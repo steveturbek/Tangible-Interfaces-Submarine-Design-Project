@@ -4,12 +4,36 @@
       body {
         padding: 0;
         margin: 0;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* Style for the underwater scene canvas */
+      #outside-scene {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      /* Style for the cockpit overlay SVG */
+      #cockpit-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10; /* Higher z-index to appear in front */
+        pointer-events: none; /* Allow clicks to pass through to canvas */
       }
     </style>
   </head>
   <body>
-    <canvas id="outside-scene" style="width: 100%; height: 100%"></canvas>
-    <svg id="cockpit-screen" src="theme/cockpit-screen.svg" style="width: 100%; height: 100%"></svg>
+    <canvas id="outside-scene"></canvas>
+
+    <object id="cockpit-screen" type="image/svg+xml" data="artwork/cockpit-background.svg"></object>
 
     <script src="js/game.js"></script>
     <script src="js/controls.js"></script>
