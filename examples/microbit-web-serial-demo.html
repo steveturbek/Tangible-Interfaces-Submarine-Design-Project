@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micro:bit Serial Communication Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #output {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+            overflow-y: auto;
+            font-family: monospace;
+        }
+        .status {
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .connected {
+            color: green;
+        }
+        .disconnected {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Micro:bit Serial Communication Demo</h1>
+        <p>This demo shows how to receive serial data from a Micro:bit V2 in a web browser using Web Serial API.</p>
+        
+        <div class="status disconnected" id="connectionStatus">Not connected</div>
+        
+        <button id="connectButton">Connect to Micro:bit</button>
+        
+        <div>
+            <h3>Received Data:</h3>
+            <div id="output"></div>
+        </div>
+    </div>
+
+    <script>
+        // Elements
+        const connectButton = document.getElementById('connectButton');
+        const outputDiv = document.getElementById('output');
+        const connectionStatus = document.getElementById('connectionStatus');
+        
+        // Serial port object
+        let port;
+        let reader;
+        let readingInProgress = false;
+        
+        // Check if Web Serial API is supported
+        if ('serial' in navigator) {
+            connectButton.addEventListener('click', connectToMicrobit);
+        } else {
+            outputDiv.textContent = 'Web Serial API is not supported in this browser. Please use Chrome or Edge.';
+            connectButton.disabled = true;
+        }
+        
+        async function connectToMicrobit() {
+            try {
+                // Request a port and open a connection
+                port = await navigator.serial.requestPort();
+                
+                // Open the port with appropriate settings for Micro:bit
+                // Micro:bit v2 default baud rate is 115200
+                await port.open({ baudRate: 115200 });
+                
+                connectionStatus.textContent = 'Connected to Micro:bit';
+                connectionStatus.classList.remove('disconnected');
+                connectionStatus.classList.add('connected');
+                connectButton.textContent = 'Disconnect';
+                connectButton.removeEventListener('click', connectToMicrobit);
+                connectButton.addEventListener('click', disconnectFromMicrobit);
+                
+                // Start reading data
+                readSerialData();
+                
+                logMessage('Connected to Micro:bit successfully');
+            } catch (error) {
+                logMessage(`Error: ${error.message}`);
+            }
+        }
+        
+        async function disconnectFromMicrobit() {
+            if (reader) {
+                await reader.cancel();
+                reader = null;
+            }
+            
+            if (port) {
+                await port.close();
+                port = null;
+            }
+            
+            readingInProgress = false;
+            connectionStatus.textContent = 'Not connected';
+            connectionStatus.classList.remove('connected');
+            connectionStatus.classList.add('disconnected');
+            connectButton.textContent = 'Connect to Micro:bit';
+            connectButton.removeEventListener('click', disconnectFromMicrobit);
+            connectButton.addEventListener('click', connectToMicrobit);
+            
+            logMessage('Disconnected from Micro:bit');
+        }
+        
+        async function readSerialData() {
+            if (readingInProgress) return;
+            readingInProgress = true;
+            
+            // Create a reader and a decoder for text
+            reader = port.readable.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+            
+            try {
+                while (port && readingInProgress) {
+                    const { value, done } = await reader.read();
+                    
+                    if (done) {
+                        // Reader has been canceled
+                        break;
+                    }
+                    
+                    // Decode the received data
+                    const text = decoder.decode(value);
+                    
+                    // Add to buffer and check for newline
+                    buffer += text;
+                    
+                    // Process complete lines
+                    const lines = buffer.split('\n');
+                    
+                    // Keep the last incomplete line in the buffer
+                    buffer = lines.pop();
+                    
+                    // Process complete lines
+                    for (const line of lines) {
+                        if (line.trim()) {
+                            logMessage(`Received: ${line.trim()}`);
+                        }
+                    }
+                }
+            } catch (error) {
+                logMessage(`Error reading data: ${error.message}`);
+            } finally {
+                readingInProgress = false;
+                if (reader) {
+                    reader.releaseLock();
+                }
+            }
+        }
+        
+        function logMessage(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            outputDiv.appendChild(logEntry);
+            outputDiv.scrollTop = outputDiv.scrollHeight; // Auto-scroll to bottom
+            console.log(message); // Also log to console
+        }
+    </script>
+</body>
+</html>
