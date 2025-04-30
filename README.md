@@ -87,7 +87,8 @@ The repository is organized as follows:
 Students will design and implement SVG-based instruments displaying:
 - Oxygen level
 - Battery status
-- Speed
+- Speed X, Y, Z
+- heading X, Y, Z
 - Sonar distance
 - Depth
 - Compass direction
