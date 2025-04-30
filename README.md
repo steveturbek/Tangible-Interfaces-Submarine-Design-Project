@@ -51,18 +51,23 @@ The game challenges players to navigate a personal submersible through an underw
 
 The repository is organized as follows:
 
+
 ```
-├── index.html          # Main game page
-├── js/                 # JavaScript files
+├── index.html          # Game page **do not edit**
+├── js/                 # JavaScript files **do not edit**
 │   ├── game.js         # Core game mechanics
 │   ├── controls.js     # Input handling
 │   ├── rendering.js    # 3D scene rendering
 │   └── instruments.js  # Cockpit instrument displays
-├── css/                # Styling files
-├── assets/             # Images and other static assets
-├── levels/             # Level configuration files
-└── examples/           # Example code for students
+├── themes/             # Images, CSS, and other assets to customize the game **Edit only these files**
+└── examples/           # Example code
 ```
+
+## Student Development process
+1. "Fork" this project
+2. Replace the files in themes folder
+3. Publish your fork to github pages
+4. Test and play game
 
 ## Technical Requirements
 
