@@ -42,16 +42,10 @@ In this project, student teams will design:
 1. A submarine vehicle design (styling concept)
 2. An on-screen user experience with instruments displaying vehicle data
 3. A physical control set (buttons, joysticks, etc.) to drive the submarine
+4. Present their design and process
 
 The game challenges players to navigate a personal submersible through an underwater maze of coral reefs to reach an underwater base before running out of oxygen or electricity.
 
-## Educational Objectives
-
-This project encourages students to:
-- Apply industrial design principles to vehicle concepts
-- Design intuitive physical control systems
-- Create effective data visualization for instrument panels
-- Test and iterate based on user feedback
 
 ## Project Structure
 
