@@ -5,7 +5,7 @@
       <!-- Black background (will be hidden) -->
       <rect width="1000" height="600" fill="black"/>
       <!-- White circle (will be visible) -->
-      <circle cx="500" cy="300" r="300" fill="white"/>
+      <circle cx="500" cy="300" r="100" fill="white"/>
     </mask>
   </defs>
   
