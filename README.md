@@ -85,13 +85,15 @@ The repository is organized as follows:
 
 ### Cockpit Instruments
 Students will design and implement SVG-based instruments displaying:
-- Oxygen level
-- Battery status
-- Speed X, Y, Z
-- heading X, Y, Z
-- Sonar distance
+- Oxygen level 0-100%
+- Battery level 0-100%
+- Speed 
+- max speed
+- pitch (up / down)
+- Yaw (left/right) 
+- Sonar distance to target
 - Depth
-- Compass direction
+- Compass direction 0-359°
 
 ### Physical Controls
 Using the Micro:bit v2, students will implement:
