@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logitech G F310 Gamepad Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        h1 {
+            color: #0066cc;
+            text-align: center;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .status {
+            text-align: center;
+            font-size: 18px;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .disconnected {
+            background-color: #ffeeee;
+            color: #cc0000;
+        }
+        
+        .connected {
+            background-color: #eeffee;
+            color: #00cc00;
+        }
+        
+        .gamepad {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+        }
+        
+        .gamepad-visual {
+            width: 400px;
+            height: 280px;
+            background-color: #333;
+            border-radius: 15px;
+            position: relative;
+        }
+        
+        .d-pad {
+            position: absolute;
+            top: 100px;
+            left: 50px;
+            width: 80px;
+            height: 80px;
+        }
+        
+        .d-pad-button {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: #444;
+            border-radius: 4px;
+        }
+        
+        .d-pad-up { top: 0; left: 27px; }
+        .d-pad-right { top: 27px; right: 0; }
+        .d-pad-down { bottom: 0; left: 27px; }
+        .d-pad-left { top: 27px; left: 0; }
+        
+        .face-buttons {
+            position: absolute;
+            top: 100px;
+            right: 50px;
+            width: 80px;
+            height: 80px;
+        }
+        
+        .face-button {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: #444;
+            border-radius: 50%;
+        }
+        
+        .button-y { top: 0; left: 27px; }
+        .button-b { top: 27px; right: 0; }
+        .button-a { bottom: 0; left: 27px; }
+        .button-x { top: 27px; left: 0; }
+        
+        .shoulder-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 380px;
+            margin-top: 10px;
+        }
+        
+        .shoulder-button {
+            width: 80px;
+            height: 20px;
+            background-color: #444;
+            border-radius: 4px;
+        }
+        
+        .center-buttons {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+        }
+        
+        .center-button {
+            width: 25px;
+            height: 25px;
+            background-color: #444;
+            border-radius: 4px;
+        }
+        
+        .sticks {
+            position: absolute;
+            top: 180px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .stick {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #222;
+            position: relative;
+        }
+        
+        .stick-nub {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #555;
+            border-radius: 50%;
+            top: 10px;
+            left: 10px;
+        }
+        
+        .active {
+            background-color: #0066cc !important;
+            box-shadow: 0 0 10px rgba(0, 102, 204, 0.7);
+        }
+        
+        .data-panel {
+            margin-top: 30px;
+            background-color: #eee;
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .data-row {
+            display: grid;
+            grid-template-columns: 100px 100px 1fr;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+        
+        .value-bar {
+            height: 20px;
+            background-color: #0066cc;
+            border-radius: 3px;
+            min-width: 2px;
+        }
+        
+        .instruction {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #ffffee;
+            border-left: 4px solid #ffcc00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Logitech G F310 Gamepad Demo</h1>
+        
+        <div class="instruction">
+            <p>Connect your Logitech G F310 Gamepad to your computer and press any button to begin.</p>
+            <p>This demo will show which buttons are being pressed and display analog values for sticks and triggers.</p>
+        </div>
+        
+        <div id="status" class="status disconnected">Waiting for gamepad connection...</div>
+        
+        <div class="gamepad">
+            <div class="gamepad-visual">
+                <div class="d-pad">
+                    <div id="dpad-up" class="d-pad-button d-pad-up"></div>
+                    <div id="dpad-right" class="d-pad-button d-pad-right"></div>
+                    <div id="dpad-down" class="d-pad-button d-pad-down"></div>
+                    <div id="dpad-left" class="d-pad-button d-pad-left"></div>
+                </div>
+                
+                <div class="face-buttons">
+                    <div id="button-y" class="face-button button-y"></div>
+                    <div id="button-b" class="face-button button-b"></div>
+                    <div id="button-a" class="face-button button-a"></div>
+                    <div id="button-x" class="face-button button-x"></div>
+                </div>
+                
+                <div class="center-buttons">
+                    <div id="button-back" class="center-button"></div>
+                    <div id="button-start" class="center-button"></div>
+                </div>
+                
+                <div class="sticks">
+                    <div class="stick" id="left-stick-container">
+                        <div class="stick-nub" id="left-stick"></div>
+                    </div>
+                    <div class="stick" id="right-stick-container">
+                        <div class="stick-nub" id="right-stick"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="shoulder-buttons">
+                <div id="button-lb" class="shoulder-button"></div>
+                <div id="button-rb" class="shoulder-button"></div>
+            </div>
+        </div>
+        
+        <div class="data-panel">
+            <h3>Raw Input Data</h3>
+            <div id="raw-data"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Elements
+        const statusEl = document.getElementById('status');
+        const rawDataEl = document.getElementById('raw-data');
+        
+        // Button mappings specific to Logitech F310
+        // These may need adjustment based on browser/platform
+        const buttonMappings = {
+            0: 'button-a',
+            1: 'button-b',
+            2: 'button-x',
+            3: 'button-y',
+            4: 'button-lb',
+            5: 'button-rb',
+            6: 'button-lt',  // Trigger
+            7: 'button-rt',  // Trigger
+            8: 'button-back',
+            9: 'button-start',
+            10: 'button-lstick',  // Left stick press
+            11: 'button-rstick',  // Right stick press
+            12: 'dpad-up',
+            13: 'dpad-down',
+            14: 'dpad-left',
+            15: 'dpad-right',
+            16: 'button-home',  // Mode/Home button
+        };
+        
+        // State
+        let controllers = {};
+        let gamepadConnected = false;
+        let animationFrameId = null;
+        
+        // Initialize gamepad API
+        window.addEventListener('gamepadconnected', function(e) {
+            console.log('Gamepad connected: ', e.gamepad);
+            controllers[e.gamepad.index] = e.gamepad;
+            gamepadConnected = true;
+            statusEl.textContent = `Connected: ${e.gamepad.id}`;
+            statusEl.classList.remove('disconnected');
+            statusEl.classList.add('connected');
+            
+            if (!animationFrameId) {
+                animationFrameId = requestAnimationFrame(updateStatus);
+            }
+        });
+        
+        window.addEventListener('gamepaddisconnected', function(e) {
+            console.log('Gamepad disconnected: ', e.gamepad);
+            delete controllers[e.gamepad.index];
+            
+            if (Object.keys(controllers).length === 0) {
+                gamepadConnected = false;
+                statusEl.textContent = 'Waiting for gamepad connection...';
+                statusEl.classList.remove('connected');
+                statusEl.classList.add('disconnected');
+                
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+                
+                // Reset all visual elements
+                resetElements();
+            }
+        });
+        
+        function resetElements() {
+            // Reset all active buttons
+            document.querySelectorAll('.active').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Reset stick positions
+            const leftStick = document.getElementById('left-stick');
+            const rightStick = document.getElementById('right-stick');
+            if (leftStick) {
+                leftStick.style.transform = 'translate(0px, 0px)';
+            }
+            if (rightStick) {
+                rightStick.style.transform = 'translate(0px, 0px)';
+            }
+            
+            // Clear raw data
+            if (rawDataEl) {
+                rawDataEl.innerHTML = '';
+            }
+        }
+        
+        function updateStatus() {
+            if (!gamepadConnected) {
+                return;
+            }
+            
+            // Get the latest gamepad data
+            const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+            let activeGamepad = null;
+            
+            for (let i = 0; i < gamepads.length; i++) {
+                if (gamepads[i] && gamepads[i].id.indexOf('F310') !== -1) {
+                    activeGamepad = gamepads[i];
+                    break;
+                } else if (gamepads[i]) {
+                    // Use any gamepad if F310 not found specifically
+                    activeGamepad = gamepads[i];
+                    break;
+                }
+            }
+            
+            if (!activeGamepad) {
+                animationFrameId = requestAnimationFrame(updateStatus);
+                return;
+            }
+            
+            // Clear existing raw data
+            rawDataEl.innerHTML = '';
+            
+            // Update button states
+            updateButtons(activeGamepad);
+            
+            // Update axes (sticks)
+            updateAxes(activeGamepad);
+            
+            // Continue loop
+            animationFrameId = requestAnimationFrame(updateStatus);
+        }
+        
+        function updateButtons(gamepad) {
+            // Update all buttons
+            for (let i = 0; i < gamepad.buttons.length; i++) {
+                const button = gamepad.buttons[i];
+                const buttonEl = document.getElementById(buttonMappings[i]);
+                const pressed = button.pressed;
+                const value = button.value;
+                
+                // Create row in raw data panel
+                const row = document.createElement('div');
+                row.className = 'data-row';
+                
+                const labelEl = document.createElement('div');
+                labelEl.textContent = `Button ${i}:`;
+                
+                const valueEl = document.createElement('div');
+                valueEl.textContent = value.toFixed(2);
+                
+                const barContainer = document.createElement('div');
+                barContainer.style.width = '100%';
+                
+                const bar = document.createElement('div');
+                bar.className = 'value-bar';
+                bar.style.width = `${value * 100}%`;
+                
+                barContainer.appendChild(bar);
+                row.appendChild(labelEl);
+                row.appendChild(valueEl);
+                row.appendChild(barContainer);
+                rawDataEl.appendChild(row);
+                
+                // Update visual gamepad
+                if (buttonEl) {
+                    if (pressed) {
+                        buttonEl.classList.add('active');
+                    } else {
+                        buttonEl.classList.remove('active');
+                    }
+                }
+            }
+        }
+        
+        function updateAxes(gamepad) {
+            // Update all axes
+            for (let i = 0; i < gamepad.axes.length; i++) {
+                const value = gamepad.axes[i];
+                
+                // Create row in raw data panel
+                const row = document.createElement('div');
+                row.className = 'data-row';
+                
+                const labelEl = document.createElement('div');
+                labelEl.textContent = `Axis ${i}:`;
+                
+                const valueEl = document.createElement('div');
+                valueEl.textContent = value.toFixed(2);
+                
+                const barContainer = document.createElement('div');
+                barContainer.style.width = '100%';
+                
+                const bar = document.createElement('div');
+                bar.className = 'value-bar';
+                // Normalize -1 to 1 range to 0-100%
+                const normalizedWidth = ((value + 1) / 2) * 100;
+                bar.style.width = `${normalizedWidth}%`;
+                
+                barContainer.appendChild(bar);
+                row.appendChild(labelEl);
+                row.appendChild(valueEl);
+                row.appendChild(barContainer);
+                rawDataEl.appendChild(row);
+                
+                // Update visual sticks
+                updateVisualSticks(i, value);
+            }
+        }
+        
+        function updateVisualSticks(axisIndex, value) {
+            const leftStick = document.getElementById('left-stick');
+            const rightStick = document.getElementById('right-stick');
+            const maxDistance = 10; // max pixel movement
+            
+            if (axisIndex === 0 && leftStick) {
+                // X-axis for left stick
+                const currentY = leftStick.style.transform.match(/translateY\(([^)]+)\)/) 
+                                ? leftStick.style.transform.match(/translateY\(([^)]+)\)/)[1]
+                                : '0px';
+                leftStick.style.transform = `translateX(${value * maxDistance}px) translateY(${currentY})`;
+            }
+            else if (axisIndex === 1 && leftStick) {
+                // Y-axis for left stick
+                const currentX = leftStick.style.transform.match(/translateX\(([^)]+)\)/) 
+                                ? leftStick.style.transform.match(/translateX\(([^)]+)\)/)[1]
+                                : '0px';
+                leftStick.style.transform = `translateX(${currentX}) translateY(${value * maxDistance}px)`;
+            }
+            else if (axisIndex === 2 && rightStick) {
+                // X-axis for right stick
+                const currentY = rightStick.style.transform.match(/translateY\(([^)]+)\)/) 
+                                ? rightStick.style.transform.match(/translateY\(([^)]+)\)/)[1]
+                                : '0px';
+                rightStick.style.transform = `translateX(${value * maxDistance}px) translateY(${currentY})`;
+            }
+            else if (axisIndex === 3 && rightStick) {
+                // Y-axis for right stick
+                const currentX = rightStick.style.transform.match(/translateX\(([^)]+)\)/) 
+                                ? rightStick.style.transform.match(/translateX\(([^)]+)\)/)[1]
+                                : '0px';
+                rightStick.style.transform = `translateX(${currentX}) translateY(${value * maxDistance}px)`;
+            }
+        }
+        
+        // Check if browser supports Gamepad API
+        if (!navigator.getGamepads) {
+            statusEl.textContent = 'Your browser does not support the Gamepad API';
+        } else {
+            // Check if any gamepads are already connected
+            const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+            for (let i = 0; i < gamepads.length; i++) {
+                if (gamepads[i]) {
+                    controllers[gamepads[i].index] = gamepads[i];
+                    gamepadConnected = true;
+                    statusEl.textContent = `Connected: ${gamepads[i].id}`;
+                    statusEl.classList.remove('disconnected');
+                    statusEl.classList.add('connected');
+                    
+                    if (!animationFrameId) {
+                        animationFrameId = requestAnimationFrame(updateStatus);
+                    }
+                    break;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

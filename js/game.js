@@ -105,3 +105,70 @@ function updateDerivedValues() {
   // Convert depth to positive number for display (assuming negative z is down)
   gameState.status.depth = Math.min(gameState.constants.maxDepth, -gameState.position.z);
 }
+
+// Game loop implementation to add to the end of game.js
+
+// Game loop variables
+let lastFrameTime = 0;
+let isGameRunning = false;
+let animationFrameId = null;
+
+// Main game loop function - more optimized
+function gameLoop(currentTime) {
+  // Convert time to seconds (it comes in as milliseconds)
+  currentTime = currentTime / 1000;
+
+  // Calculate delta time (time since last frame)
+  if (lastFrameTime === 0) {
+    lastFrameTime = currentTime;
+    animationFrameId = requestAnimationFrame(gameLoop);
+    return; // Skip the first frame to establish timing
+  }
+
+  const deltaTime = Math.min(0.1, currentTime - lastFrameTime); // Cap delta time to avoid large jumps
+  lastFrameTime = currentTime;
+
+  // Update game state with the calculated delta time
+  updateSubmarineState(deltaTime);
+
+  // Request the next frame if the game is still running
+  if (isGameRunning) {
+    // We're calling renderUnderwaterScene directly from rendering.js
+    // This is defined there and should not recreate the coral reef
+    renderUnderwaterScene();
+    animationFrameId = requestAnimationFrame(gameLoop);
+  }
+}
+
+// Function to start the game
+function startGame() {
+  if (!isGameRunning) {
+    console.log("Starting game loop");
+    isGameRunning = true;
+    lastFrameTime = 0; // Reset the time tracker
+    animationFrameId = requestAnimationFrame(gameLoop);
+  }
+}
+
+// Function to stop the game
+function stopGame() {
+  if (isGameRunning) {
+    console.log("Stopping game loop");
+    isGameRunning = false;
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+  }
+}
+
+// Start the game after everything else is loaded
+window.addEventListener(
+  "load",
+  function () {
+    console.log("Window loaded, starting game in 500ms");
+    // Start the game loop after a delay to ensure all initialization is complete
+    setTimeout(startGame, 500);
+  },
+  { once: true }
+); // Only attach this listener once
