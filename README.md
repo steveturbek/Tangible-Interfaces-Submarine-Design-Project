@@ -4,25 +4,36 @@
 
 Welcome to the "AquaNova Submarine" Student Design Project for Steve Turbek's "Tangible Interfaces" Industrial Design class at Pratt Institute! This collaborative challenge sits at the intersection of industrial design, user experience, and physical computing. Throughout this project, you'll work in teams to create an immersive submarine piloting experience that combines digital interfaces with physical controls.
 
-This GitHub Project build a web app 'game' with on-screen controls you can customize. It contains simplish recipes to connect hardware controls to this game. Very little electronics or programming is expected and examples to copy are provided.
+## Demo Link (in early development)
 
-## Demo (in early development)
+[Web game experience - not yet working!](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project){:target="\_blank"}
 
-[Web game experience - not yet working!](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project)
+## Project Concept
 
-## The Challenge
+[Goofy Hand drawn diagram of conceptual Technical Setup](assets/conceptual-diagram-of-tech.png)
+To enable this project, we have built a technical framework to build on.  
+This GitHub Project builds a web app 'game' with on-screen controls you can customize. It contains simplish recipes to connect hardware controls to this game. Very little electronics or programming is expected and examples are provided to build on.
+
+## The Design Challenge
 
 You are a design team tasked with creating the next generation of personal submersibles. Your submersible needs to navigate complex underwater environments while providing an intuitive interface for pilots of varying experience levels.
 
-Your mission is threefold:
+Success in this project will require balancing aesthetic appeal with functional clarity. Your instruments must be visually consistent with your cockpit design while providing clear information. Your physical controls must feel natural while providing the precision needed for delicate maneuvers.
 
-1. Research and Identify target market
+You'll work in teams of three, with two teams designing seated cockpits and two teams designing prone cockpits. At the end of the project, visiting guests will test each design to determine which provides the most intuitive user experience, their average time to complete the mission will be a factor in rating the design of the team.
+
+Are you ready to dive in?
+
+Your mission:
+
+1. Research and identify target market
 1. Create brand for sub line
 1. Design the visual styling of your submersible cockpit
-1. Create digital instruments that effectively communicate critical information
-1. Build physical controls that provide an intuitive piloting experience
-
-You'll work in teams of three, with two teams designing seated cockpits and two teams designing prone cockpits. At the end of the project, visiting guests will test each design to determine which provides the most intuitive user experience.
+1. Create on-screen digital user experience instruments that effectively communicate critical vehicle information
+1. Build physical control set (buttons, joysticks, etc.) to drive the submarine that provide an intuitive piloting experience
+1. User Start Guide as needed
+1. Test with real people
+1. Write up and present design, process, and findings
 
 ## Learning Objectives
 
@@ -39,49 +50,36 @@ By completing this project, you will:
 
 Your submersible will navigate through an underwater maze of coral reefs. The pilot must reach an underwater base before running out of oxygen or electricity. The gameplay emphasizes careful resource management and precise navigation through challenging 3D environments.
 
-Success in this project will require balancing aesthetic appeal with functional clarity. Your instruments must be visually consistent with your cockpit design while providing clear information. Your physical controls must feel natural while providing the precision needed for delicate maneuvers.
-
-Are you ready to dive in?
-
-## Project Overview
-
-In this project, student teams will design:
-
-1. A submarine vehicle design (styling concept)
-2. An on-screen user experience with instruments displaying vehicle data
-3. A physical control set (buttons, joysticks, etc.) to drive the submarine
-4. Present their design and process
-
-The game challenges players to navigate a personal submersible through an underwater maze of coral reefs to reach an underwater base before running out of oxygen or electricity.
-
-## Project Structure
+## GitHub Project Structure
 
 The repository is organized as follows:
 
 ```
-├── index.html          # Game page **do not edit**
-├── js/                 # JavaScript files **do not edit**
+├── index.html          # Game page **Do not edit**
+├── js/                 # JavaScript files **Do not edit**
 │   ├── game.js         # Core game mechanics
 │   ├── controls.js     # Input handling
 │   ├── rendering.js    # 3D scene rendering
 │   └── instruments.js  # Cockpit instrument displays
-├── themes/             # Images, CSS, and other assets to customize the game **Edit only these files**
+├── artwork/             # Images, CSS, and other assets to customize the game **Edit only these files**
+├── assets/             # Images, CSS, and other assets to customize the game **Do not edit only these files**
 └── examples/           # Example code
 ```
 
 ## Student Development process
 
 1. "Fork" this project
-2. Replace the files in themes folder
+2. Replace the files in artwork folder
 3. Publish your fork to github pages
 4. Test and play game
 
 ## Technical Requirements
 
 - **Browser**: Chrome (latest version)
-- **Hardware**: Micro:bit v2 for physical controls
+- **Hardware**: Micro:bit v2 for physical controls configuration
+- **UX design**: Photoshop, illustrator, AI tools for coding
 - **Programming**: Basic JavaScript and CSS (examples provided)
-- **Publishing**: GitHub Pages for hosting
+- **Publishing**: GitHub Pages for hosting (provided)
 
 ## Game Features
 
@@ -113,7 +111,7 @@ Students will design and implement SVG-based instruments displaying:
 
 ### Physical Controls
 
-Using the Micro:bit v2, students will implement:
+Using the Micro:bit v2 as a bridge to the computer, students will implement at a minimum:
 
 - Game start/selection controls
 - "Blow tanks" emergency button
