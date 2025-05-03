@@ -8,13 +8,6 @@ Welcome to the "AquaNova Submarine" Student Design Project for Steve Turbek's "T
 
 [Web game experience - not yet working!](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project)
 
-## Project Concept
-
-To make this project possible for a design student, we have a technical framework to build from.  
-This GitHub Project builds a web app 'game' with on-screen UX instruments that can be customized. The project contains simplish recipes to connect hardware controls to this game. Very little electronics or programming is expected. Examples are provided to learn from.
-
-![Goofy Hand drawn diagram of conceptual Technical Setup](assets/conceptual-diagram-of-tech.png "Diagram of conceptual Technical Setup")
-
 ## The Design Challenge
 
 You are a design team tasked with creating the next generation of personal submersibles. Your submersible needs to navigate complex underwater environments while providing an intuitive interface for pilots of varying experience levels.
@@ -22,8 +15,6 @@ You are a design team tasked with creating the next generation of personal subme
 Success in this project will require balancing aesthetic appeal with functional clarity. Your instruments must be visually consistent with your cockpit design while providing clear information. Your physical controls must feel natural while providing the precision needed for delicate maneuvers.
 
 You'll work in teams of three, with two teams designing seated cockpits and two teams designing prone cockpits. At the end of the project, visiting guests will test each design to determine which provides the most intuitive user experience, their average time to complete the mission will be a factor in rating the design of the team.
-
-Are you ready to dive in?
 
 Your mission:
 
@@ -35,6 +26,8 @@ Your mission:
 1. User Start Guide as needed
 1. Test with real people
 1. Write up and present design, process, and findings
+
+**Are you ready to dive in?**
 
 ## Learning Objectives
 
@@ -50,6 +43,20 @@ By completing this project, you will:
 ## The Gameplay Experience
 
 Your submersible will navigate through an underwater maze of coral reefs. The pilot must reach an underwater base before running out of oxygen or electricity. The gameplay emphasizes careful resource management and precise navigation through challenging 3D environments.
+
+## Physical Mockup Concept
+
+To make this project possible for a design student, we have a technical framework to build from. This GitHub Project builds a web app 'game' with on-screen UX instruments that can be customized. The project contains simplish recipes to connect hardware controls to this game. Very little electronics or programming is expected. Examples are provided to learn from.
+
+The student will design and fabricate th items in diagram below
+
+1. A cockpit design prototype (orange), either beautiful or rough, from wood or cardboard
+1. An innovative and beautiful physical control set (red/green)
+1. The controls will send signals to the Micro:bit board (center)
+1. The board will send a USB message to the student laptop (blue)
+1. The laptop drive an external monitor(s) embedded in cockpit design prototype (blue rectangle)
+
+![Goofy Hand drawn diagram of conceptual Technical Setup](assets/conceptual-diagram-of-tech.png "Diagram of conceptual Technical Setup")
 
 ## GitHub Project Structure
 
