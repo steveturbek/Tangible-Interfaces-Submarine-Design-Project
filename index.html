@@ -43,6 +43,14 @@
         z-index: 10; /* Higher z-index to appear in front */
         pointer-events: none; /* Allow clicks to pass through to canvas */
       }
+
+      #oxygenGauge {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 20; /* Higher z-index to appear in front */
+        width: 200px;
+      }
     </style>
   </head>
   <body>
@@ -50,6 +58,8 @@
       <canvas id="outside-scene"></canvas>
       <img class="cockpit-screen" src="artwork/cockpit-background-lines.png" />
       <object class="cockpit-screen" type="image/svg+xml" data="artwork/cockpit-background-border.svg"></object>
+
+      <object class="instruments" id="oxygenGauge" type="image/svg+xml" data="artwork/oxygen.svg"></object>
 
       <script src="js/game.js"></script>
       <script src="js/controls.js"></script>

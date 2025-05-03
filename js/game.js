@@ -49,17 +49,24 @@ const gameState = {
   time: {
     elapsed: 0, // Total game time in seconds
     deltaTime: 0, // Time since last update (for physics)
+    logTimeCounter: 0, // Temporary count of time to count up to logTimeLengthMS
+    logTimeCounterLengthMS: 0.5, //500 miliseconds
   },
 };
 
 // Example update function to be called each frame
 function updateSubmarineState(deltaTime) {
+  // console.log(deltaTime);
   // Update time
   gameState.time.deltaTime = deltaTime;
   gameState.time.elapsed += deltaTime;
+  gameState.time.logTimeCounter += deltaTime;
 
   // Update oxygen based on elapsed time
-  gameState.status.oxygenLevel = Math.max(0, 100 - Math.ceil(gameState.time.elapsed / 3));
+  gameState.status.oxygenLevel = Math.max(
+    0,
+    Math.ceil(((gameState.constants.maxOxygenTime - gameState.time.elapsed) / gameState.constants.maxOxygenTime) * 100)
+  );
 
   // Update battery based on engine usage
   const powerDrain = (Math.abs(gameState.status.engineRPM) * deltaTime) / gameState.constants.maxBatteryTime;
@@ -80,6 +87,23 @@ function updateSubmarineState(deltaTime) {
 
   // Calculate derived values
   updateDerivedValues();
+
+  // fire counters
+  if (gameState.time.logTimeCounter > gameState.time.logTimeCounterLengthMS) {
+    gameState.time.logTimeCounter = 0;
+
+    // console.log(gameState.status.oxygenLevel);
+    //is ded?
+
+    if (gameState.status.oxygenLevel <= 0) {
+      console.log("you died");
+      stopGame();
+    }
+
+    //update Instruments
+    updateInstruments();
+    // console.log("counter");
+  }
 }
 
 // Calculate values derived from core state
@@ -135,7 +159,7 @@ function gameLoop(currentTime) {
   if (isGameRunning) {
     // We're calling renderUnderwaterScene directly from rendering.js
     // This is defined there and should not recreate the coral reef
-    renderUnderwaterScene();
+    // renderUnderwaterScene();
     animationFrameId = requestAnimationFrame(gameLoop);
   }
 }
