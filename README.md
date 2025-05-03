@@ -10,7 +10,8 @@ Welcome to the "AquaNova Submarine" Student Design Project for Steve Turbek's "T
 
 ## Project Concept
 
-[Goofy Hand drawn diagram of conceptual Technical Setup](assets/conceptual-diagram-of-tech.png)
+![Goofy Hand drawn diagram of conceptual Technical Setup](assets/conceptual-diagram-of-tech.png "Diagram of conceptual Technical Setup")
+
 To enable this project, we have built a technical framework to build on.  
 This GitHub Project builds a web app 'game' with on-screen controls you can customize. It contains simplish recipes to connect hardware controls to this game. Very little electronics or programming is expected and examples are provided to build on.
 
