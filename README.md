@@ -6,7 +6,7 @@ Welcome to the "AquaNova Submarine" Student Design Project for Steve Turbek's "T
 
 ## Demo Link (in early development)
 
-[Web game experience - not yet working!](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project){:target="\_blank"}
+[Web game experience - not yet working!](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project)
 
 ## Project Concept
 
