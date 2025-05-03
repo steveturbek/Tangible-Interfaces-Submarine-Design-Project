@@ -10,10 +10,10 @@ Welcome to the "AquaNova Submarine" Student Design Project for Steve Turbek's "T
 
 ## Project Concept
 
-![Goofy Hand drawn diagram of conceptual Technical Setup](assets/conceptual-diagram-of-tech.png "Diagram of conceptual Technical Setup")
+To make this project possible for a design student, we have a technical framework to build from.  
+This GitHub Project builds a web app 'game' with on-screen UX instruments that can be customized. The project contains simplish recipes to connect hardware controls to this game. Very little electronics or programming is expected. Examples are provided to learn from.
 
-To enable this project, we have built a technical framework to build on.  
-This GitHub Project builds a web app 'game' with on-screen controls you can customize. It contains simplish recipes to connect hardware controls to this game. Very little electronics or programming is expected and examples are provided to build on.
+![Goofy Hand drawn diagram of conceptual Technical Setup](assets/conceptual-diagram-of-tech.png "Diagram of conceptual Technical Setup")
 
 ## The Design Challenge
 
@@ -127,21 +127,23 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 - Chrome browser
 - Micro:bit v2 with USB cable
 - Basic text editor or IDE
+- various electonics parts
 
 ### Installation
 
 1. Fork this repository
-2. Enable GitHub Pages in your repository settings
-3. Connect your Micro:bit v2 via USB
-4. Open the game URL in Chrome
+1. Enable GitHub Pages in your repository settings
+1. Connect your Micro:bit v2 via USB
+1. Open the game URL in Chrome
 
 ### Development Workflow
 
-1. Fork the repository
-2. Modify the SVG elements in the HTML/CSS for cockpit design
-3. Update the configuration in `config.js` for control scaling
-4. Test your implementation using keyboard controls
-5. Integrate Micro:bit controls using the provided examples
+(in your fork)
+
+1. Modify the SVG elements in the HTML/CSS for cockpit design
+1. Update the configuration in `config.js` for control scaling
+1. Test your implementation using keyboard controls
+1. Integrate Micro:bit controls using the provided examples
 
 ## Testing Your Design
 
