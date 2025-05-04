@@ -8,6 +8,8 @@ Welcome to the "AquaNova Submarine" Student Design Project for Steve Turbek's "T
 
 [Web game experience - not yet working!](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project)
 
+![Illustration of a Submarine Cockpit](assets/submarine-illus.png "Illustration of a Submarine Cockpit")
+
 ## The Design Challenge
 
 You are a design team tasked with creating the next generation of personal submersibles. Your submersible needs to navigate complex underwater environments while providing an intuitive interface for pilots of varying experience levels.
