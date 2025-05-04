@@ -207,7 +207,8 @@ function updateCounter() {
       `Pitch: ${formatPos(gameState.rotation.pitch)}° | ` +
       `O₂: ${gameState.status.oxygenLevel}% | ` +
       `Batt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
-      `Target: ${gameState.navigation.distanceToTarget.toFixed(1)}m``LeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
+      `Target: ${gameState.navigation.distanceToTarget.toFixed(1)}m` +
+      `LeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
       `RightThrust: ${gameState.controls.ThrottleRight}% | ` +
       `Rudder: ${gameState.controls.YawRudderAngle}% | ` +
       `Elevator: ${gameState.controls.PitchElevatorAngle}% | ` +
