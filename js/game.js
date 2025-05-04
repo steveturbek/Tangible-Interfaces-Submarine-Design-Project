@@ -200,20 +200,15 @@ function updateCounter() {
 
   // Log submarine state values in a single line
   console.log(
-    `STATE: Position(${formatPos(gameState.position.x)},${formatPos(gameState.position.y)},${formatPos(gameState.position.z)}) | ` +
+    `Position(${formatPos(gameState.position.x)},${formatPos(gameState.position.y)},${formatPos(gameState.position.z)}) | ` +
       `Heading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
       `Speed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
       `Depth: ${formatPos(gameState.status.depth)}m | ` +
       `Pitch: ${formatPos(gameState.rotation.pitch)}° | ` +
       `O₂: ${gameState.status.oxygenLevel}% | ` +
       `Batt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
-      `Target: ${gameState.navigation.distanceToTarget.toFixed(1)}m`
-  );
-
-  // Log control states in a separate line
-  console.log(
-    `CTRL: Left: ${gameState.controls.ThrottleLeft}% | ` +
-      `Right: ${gameState.controls.ThrottleRight}% | ` +
+      `Target: ${gameState.navigation.distanceToTarget.toFixed(1)}m``LeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
+      `RightThrust: ${gameState.controls.ThrottleRight}% | ` +
       `Rudder: ${gameState.controls.YawRudderAngle}% | ` +
       `Elevator: ${gameState.controls.PitchElevatorAngle}% | ` +
       `Aft: ${gameState.controls.AftThruster}%`
