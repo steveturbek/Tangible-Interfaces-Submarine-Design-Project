@@ -31,17 +31,6 @@ Your mission:
 
 **Are you ready to dive in?**
 
-## Learning Objectives
-
-By completing this project, you will:
-
-- Apply industrial design principles to vehicle interface design
-- Translate abstract data into meaningful visual instruments
-- Create physical control systems that map intuitively to digital actions
-- Test and iterate based on user feedback
-- Collaborate effectively with a design team
-- Present and defend design decisions
-
 ## The Gameplay Experience
 
 Your submersible will navigate through an underwater maze of coral reefs. The pilot must reach an underwater base before running out of oxygen or electricity. The gameplay emphasizes careful resource management and precise navigation through challenging 3D environments.
@@ -64,50 +53,29 @@ The student will design and fabricate th items in diagram below
 
 The student will have the ability to design the submarine. Here are the technical design constraints. A clever team can write code to change these, but they are responsible for these customizations.
 
-- Left and Right (Port and Starboard) [Underwater thrusters](https://en.wikipedia.org/wiki/Underwater_thruster)
+- Left (Port) and Right(Starboard) [Underwater thrusters](https://en.wikipedia.org/wiki/Underwater_thruster) : These face forward and are centered front to back and top to bottom. They operate like tank treads, if both drive forward, the vehicle goes forward; both back: back; one front the other back, vehicle turns. One operating, the other not, the vehicle goes at half speed and turns in the opposite direction.
+- [Rudder](https://en.wikipedia.org/wiki/Rudder): turns vehicle left and right, proportional to vehicle speed
+- [Elevators](<https://en.wikipedia.org/wiki/Elevator_(aeronautics)>): points vehicle up and down, proportional to vehicle speed
+- Aft thrusters; Small thrusters that point vehicle up and down; very slow, but works when not in motion
 
-## Submarine Inspiration
+The submarine is an idealized, simplified vehicle to keep the project fun!
+
+## Submarines for Inspiration
 
 - https://robbreport.com/motors/marine/gallery/personal-submersibles-exploration-1234848269/unknown-32/
 
-## GitHub Project Structure
+## Learning Objectives
 
-The repository is organized as follows:
+By completing this project, you will:
 
-```
-├── index.html          # Game page **Do not edit**
-├── js/                 # JavaScript files **Do not edit**
-│   ├── game.js         # Core game mechanics
-│   ├── controls.js     # Input handling
-│   ├── rendering.js    # 3D scene rendering
-│   └── instruments.js  # Cockpit instrument displays
-├── artwork/             # Images, CSS, and other assets to customize the game **Edit only these files**
-├── assets/             # Images, CSS, and other assets to customize the game **Do not edit only these files**
-└── examples/           # Example code
-```
+- Apply industrial design principles to vehicle interface design
+- Translate abstract data into meaningful visual instruments
+- Create physical control systems that map intuitively to digital actions
+- Test and iterate based on user feedback
+- Collaborate effectively with a design team
+- Present and defend design decisions
 
-## Student Development process
-
-1. "Fork" this project
-2. Replace the files in artwork folder
-3. Publish your fork to github pages
-4. Test and play game
-
-## Technical Requirements
-
-- **Browser**: Chrome (latest version)
-- **Hardware**: Micro:bit v2 for physical controls configuration
-- **UX design**: Photoshop, illustrator, AI tools for coding
-- **Programming**: Basic JavaScript and CSS (examples provided)
-- **Publishing**: GitHub Pages for hosting (provided)
-
-## Game Features
-
-### Environment
-
-- First-person 3D underwater environment
-- Randomly generated levels (with seed options for competitive play)
-- 10 learning levels of increasing complexity
+## Game Overview
 
 ### Game Mechanics
 
@@ -122,8 +90,7 @@ Students will design and implement SVG-based instruments displaying:
 - Oxygen level 0-100%
 - Battery level 0-100%
 - Speed
-- max speed
-- pitch (up / down)
+- Pitch (up / down)
 - Yaw (left/right)
 - Sonar distance to target
 - Depth
@@ -140,6 +107,14 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 
 ## Getting Started
 
+### Technical Requirements
+
+- **Browser**: Chrome (latest version)
+- **Hardware**: Micro:bit v2 for physical controls configuration
+- **UX design**: Photoshop, illustrator, AI tools for coding
+- **Programming**: Basic JavaScript and CSS (examples provided)
+- **Publishing**: GitHub Pages for hosting (provided)
+
 ### Prerequisites
 
 - A GitHub account
@@ -152,8 +127,9 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 
 1. Fork this repository
 1. Enable GitHub Pages in your repository settings
+1. Download for local development (not required, but faster)
 1. Connect your Micro:bit v2 via USB
-1. Open the game URL in Chrome
+1. Open your GitHub Pages game URL in Chrome
 
 ### Development Workflow
 
@@ -164,11 +140,24 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 1. Test your implementation using keyboard controls
 1. Integrate Micro:bit controls using the provided examples
 
-## Testing Your Design
+## GitHub Project Structure
 
-The final class session will involve user testing with visiting guests. They will test each team's design to determine which interface is most intuitive and effective.
+The repository is organized as follows:
 
-## Future Enhancements (Phase 2)
+```
+├── index.html          # Game page **Do not edit**
+├── js/                 # JavaScript files **Do not edit**
+│   ├── game.js         # Core game mechanics
+│   ├── controls.js     # Input handling
+│   ├── rendering.js    # 3D scene rendering
+│   ├── config.js       # Placeholder in case student needs to write javascript to customize game
+│   └── instruments.js  # Cockpit instrument displays
+├── artwork/            # Images, CSS, and other assets to customize the game **Edit only these files**
+├── assets/             # Images, CSS, and other assets to customize the game **Do not edit only these files**
+└── examples/           # Example code
+```
+
+## Potential Future Game Ideas
 
 - Damage mechanics (wall collisions, shark attacks)
 - Use of lights to see better (with strategic consequences, uses electricity, attracts sharks)
@@ -177,9 +166,8 @@ The final class session will involve user testing with visiting guests. They wil
 - Supply grabber arm
 - Beacon placement system
 
-## References
+## Technical References, not all used in project
 
+- https://support.microbit.org/support/solutions/articles/19000071689-can-i-control-my-pc-or-simulate-a-keyboard-and-mouse-
 - https://edges.ideo.com/posts/figproxy
 - https://microflow.vercel.app/
-- https://support.microbit.org/support/solutions/articles/19000071689-can-i-control-my-pc-or-simulate-a-keyboard-and-mouse-
--
