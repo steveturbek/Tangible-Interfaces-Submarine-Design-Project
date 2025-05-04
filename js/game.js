@@ -183,16 +183,21 @@ function updateSubmarineState(deltaTime) {
   if (gameState.time.logTimeCounter > gameState.time.logTimeCounterLengthMS) {
     gameState.time.logTimeCounter = 0;
 
-    // console.log(gameState.status.oxygenLevel);
-    if (gameState.status.oxygenLevel <= 0) {
-      console.log("you died");
-      stopGame();
-    }
-
-    //update Instruments
-    updateInstruments();
-    // console.log("counter");
+    updateCounter();
   }
+}
+
+function updateCounter() {
+  // console.log(gameState.status.oxygenLevel);
+  if (gameState.status.oxygenLevel <= 0) {
+    console.log("you died");
+    stopGame();
+  }
+
+  //update Instruments
+  updateInstruments();
+
+  //console.log( key sub state values)
 }
 
 // Calculate values derived from core state
