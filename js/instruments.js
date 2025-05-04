@@ -1,5 +1,15 @@
 //Update the cockpit instrument displays
 
+/*
+Instrument values in the game
+gameState.status.oxygenLevel
+gameState.status.batteryLevel
+gameState.status.depth
+gameState.navigation.distanceToTarget
+gameState.navigation.compassHeading
+gameState.navigation.currentSpeed
+ */
+
 function initializeInstruments() {
   // Create and append the oxygen gauge SVG
   // Get reference to the oxygen SVG object

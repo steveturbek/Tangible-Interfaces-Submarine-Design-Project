@@ -16,23 +16,22 @@ const gameState = {
     PitchElevatorAngle: 0, // -100 to +100 (down to up)
     maxPitchElevatorAngle: 100, // absolute number
 
-    //Aft Thruster on the horizontal tail produce pitch
-    AftThruster: 0, // -100 to +100 (down to up)
-    MaxAftThruster: 100, // absolute number
-
     //rudder on the vertical tail produces yaw
     YawRudderAngle: 0, // -100 to +100 (left to right)
     maxRudderAngle: 100, // absolute number
+
+    //Aft Thruster on the horizontal tail produce pitch
+    AftThruster: 0, // -100 to +100 (down to up)
+    MaxAftThruster: 100, // absolute number
 
     // Not using roll  targetRoll: 0, // -100 to +100 (optional: left bank to right bank)
   },
 
   // Resources & Status
   status: {
-    engineRPM: 0, // -100 to +100 (current engine speed)
     oxygenLevel: 100, // 0-100%
     batteryLevel: 100, // 0-100%
-    hullIntegrity: 100, // 0-100% (optional: damage model)
+    // hullIntegrity: 100, // 0-100% (optional: damage model)
     depth: 0, // 0 to maxDepth (positive number for UI clarity)
   },
 
@@ -69,7 +68,6 @@ const gameState = {
 
 // Example update function to be called each frame
 function updateSubmarineState(deltaTime) {
-  // console.log(deltaTime);
   // Update time
   gameState.time.deltaTime = deltaTime;
   gameState.time.elapsed += deltaTime;
@@ -81,12 +79,92 @@ function updateSubmarineState(deltaTime) {
     Math.ceil(((gameState.constants.maxOxygenTime - gameState.time.elapsed) / gameState.constants.maxOxygenTime) * 100)
   );
 
-  // Update battery based on engine usage
-  const powerDrain = (Math.abs(gameState.status.engineRPM) * deltaTime) / gameState.constants.maxBatteryTime;
-  gameState.status.batteryLevel = Math.max(0, gameState.status.batteryLevel - powerDrain);
+  // Calculate engine RPM based on thruster values
+  // Average the absolute values of both thrusters to get overall engine load
+  const avgThrottle = (Math.abs(gameState.controls.ThrottleLeft) + Math.abs(gameState.controls.ThrottleRight)) / 2;
+  gameState.status.engineRPM = avgThrottle;
 
-  // Gradually adjust actual RPM, pitch and yaw towards target values
-  // (Add smooth interpolation logic here)
+  // Update battery based on engine usage and aft thruster
+  const mainPowerDrain = (avgThrottle * deltaTime) / gameState.constants.maxBatteryTime;
+  // Aft thrusters also use some power, but less than main thrusters
+  const aftPowerDrain = (Math.abs(gameState.controls.AftThruster) * 0.3 * deltaTime) / gameState.constants.maxBatteryTime;
+  const totalPowerDrain = mainPowerDrain + aftPowerDrain;
+
+  gameState.status.batteryLevel = Math.max(0, gameState.status.batteryLevel - totalPowerDrain);
+
+  // Apply water resistance (drag) to slow down the submarine when no thrust is applied
+  const drag = gameState.constants.dragCoefficient;
+
+  // Calculate forward thrust vector based on submarine orientation
+  // Convert yaw from degrees to radians for trigonometry calculations
+  const yawRad = (gameState.rotation.yaw * Math.PI) / 180;
+  const pitchRad = (gameState.rotation.pitch * Math.PI) / 180;
+
+  // Calculate thruster impacts on velocity
+  // Only apply thrust if battery has power
+  if (gameState.status.batteryLevel > 0) {
+    // 1. Apply Left and Right Thrusters (main propulsion)
+    // Scale thruster values to appropriate acceleration
+    const thrustFactor = gameState.constants.maxSpeed / 100;
+
+    // Calculate net forward thrust from both thrusters
+    const netThrust = (gameState.controls.ThrottleLeft + gameState.controls.ThrottleRight) / 2;
+
+    // Calculate turning effect from differential thrust (like tank treads)
+    const diffThrust = (gameState.controls.ThrottleRight - gameState.controls.ThrottleLeft) / 2;
+
+    // Apply thrust vectors based on current orientation
+    // Forward/backward movement
+    const thrustAccelX = Math.cos(yawRad) * Math.cos(pitchRad) * netThrust * thrustFactor * deltaTime;
+    const thrustAccelY = Math.sin(yawRad) * Math.cos(pitchRad) * netThrust * thrustFactor * deltaTime;
+    const thrustAccelZ = Math.sin(pitchRad) * netThrust * thrustFactor * deltaTime;
+
+    gameState.velocity.x += thrustAccelX;
+    gameState.velocity.y += thrustAccelY;
+    gameState.velocity.z += thrustAccelZ;
+
+    // Apply turning effect from differential thrust
+    // This creates additional yaw rotation based on thrust difference
+    gameState.angularVelocity.yaw += diffThrust * 0.5 * deltaTime;
+
+    // 2. Apply Rudder effect (yaw control)
+    // Rudder effect is proportional to forward speed
+    const forwardSpeed = Math.sqrt(gameState.velocity.x * gameState.velocity.x + gameState.velocity.y * gameState.velocity.y);
+
+    // Rudder is more effective at higher speeds
+    const rudderEffect = (gameState.controls.YawRudderAngle / 100) * (forwardSpeed / gameState.constants.maxSpeed) * gameState.constants.maxYawRate * deltaTime;
+
+    gameState.angularVelocity.yaw += rudderEffect;
+
+    // 3. Apply Elevator effect (pitch control)
+    // Like rudder, elevator effect is proportional to forward speed
+    const elevatorEffect =
+      (gameState.controls.PitchElevatorAngle / 100) * (forwardSpeed / gameState.constants.maxSpeed) * gameState.constants.maxPitchAngle * 0.5 * deltaTime;
+
+    gameState.angularVelocity.pitch += elevatorEffect;
+
+    // 4. Apply Aft Thrusters (vertical control when stationary)
+    // These work regardless of forward speed, but are slower
+    const aftThrustFactor = 0.2; // Aft thrusters are weaker than main thrusters
+    const aftEffect = (gameState.controls.AftThruster / 100) * aftThrustFactor * deltaTime;
+
+    // Aft thrusters directly affect pitch velocity
+    gameState.angularVelocity.pitch += aftEffect;
+  }
+
+  // Apply drag/water resistance to velocities
+  gameState.velocity.x *= 1 - drag * deltaTime;
+  gameState.velocity.y *= 1 - drag * deltaTime;
+  gameState.velocity.z *= 1 - drag * deltaTime;
+
+  // Apply drag to angular velocities
+  gameState.angularVelocity.pitch *= 1 - drag * 2 * deltaTime;
+  gameState.angularVelocity.yaw *= 1 - drag * 2 * deltaTime;
+  gameState.angularVelocity.roll *= 1 - drag * 2 * deltaTime;
+
+  // Limit maximum pitch to avoid submarine flipping over
+  const maxPitch = gameState.constants.maxPitchAngle;
+  gameState.rotation.pitch = Math.max(-maxPitch, Math.min(maxPitch, gameState.rotation.pitch));
 
   // Apply physics: update position based on velocity
   gameState.position.x += gameState.velocity.x * deltaTime;
@@ -101,13 +179,11 @@ function updateSubmarineState(deltaTime) {
   // Calculate derived values
   updateDerivedValues();
 
-  // fire counters
+  // run this every so often to update instruments, etc
   if (gameState.time.logTimeCounter > gameState.time.logTimeCounterLengthMS) {
     gameState.time.logTimeCounter = 0;
 
     // console.log(gameState.status.oxygenLevel);
-    //is ded?
-
     if (gameState.status.oxygenLevel <= 0) {
       console.log("you died");
       stopGame();
@@ -203,7 +279,7 @@ function stopGame() {
 window.addEventListener(
   "load",
   function () {
-    console.log("Window loaded, starting game in 500ms");
+    // console.log("Window loaded, starting game in 500ms");
     // Start the game loop after a delay to ensure all initialization is complete
     setTimeout(startGame, 500);
   },
