@@ -188,16 +188,39 @@ function updateSubmarineState(deltaTime) {
 }
 
 function updateCounter() {
-  // console.log(gameState.status.oxygenLevel);
+  // Check oxygen level
   if (gameState.status.oxygenLevel <= 0) {
-    console.log("you died");
+    console.log("CRITICAL: Oxygen depleted! You died.");
     stopGame();
+    return;
   }
 
-  //update Instruments
-  updateInstruments();
+  // Format position values with 2 decimal places
+  const formatPos = (val) => val.toFixed(2);
 
-  //console.log( key sub state values)
+  // Log submarine state values in a single line
+  console.log(
+    `STATE: Position(${formatPos(gameState.position.x)},${formatPos(gameState.position.y)},${formatPos(gameState.position.z)}) | ` +
+      `Heading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
+      `Speed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
+      `Depth: ${formatPos(gameState.status.depth)}m | ` +
+      `Pitch: ${formatPos(gameState.rotation.pitch)}° | ` +
+      `O₂: ${gameState.status.oxygenLevel}% | ` +
+      `Batt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
+      `Target: ${gameState.navigation.distanceToTarget.toFixed(1)}m`
+  );
+
+  // Log control states in a separate line
+  console.log(
+    `CTRL: Left: ${gameState.controls.ThrottleLeft}% | ` +
+      `Right: ${gameState.controls.ThrottleRight}% | ` +
+      `Rudder: ${gameState.controls.YawRudderAngle}% | ` +
+      `Elevator: ${gameState.controls.PitchElevatorAngle}% | ` +
+      `Aft: ${gameState.controls.AftThruster}%`
+  );
+
+  // Update instruments
+  updateInstruments();
 }
 
 // Calculate values derived from core state
