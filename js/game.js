@@ -39,8 +39,8 @@ const gameState = {
   navigation: {
     targetPosition: { x: 0, y: 0, z: 0 }, // Current objective location
     distanceToTarget: 0, // 0-100% (scaled)
-    compassHeading: 0, // 0-359 degrees
-    proximityWarning: 0, // 0-100% (distance to nearest obstacle)
+    headingToTarget: 0, // 0-359 degrees
+    // proximityWarning: 0, // 0-100% (distance to nearest obstacle)
     currentSpeed: 0, // 0-100% (scalar speed value)
   },
 
@@ -190,7 +190,7 @@ function updateSubmarineState(deltaTime) {
 function updateCounter() {
   // Check oxygen level
   if (gameState.status.oxygenLevel <= 0) {
-    console.log("CRITICAL: Oxygen depleted! You died.");
+    console.log("CRITICAL: Oxygen depleted! You ded.");
     stopGame();
     return;
   }
@@ -201,18 +201,19 @@ function updateCounter() {
   // Log submarine state values in a single line
   console.log(
     `Position(${formatPos(gameState.position.x)},${formatPos(gameState.position.y)},${formatPos(gameState.position.z)}) | ` +
-      `Heading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
+      `headingToTarget: ${Math.round(gameState.navigation.headingToTarget)}° | ` +
       `Speed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
       `Depth: ${formatPos(gameState.status.depth)}m | ` +
       `Pitch: ${formatPos(gameState.rotation.pitch)}° | ` +
       `O₂: ${gameState.status.oxygenLevel}% | ` +
       `Batt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
       `Target: ${gameState.navigation.distanceToTarget.toFixed(1)}m` +
+      ` |||| ` +
       `LeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
       `RightThrust: ${gameState.controls.ThrottleRight}% | ` +
       `Rudder: ${gameState.controls.YawRudderAngle}% | ` +
       `Elevator: ${gameState.controls.PitchElevatorAngle}% | ` +
-      `Aft: ${gameState.controls.AftThruster}%`
+      `AftThruster: ${gameState.controls.AftThruster}%`
   );
 
   // Update instruments
@@ -231,7 +232,7 @@ function updateDerivedValues() {
   gameState.navigation.distanceToTarget = Math.min(100, (distance / gameState.constants.maxDistance) * 100);
 
   // Calculate compass heading (simplified - assumes y is up)
-  gameState.navigation.compassHeading = ((Math.atan2(dy, dx) * 180) / Math.PI + 360) % 360;
+  gameState.navigation.headingToTarget = ((Math.atan2(dy, dx) * 180) / Math.PI + 360) % 360;
 
   // Calculate current speed as percentage of max
   const speed = Math.sqrt(
@@ -243,7 +244,7 @@ function updateDerivedValues() {
   gameState.status.depth = Math.min(gameState.constants.maxDepth, -gameState.position.z);
 }
 
-// Game loop implementation to add to the end of game.js
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Game loop variables
 let lastFrameTime = 0;
