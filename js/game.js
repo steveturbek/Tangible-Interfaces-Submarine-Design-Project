@@ -42,6 +42,7 @@ const gameState = {
     headingToTarget: 0, // 0-359 degrees
     // proximityWarning: 0, // 0-100% (distance to nearest obstacle)
     currentSpeed: 0, // 0-100% (scalar speed value)
+    compassHeading: 0, // 0-359 degrees
   },
 
   // Game Constants (configure as needed)
@@ -201,13 +202,14 @@ function updateCounter() {
   // Log submarine state values in a single line
   console.log(
     `Position(${formatPos(gameState.position.x)},${formatPos(gameState.position.y)},${formatPos(gameState.position.z)}) | ` +
-      `headingToTarget: ${Math.round(gameState.navigation.headingToTarget)}° | ` +
+      `compassHeading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
       `Speed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
       `Depth: ${formatPos(gameState.status.depth)}m | ` +
       `Pitch: ${formatPos(gameState.rotation.pitch)}° | ` +
       `O₂: ${gameState.status.oxygenLevel}% | ` +
       `Batt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
       `Target: ${gameState.navigation.distanceToTarget.toFixed(1)}m` +
+      // `headingToTarget: ${Math.round(gameState.navigation.headingToTarget)}° | ` +
       ` |||| ` +
       `LeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
       `RightThrust: ${gameState.controls.ThrottleRight}% | ` +
@@ -233,6 +235,8 @@ function updateDerivedValues() {
 
   // Calculate compass heading (simplified - assumes y is up)
   gameState.navigation.headingToTarget = ((Math.atan2(dy, dx) * 180) / Math.PI + 360) % 360;
+
+  gameState.navigation.compassHeading = ((gameState.rotation.yaw % 360) + 360) % 360;
 
   // Calculate current speed as percentage of max
   const speed = Math.sqrt(
