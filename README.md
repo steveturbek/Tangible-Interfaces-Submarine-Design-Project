@@ -58,6 +58,16 @@ The student will design and fabricate th items in diagram below
 
 ![Goofy Hand drawn diagram of conceptual Technical Setup](assets/conceptual-diagram-of-tech.png "Diagram of conceptual Technical Setup")
 
+## Submarine Description
+
+The student will have the ability to design the submarine. Here are the technical design constraints. A clever team can write code to change these, but they are responsible for these customizations.
+
+- Left and Right (Port and Starboard) [Underwater thrusters](https://en.wikipedia.org/wiki/Underwater_thruster)
+
+## Submarine Inspiration
+
+- https://robbreport.com/motors/marine/gallery/personal-submersibles-exploration-1234848269/unknown-32/
+
 ## GitHub Project Structure
 
 The repository is organized as follows:
@@ -134,7 +144,7 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 - Chrome browser
 - Micro:bit v2 with USB cable
 - Basic text editor or IDE
-- various electonics parts
+- various electronics parts
 
 ### Installation
 
@@ -164,3 +174,10 @@ The final class session will involve user testing with visiting guests. They wil
 - Supplies (oxygen)
 - Supply grabber arm
 - Beacon placement system
+
+## References
+
+- https://edges.ideo.com/posts/figproxy
+- https://microflow.vercel.app/
+- https://support.microbit.org/support/solutions/articles/19000071689-can-i-control-my-pc-or-simulate-a-keyboard-and-mouse-
+-

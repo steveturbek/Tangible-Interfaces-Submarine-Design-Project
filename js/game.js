@@ -8,10 +8,19 @@ const gameState = {
 
   // Controls & Input (player inputs or AI controls)
   controls: {
-    targetThrottle: 0, // -100 to +100 (reverse to forward)
-    targetPitch: 0, // -100 to +100 (down to up)
-    targetYaw: 0, // -100 to +100 (left to right)
-    targetRoll: 0, // -100 to +100 (optional: left bank to right bank)
+    ThrottleLeft: 0, // -100 to +100 (reverse to forward)
+    ThrottleRight: 0, // -100 to +100 (reverse to forward)
+    MaxThrottle: 100, // absolute number
+
+    //Elevator flaps on the horizontal tail produce pitch
+    PitchElevatorAngle: 0, // -100 to +100 (down to up)
+    maxPitchElevatorAngle: 100, // absolute number
+
+    //rudder on the vertical tail produces yaw
+    YawRudderAngle: 0, // -100 to +100 (left to right)
+    maxRudderAngle: 100, // absolute number
+
+    // Not using roll  targetRoll: 0, // -100 to +100 (optional: left bank to right bank)
   },
 
   // Resources & Status
@@ -50,7 +59,7 @@ const gameState = {
     elapsed: 0, // Total game time in seconds
     deltaTime: 0, // Time since last update (for physics)
     logTimeCounter: 0, // Temporary count of time to count up to logTimeLengthMS
-    logTimeCounterLengthMS: 0.5, //500 miliseconds
+    logTimeCounterLengthMS: 0.5, //500 milliseconds
   },
 };
 
