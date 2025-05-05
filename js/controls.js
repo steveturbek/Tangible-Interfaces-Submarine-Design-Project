@@ -3,6 +3,7 @@
 // Control configurations
 const controlConfig = {
   thrusterIncrement: 10, // 10% per keypress
+  flapIncrement: 1, // 10% per keypress
 };
 
 // Define our debug toggle key (backtick key)

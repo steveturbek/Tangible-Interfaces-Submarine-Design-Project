@@ -190,7 +190,7 @@ function updateSubmarineState(deltaTime) {
 function updateCounter() {
   // console.log(gameState.navigation.distanceToTarget);
   //are you at target?
-  if (gameState.navigation.distanceToTarget < 1) {
+  if (gameState.navigation.distanceToTarget < 0.1) {
     console.log("Won!");
     stopGame();
   }
@@ -215,7 +215,7 @@ function updateCounter() {
     `\n` +
     `O₂: ${gameState.status.oxygenLevel}% | ` +
     `Batt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
-    `Target: ${gameState.navigation.distanceToTarget.toFixed(1)}m` +
+    `Target: ${gameState.navigation.distanceToTarget.toFixed(2)}m` +
     `\n` +
     `LeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
     `RightThrust: ${gameState.controls.ThrottleRight}% | ` +
