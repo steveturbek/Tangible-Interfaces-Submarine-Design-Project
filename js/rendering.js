@@ -1,4 +1,4 @@
-// 3D Underwater Scene Rendering using Three.js
+// 3D Underwater Scene Rendering using Three.js - Caribbean Edition
 
 // Scene variables
 let scene, camera, renderer;
@@ -7,13 +7,18 @@ let seabed;
 let water;
 let directionalLight, ambientLight;
 let clock;
+let underwaterFog;
 
 // Environment settings
 const WORLD_SIZE = 2000; // World dimensions
 const SEABED_DEPTH = -100; // Depth of the seabed
-const WATER_COLOR = 0x001e0f; // Deep blue-green color
-const TARGET_COLOR = 0xff0000; // Red target
+const WATER_COLOR = 0x0096ff; // Bright Caribbean blue
+const DEEP_WATER_COLOR = 0x0073cf; // Deeper Caribbean blue for gradient
+const TARGET_COLOR = 0xff5500; // Bright orange target (more visible in blue water)
 const TARGET_SIZE = 5; // Target sphere size
+const FOG_COLOR = 0x0096ff; // Match water color
+const FOG_NEAR = 10; // Start fog effect at 10 units
+const FOG_FAR = 100; // Max visibility distance
 
 // Check Three.js version and provide compatibility
 const isNewThreeVersion = THREE.REVISION >= 125; // r125+ uses only BufferGeometry
@@ -23,10 +28,13 @@ function initScene() {
   // Create clock for animations
   clock = new THREE.Clock();
 
-  // Create scene with underwater color
+  // Create scene with Caribbean blue color
   scene = new THREE.Scene();
   scene.background = new THREE.Color(WATER_COLOR);
-  // No fog as requested
+
+  // Add underwater fog effect for light scattering/distance obscuring
+  underwaterFog = new THREE.Fog(FOG_COLOR, FOG_NEAR, FOG_FAR);
+  scene.fog = underwaterFog;
 
   // Create camera - first person view
   const aspectRatio = window.innerWidth / window.innerHeight;
@@ -47,17 +55,26 @@ function initScene() {
   renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
 
-  // Add lighting
+  // Enable physically correct lighting
+  renderer.physicallyCorrectLights = true;
+
+  // Add post-processing for water caustics
+  setupPostProcessing();
+
+  // Add lighting for bright Caribbean day
   setupLighting();
 
-  // Create seabed
+  // Create seabed with coral formations
   createSeabed();
 
   // Create target sphere
   createTarget();
 
-  // Add water effects
+  // Add water effects - caustics, particles, etc.
   createWaterEffects();
+
+  // Add coral reef elements
+  createCoralReef();
 
   // Handle window resize
   window.addEventListener("resize", onWindowResize);
@@ -66,36 +83,61 @@ function initScene() {
   updateCameraPosition();
 }
 
-// Set up scene lighting
-function setupLighting() {
-  // Main directional light (sun)
-  directionalLight = new THREE.DirectionalLight(0x88ccff, 0.5);
-  directionalLight.position.set(100, 100, 100);
-  scene.add(directionalLight);
-
-  // Ambient light for overall scene illumination
-  ambientLight = new THREE.AmbientLight(0x003366, 0.7);
-  scene.add(ambientLight);
-
-  // Add a slight blue point light to simulate water scattering
-  const waterLight = new THREE.PointLight(0x0077ff, 0.5, 100);
-  waterLight.position.set(0, 20, 0);
-  scene.add(waterLight);
+// Setup post-processing effects
+function setupPostProcessing() {
+  // This is a simplified placeholder - implement if Three.js version supports it
+  if (THREE.EffectComposer) {
+    // Setup would go here if using post-processing libraries
+    console.log("Post-processing available");
+  }
 }
 
-// Create a flat sandy seabed
+// Set up scene lighting for a bright Caribbean day
+function setupLighting() {
+  // Bright sunlight (directional light)
+  directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  directionalLight.position.set(100, 100, 100);
+  directionalLight.castShadow = true;
+  scene.add(directionalLight);
+
+  // Add sunrays with light shafts (volumetric lighting effect)
+  const sunRayLight = new THREE.SpotLight(0xffffbb, 2, 100, Math.PI / 6, 0.5);
+  sunRayLight.position.set(50, 80, 50);
+  scene.add(sunRayLight);
+
+  // Warm ambient light for overall scene illumination
+  ambientLight = new THREE.AmbientLight(0x6699cc, 0.8);
+  scene.add(ambientLight);
+
+  // Add a bright blue point light to simulate water scattering
+  const waterLight = new THREE.PointLight(0x00ffff, 0.6, 150);
+  waterLight.position.set(0, 20, 0);
+  scene.add(waterLight);
+
+  // Add secondary light sources to simulate light refraction in water
+  const refractedLight1 = new THREE.PointLight(0x00ccff, 0.4, 80);
+  refractedLight1.position.set(30, 10, -20);
+  scene.add(refractedLight1);
+
+  const refractedLight2 = new THREE.PointLight(0x88ccff, 0.3, 60);
+  refractedLight2.position.set(-40, 5, 15);
+  scene.add(refractedLight2);
+}
+
+// Create a tropical sandy seabed with coral elements
 function createSeabed() {
   // Create a large plane for the seabed
-  const seabedGeometry = new THREE.PlaneBufferGeometry(WORLD_SIZE, WORLD_SIZE, 50, 50);
+  const seabedGeometry = new THREE.PlaneBufferGeometry(WORLD_SIZE, WORLD_SIZE, 80, 80);
 
   // Load sand texture
   const textureLoader = new THREE.TextureLoader();
 
-  // Create material with sandy appearance (set texture later if loaded)
+  // Create material with tropical white sand appearance
   const seabedMaterial = new THREE.MeshStandardMaterial({
-    color: 0xd2b48c, // Sandy color
+    color: 0xf2e8c9, // Light beige/white sand color
     roughness: 0.8,
     metalness: 0.1,
+    flatShading: false,
   });
 
   // Try to load texture, but have fallback
@@ -121,54 +163,120 @@ function createSeabed() {
   seabed.position.y = SEABED_DEPTH;
   scene.add(seabed);
 
-  // Add subtle displacement to seabed for realism
+  // Add wave patterns to seabed for realism
   if (seabedGeometry.attributes.position) {
     const positions = seabedGeometry.attributes.position.array;
+    const simplex = new SimplexNoise(); // Require simplex-noise library
+
     for (let i = 0; i < positions.length; i += 3) {
-      positions[i + 1] += Math.random() * 2 - 1; // Subtle height variation
+      const x = positions[i];
+      const z = positions[i + 2];
+
+      // Create natural sand ripples and dunes
+      const noise = simplex.noise2D(x * 0.01, z * 0.01) * 2;
+      const smallerNoise = simplex.noise2D(x * 0.05, z * 0.05) * 0.5;
+
+      positions[i + 1] += noise + smallerNoise; // Combine different noise scales
     }
+
     seabedGeometry.attributes.position.needsUpdate = true;
     seabedGeometry.computeVertexNormals();
   }
 }
 
-// Create a simple submarine representation
-function createSubmarine() {
-  // Create submarine body - CapsuleGeometry was added in r125+
-  // If using older versions, create with cylinders and spheres
-  let subGeometry;
+// Create tropical coral reef elements
+function createCoralReef() {
+  // Create a coral reef group
+  const reefGroup = new THREE.Group();
+  scene.add(reefGroup);
 
-  if (THREE.CapsuleGeometry) {
-    // Use CapsuleGeometry if available (newer versions)
-    subGeometry = new THREE.CapsuleGeometry(2, 6, 8, 16);
-  } else {
-    // Fallback for older Three.js versions - create from cylinder and spheres
-    const cylinderGeo = new THREE.CylinderBufferGeometry(2, 2, 6, 16);
+  // Define colors for Caribbean coral reef
+  const coralColors = [
+    0xff7f50, // Coral
+    0xffd700, // Gold
+    0x9370db, // Medium Purple
+    0x20b2aa, // Light Sea Green
+    0x00ffff, // Cyan
+    0xff69b4, // Hot Pink
+    0xffb6c1, // Light Pink
+    0x7fffd4, // Aquamarine
+  ];
 
-    // Reposition to match capsule positioning (centered)
-    cylinderGeo.translate(0, 0, 0);
+  // Create 50-80 coral formations
+  const coralCount = 70;
 
-    subGeometry = cylinderGeo;
+  for (let i = 0; i < coralCount; i++) {
+    // Random position within world bounds
+    const x = (Math.random() - 0.5) * WORLD_SIZE * 0.8;
+    const z = (Math.random() - 0.5) * WORLD_SIZE * 0.8;
+
+    // Create a coral formation (group of shapes)
+    const coralFormation = createCoralFormation(coralColors);
+
+    // Position the coral
+    coralFormation.position.set(x, SEABED_DEPTH, z);
+    reefGroup.add(coralFormation);
+  }
+}
+
+// Helper to create a single coral formation
+function createCoralFormation(coralColors) {
+  const coralGroup = new THREE.Group();
+
+  // Number of coral elements in this formation
+  const elementCount = Math.floor(Math.random() * 5) + 2;
+
+  for (let i = 0; i < elementCount; i++) {
+    // Choose a random coral type and color
+    const coralType = Math.floor(Math.random() * 3);
+    const coralColor = coralColors[Math.floor(Math.random() * coralColors.length)];
+
+    let coralGeometry;
+
+    // Create different coral shapes
+    switch (coralType) {
+      case 0: // Branching coral
+        coralGeometry = new THREE.CylinderBufferGeometry(0.2, 0.6, Math.random() * 5 + 2, 5, 3, true);
+        break;
+      case 1: // Brain coral
+        coralGeometry = new THREE.SphereBufferGeometry(Math.random() * 2 + 1, 8, 8);
+        break;
+      case 2: // Fan coral
+        coralGeometry = new THREE.PlaneBufferGeometry(Math.random() * 3 + 1, Math.random() * 4 + 2, 4, 4);
+        // Deform to create a wavy effect
+        if (coralGeometry.attributes.position) {
+          const positions = coralGeometry.attributes.position.array;
+          for (let j = 0; j < positions.length; j += 3) {
+            positions[j + 2] = Math.sin(positions[j] * 2) * 0.3;
+          }
+          coralGeometry.attributes.position.needsUpdate = true;
+        }
+        break;
+    }
+
+    // Create material with glow and shimmer
+    const coralMaterial = new THREE.MeshStandardMaterial({
+      color: coralColor,
+      roughness: 0.3,
+      metalness: 0.2,
+      emissive: coralColor,
+      emissiveIntensity: 0.1, // Subtle glow
+      flatShading: true,
+    });
+
+    // Create the coral mesh
+    const coral = new THREE.Mesh(coralGeometry, coralMaterial);
+
+    // Position within the formation
+    coral.position.set(Math.random() * 2 - 1, Math.random() * 3, Math.random() * 2 - 1);
+
+    // Random rotation
+    coral.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI * 2, Math.random() * Math.PI);
+
+    coralGroup.add(coral);
   }
 
-  const subMaterial = new THREE.MeshStandardMaterial({ color: SUBMARINE_COLOR });
-  submarine = new THREE.Mesh(subGeometry, subMaterial);
-
-  // Add a conning tower
-  const towerGeometry = new THREE.CylinderBufferGeometry(1, 1, 2, 8);
-  const tower = new THREE.Mesh(towerGeometry, subMaterial);
-  tower.position.y = 2;
-  submarine.add(tower);
-
-  // Add simple propellers
-  const propGeometry = new THREE.BoxBufferGeometry(0.5, 2, 0.2);
-  const propMaterial = new THREE.MeshStandardMaterial({ color: 0x666666 });
-
-  const propeller = new THREE.Mesh(propGeometry, propMaterial);
-  propeller.position.set(0, 0, -4);
-  submarine.add(propeller);
-
-  scene.add(submarine);
+  return coralGroup;
 }
 
 // Create target destination marker
@@ -177,7 +285,7 @@ function createTarget() {
   const targetMaterial = new THREE.MeshStandardMaterial({
     color: TARGET_COLOR,
     emissive: TARGET_COLOR,
-    emissiveIntensity: 0.5,
+    emissiveIntensity: 0.7,
     transparent: true,
     opacity: 0.8,
   });
@@ -186,18 +294,33 @@ function createTarget() {
   scene.add(targetSphere);
 
   // Add a pulsing effect to make it more visible
-  const pulseLight = new THREE.PointLight(TARGET_COLOR, 2, 20);
+  const pulseLight = new THREE.PointLight(TARGET_COLOR, 2, 30);
   targetSphere.add(pulseLight);
+
+  // Add indicator beam from surface
+  const beamGeometry = new THREE.CylinderBufferGeometry(0.5, 0.5, 200, 8, 1, true);
+  const beamMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffffaa,
+    transparent: true,
+    opacity: 0.2,
+    side: THREE.DoubleSide,
+  });
+
+  const beam = new THREE.Mesh(beamGeometry, beamMaterial);
+  beam.position.y = 100; // Position above target
+  targetSphere.add(beam);
 }
 
-// Create underwater effects (caustics, particles)
+// Create underwater effects (caustics, particles, water surface)
 function createWaterEffects() {
-  // Add subtle water movement effect
-  const waterGeometry = new THREE.PlaneBufferGeometry(WORLD_SIZE, WORLD_SIZE, 1, 1);
-  const waterMaterial = new THREE.MeshBasicMaterial({
+  // Create water surface with ripple effect
+  const waterGeometry = new THREE.PlaneBufferGeometry(WORLD_SIZE, WORLD_SIZE, 10, 10);
+  const waterMaterial = new THREE.MeshPhongMaterial({
     color: WATER_COLOR,
     transparent: true,
-    opacity: 0.1,
+    opacity: 0.6,
+    specular: 0xffffff,
+    shininess: 90,
     side: THREE.DoubleSide,
   });
 
@@ -208,6 +331,33 @@ function createWaterEffects() {
 
   // Add underwater particles for better depth perception
   addUnderwaterParticles();
+
+  // Add caustic light effect
+  // addCausticEffect();
+}
+
+// Add caustic light effect (simulated light patterns through water)
+function addCausticEffect() {
+  const causticLight = new THREE.DirectionalLight(0xffffff, 0.5);
+  causticLight.position.set(0, 50, 0);
+  scene.add(causticLight);
+
+  // Create animated caustic texture if available
+  const textureLoader = new THREE.TextureLoader();
+  textureLoader.load(
+    "artwork/caustics.jpg",
+    function (texture) {
+      // If texture loads, create a projector
+      const causticProjector = new THREE.SpotLight(0xffffff, 1, 100, Math.PI / 4, 0.5);
+      causticProjector.position.set(0, 20, 0);
+      causticProjector.map = texture;
+      scene.add(causticProjector);
+    },
+    undefined,
+    function (err) {
+      console.log("Caustic texture not available, using simplified lighting");
+    }
+  );
 }
 
 // Add floating particles to enhance underwater effect
@@ -216,16 +366,19 @@ function addUnderwaterParticles() {
   const particlesGroup = new THREE.Group();
   scene.add(particlesGroup);
 
-  // Particle count
-  const particleCount = 200;
+  // Particle count - more for more dense water effect
+  const particleCount = 500;
 
   // Create particles with simple points
   const particleGeometry = new THREE.BufferGeometry();
   const particlePositions = new Float32Array(particleCount * 3);
 
+  // Different particle sizes
+  const particleSizes = new Float32Array(particleCount);
+
   // Distribute particles randomly in a cylinder around the viewer
-  const radius = 100;
-  const height = 100;
+  const radius = 120;
+  const height = 120;
 
   for (let i = 0; i < particleCount; i++) {
     const i3 = i * 3;
@@ -237,22 +390,60 @@ function addUnderwaterParticles() {
     particlePositions[i3] = Math.cos(angle) * r; // x
     particlePositions[i3 + 1] = Math.sin(angle) * r; // y
     particlePositions[i3 + 2] = Math.random() * height - height / 2; // z
+
+    // Variable particle sizes
+    particleSizes[i] = Math.random() * 0.5 + 0.1;
   }
 
   particleGeometry.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
+  particleGeometry.setAttribute("size", new THREE.BufferAttribute(particleSizes, 1));
 
-  // Simple material for particles
+  // Improved material for particles - simulate suspended matter in water
   const particleMaterial = new THREE.PointsMaterial({
-    color: 0xaaaaff,
+    color: 0xccffff, // Bright cyan particles
     size: 0.3,
     transparent: true,
-    opacity: 0.5,
+    opacity: 0.6,
     sizeAttenuation: true,
+    blending: THREE.AdditiveBlending, // Additive blending for light scatter effect
   });
 
   // Create points mesh
   const particles = new THREE.Points(particleGeometry, particleMaterial);
   particlesGroup.add(particles);
+
+  // Create a second particle system for larger "dust" particles
+  const dustParticleCount = 100;
+  const dustGeometry = new THREE.BufferGeometry();
+  const dustPositions = new Float32Array(dustParticleCount * 3);
+  const dustSizes = new Float32Array(dustParticleCount);
+
+  for (let i = 0; i < dustParticleCount; i++) {
+    const i3 = i * 3;
+
+    const angle = Math.random() * Math.PI * 2;
+    const r = Math.random() * radius;
+
+    dustPositions[i3] = Math.cos(angle) * r;
+    dustPositions[i3 + 1] = Math.sin(angle) * r;
+    dustPositions[i3 + 2] = Math.random() * height - height / 2;
+
+    dustSizes[i] = Math.random() * 1.5 + 0.5;
+  }
+
+  dustGeometry.setAttribute("position", new THREE.BufferAttribute(dustPositions, 3));
+  dustGeometry.setAttribute("size", new THREE.BufferAttribute(dustSizes, 1));
+
+  const dustMaterial = new THREE.PointsMaterial({
+    color: 0xffffaa,
+    size: 0.8,
+    transparent: true,
+    opacity: 0.3,
+    sizeAttenuation: true,
+  });
+
+  const dustParticles = new THREE.Points(dustGeometry, dustMaterial);
+  particlesGroup.add(dustParticles);
 
   // Animate particles in render loop
   function animateParticles() {
@@ -262,6 +453,7 @@ function addUnderwaterParticles() {
     particlesGroup.position.z = gameState.position.z;
 
     const positions = particleGeometry.attributes.position.array;
+    const dustPos = dustGeometry.attributes.position.array;
     const time = clock.getElapsedTime() * 0.1;
 
     for (let i = 0; i < particleCount; i++) {
@@ -288,7 +480,31 @@ function addUnderwaterParticles() {
       }
     }
 
+    // Animate dust particles (slower movement)
+    for (let i = 0; i < dustParticleCount; i++) {
+      const i3 = i * 3;
+
+      dustPos[i3] += Math.sin(time * 0.5 + i * 0.05) * 0.005;
+      dustPos[i3 + 1] += Math.cos(time * 0.5 + i * 0.05) * 0.005;
+      dustPos[i3 + 2] += Math.sin(time * 0.3 + i * 0.05) * 0.005;
+
+      // Wrap dust particles
+      const distX = dustPos[i3];
+      const distY = dustPos[i3 + 1];
+      const distZ = dustPos[i3 + 2];
+
+      if (Math.sqrt(distX * distX + distY * distY + distZ * distZ) > radius) {
+        const angle = Math.random() * Math.PI * 2;
+        const r = Math.random() * radius * 0.8;
+
+        dustPos[i3] = Math.cos(angle) * r;
+        dustPos[i3 + 1] = Math.sin(angle) * r;
+        dustPos[i3 + 2] = Math.random() * height - height / 2;
+      }
+    }
+
     particleGeometry.attributes.position.needsUpdate = true;
+    dustGeometry.attributes.position.needsUpdate = true;
 
     // Continue animation in next frame
     requestAnimationFrame(animateParticles);
@@ -331,6 +547,41 @@ function updateCameraPosition() {
   } else {
     camera.up.set(0, 1, 0); // Default up direction in Three.js
   }
+
+  // Update fog density and color based on depth
+  updateFogWithDepth();
+}
+
+// Adjust fog based on water depth
+function updateFogWithDepth() {
+  // Get current depth
+  const depth = gameState.status.depth;
+
+  // Make water get darker and visibility decrease with depth
+  const depthFactor = Math.min(1, depth / gameState.constants.maxDepth);
+
+  // Blend from surface color to deep color
+  const r1 = (WATER_COLOR >> 16) & 255;
+  const g1 = (WATER_COLOR >> 8) & 255;
+  const b1 = WATER_COLOR & 255;
+
+  const r2 = (DEEP_WATER_COLOR >> 16) & 255;
+  const g2 = (DEEP_WATER_COLOR >> 8) & 255;
+  const b2 = DEEP_WATER_COLOR & 255;
+
+  const r = Math.floor(r1 * (1 - depthFactor) + r2 * depthFactor);
+  const g = Math.floor(g1 * (1 - depthFactor) + g2 * depthFactor);
+  const b = Math.floor(b1 * (1 - depthFactor) + b2 * depthFactor);
+
+  const blendedColor = (r << 16) | (g << 8) | b;
+
+  // Update fog and scene color
+  underwaterFog.color.setHex(blendedColor);
+  scene.background.setHex(blendedColor);
+
+  // Reduce visibility with depth
+  underwaterFog.near = FOG_NEAR + depthFactor * 5;
+  underwaterFog.far = FOG_FAR - depthFactor * 50; // Maximum visibility decreases with depth
 }
 
 // Handle window resize
@@ -355,6 +606,18 @@ function updateScene() {
   const time = clock.getElapsedTime();
   const pulseFactor = Math.sin(time * 2) * 0.1 + 0.9;
   targetSphere.scale.set(pulseFactor, pulseFactor, pulseFactor);
+
+  // Create light shaft effect from surface
+  if (targetSphere.children.length > 1) {
+    const beam = targetSphere.children[1];
+    beam.rotation.y = time * 0.1;
+    beam.material.opacity = 0.1 + Math.sin(time) * 0.05;
+  }
+
+  // Create gentle water surface movement
+  if (water) {
+    water.position.y = 50 + Math.sin(time * 0.2) * 0.5;
+  }
 
   // Update camera position for first person view
   updateCameraPosition();
