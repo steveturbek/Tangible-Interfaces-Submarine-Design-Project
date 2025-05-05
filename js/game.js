@@ -281,7 +281,7 @@ function gameLoop(currentTime) {
   if (isGameRunning) {
     // We're calling renderUnderwaterScene directly from rendering.js
     // This is defined there and should not recreate the coral reef
-    // renderUnderwaterScene();
+    renderUnderwaterScene();
     animationFrameId = requestAnimationFrame(gameLoop);
   }
 }

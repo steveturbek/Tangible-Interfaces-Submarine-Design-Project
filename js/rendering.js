@@ -193,33 +193,28 @@ img.onload = function () {
 // }
 
 // // Main function to render the underwater scene
-// function renderUnderwaterScene() {
-//   // Clear the canvas
-//   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-//   // Draw the background
-//   drawUnderwaterBackground();
-
-//   // If the scene isn't initialized yet, initialize it
-//   if (!sceneInitialized) {
-//     coralWalls = generateCoralReef();
-//     sceneInitialized = true;
-//   }
-
-//   // Draw coral walls (using the stored data)
-//   drawCoralReef(coralWalls);
-// }
-
-// // Initialize canvas and start rendering
-// function initRenderer() {
-//   initCanvas();
-
-//   // Generate the scene once
-//   if (!sceneInitialized) {
-//     // Generate coral walls and store them
-//     coralWalls = generateCoralReef();
-//     sceneInitialized = true;
-//   }
+function renderUnderwaterScene() {
+  //   // Clear the canvas
+  //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //   // Draw the background
+  //   drawUnderwaterBackground();
+  //   // If the scene isn't initialized yet, initialize it
+  //   if (!sceneInitialized) {
+  //     coralWalls = generateCoralReef();
+  //     sceneInitialized = true;
+  //   }
+  //   // Draw coral walls (using the stored data)
+  //   drawCoralReef(coralWalls);
+  // }
+  // // Initialize canvas and start rendering
+  // function initRenderer() {
+  //   initCanvas();
+  //   // Generate the scene once
+  //   if (!sceneInitialized) {
+  //     // Generate coral walls and store them
+  //     coralWalls = generateCoralReef();
+  //     sceneInitialized = true;
+}
 
 //   // Initial render
 //   renderUnderwaterScene();
