@@ -55,11 +55,11 @@ function handleKeyPress(event) {
     // Elevator (pitch) controls
     case "w":
     case "i":
-      adjustElevator(controlConfig.flapIncrement);
+      adjustElevator(-controlConfig.flapIncrement);
       break;
     case "s":
     case "k":
-      adjustElevator(-controlConfig.flapIncrement);
+      adjustElevator(controlConfig.flapIncrement);
       break;
 
     // Rudder (yaw) controls
