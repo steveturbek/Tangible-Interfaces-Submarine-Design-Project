@@ -53,7 +53,7 @@
       }
 
       /* Debug overlay styles */
-      #debug-overlay {
+      #sub-data-overlay {
         position: absolute;
         top: 10px;
         left: 0;
@@ -64,7 +64,7 @@
         pointer-events: none; /* Allow clicks to pass through */
       }
 
-      #debug-text {
+      #sub-data-text {
         display: inline-block;
         margin: 0 auto;
         padding: 5px 10px;
@@ -86,9 +86,23 @@
 
       <object class="instruments" id="oxygenGauge" type="image/svg+xml" data="artwork/oxygen.svg"></object>
 
-      <!-- Debug overlay div -->
-      <div id="debug-overlay">
-        <pre id="debug-text"></pre>
+      <!-- sub-data overlay div -->
+      <div id="sub-data-overlay" style="position: absolute; top: 10px; left: 0; width: 100%; zindex: 30; display: none; textalign: center; pointerevents: none">
+        <pre
+          id="sub-data-text"
+          style="
+            display: inline-block;
+            margin: 0 auto;
+            padding: 5px 10px;
+            backgroundcolor: rgba(0, 0, 0, 0.7);
+            color: #00ff00;
+            fontfamily: monospace;
+            fontsize: 12px;
+            borderradius: 5px;
+            textalign: left;
+            maxwidth: 80%;
+          "
+        ></pre>
       </div>
 
       <!--      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>

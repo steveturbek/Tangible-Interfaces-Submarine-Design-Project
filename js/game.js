@@ -205,13 +205,13 @@ function updateCounter() {
   // Format position values with 2 decimal places
   const formatPos = (val) => val.toFixed(2);
 
-  // Create the debug text
-  const debugText =
+  // Update sub-data overlay text
+  document.getElementById("sub-data-text").textContent =
     `Position(${formatPos(gameState.position.x)},${formatPos(gameState.position.y)},${formatPos(gameState.position.z)}) | ` +
     `compassHeading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
     `Speed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
     `Depth: ${formatPos(gameState.status.depth)}m | ` +
-    `Pitch: ${formatPos(gameState.rotation.pitch)}° | ` +
+    `Pitch: ${formatPos(gameState.rotation.pitch)}°` +
     `\n` +
     `O₂: ${gameState.status.oxygenLevel}% | ` +
     `Batt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
@@ -222,15 +222,6 @@ function updateCounter() {
     `Rudder: ${gameState.controls.YawRudderAngle}% | ` +
     `Elevator: ${gameState.controls.PitchElevatorAngle}% | ` +
     `AftThruster: ${gameState.controls.AftThruster}%`;
-
-  // Update debug overlay text
-  const debugTextElement = document.getElementById("debug-text");
-  if (debugTextElement) {
-    debugTextElement.textContent = debugText;
-  }
-
-  // Still log to console for development
-  // console.log(debugText);
 
   // Update instruments
   updateInstruments();
