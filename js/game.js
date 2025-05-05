@@ -37,7 +37,7 @@ const gameState = {
 
   // Navigation & Environment
   navigation: {
-    targetPosition: { x: 0, y: 0, z: 0 }, // Current objective location
+    targetPosition: { x: 1000, y: 0, z: 0 }, // target location
     distanceToTarget: 0, // 0-100% (scaled)
     headingToTarget: 0, // 0-359 degrees
     // proximityWarning: 0, // 0-100% (distance to nearest obstacle)
@@ -188,7 +188,14 @@ function updateSubmarineState(deltaTime) {
   }
 }
 function updateCounter() {
-  // Check oxygen level
+  console.log(gameState.navigation.distanceToTarget);
+  //are you at target?
+  if (gameState.navigation.distanceToTarget < 1) {
+    console.log("Won!");
+    stopGame();
+  }
+
+  // oxygen level
   if (gameState.status.oxygenLevel <= 0) {
     console.log("CRITICAL: Oxygen depleted! You ded.");
     stopGame();
