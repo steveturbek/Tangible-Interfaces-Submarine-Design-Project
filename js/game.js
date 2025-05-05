@@ -188,7 +188,7 @@ function updateSubmarineState(deltaTime) {
   }
 }
 function updateCounter() {
-  console.log(gameState.navigation.distanceToTarget);
+  // console.log(gameState.navigation.distanceToTarget);
   //are you at target?
   if (gameState.navigation.distanceToTarget < 1) {
     console.log("Won!");
