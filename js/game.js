@@ -187,7 +187,6 @@ function updateSubmarineState(deltaTime) {
     updateCounter();
   }
 }
-
 function updateCounter() {
   // Check oxygen level
   if (gameState.status.oxygenLevel <= 0) {
@@ -199,29 +198,36 @@ function updateCounter() {
   // Format position values with 2 decimal places
   const formatPos = (val) => val.toFixed(2);
 
-  // Log submarine state values in a single line
-  console.log(
+  // Create the debug text
+  const debugText =
     `Position(${formatPos(gameState.position.x)},${formatPos(gameState.position.y)},${formatPos(gameState.position.z)}) | ` +
-      `compassHeading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
-      `Speed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
-      `Depth: ${formatPos(gameState.status.depth)}m | ` +
-      `Pitch: ${formatPos(gameState.rotation.pitch)}° | ` +
-      `O₂: ${gameState.status.oxygenLevel}% | ` +
-      `Batt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
-      `Target: ${gameState.navigation.distanceToTarget.toFixed(1)}m` +
-      // `headingToTarget: ${Math.round(gameState.navigation.headingToTarget)}° | ` +
-      ` |||| ` +
-      `LeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
-      `RightThrust: ${gameState.controls.ThrottleRight}% | ` +
-      `Rudder: ${gameState.controls.YawRudderAngle}% | ` +
-      `Elevator: ${gameState.controls.PitchElevatorAngle}% | ` +
-      `AftThruster: ${gameState.controls.AftThruster}%`
-  );
+    `compassHeading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
+    `Speed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
+    `Depth: ${formatPos(gameState.status.depth)}m | ` +
+    `Pitch: ${formatPos(gameState.rotation.pitch)}° | ` +
+    `\n` +
+    `O₂: ${gameState.status.oxygenLevel}% | ` +
+    `Batt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
+    `Target: ${gameState.navigation.distanceToTarget.toFixed(1)}m` +
+    `\n` +
+    `LeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
+    `RightThrust: ${gameState.controls.ThrottleRight}% | ` +
+    `Rudder: ${gameState.controls.YawRudderAngle}% | ` +
+    `Elevator: ${gameState.controls.PitchElevatorAngle}% | ` +
+    `AftThruster: ${gameState.controls.AftThruster}%`;
+
+  // Update debug overlay text
+  const debugTextElement = document.getElementById("debug-text");
+  if (debugTextElement) {
+    debugTextElement.textContent = debugText;
+  }
+
+  // Still log to console for development
+  // console.log(debugText);
 
   // Update instruments
   updateInstruments();
 }
-
 // Calculate values derived from core state
 function updateDerivedValues() {
   // Calculate distance to target

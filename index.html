@@ -51,6 +51,31 @@
         z-index: 20; /* Higher z-index to appear in front */
         width: 200px;
       }
+
+      /* Debug overlay styles */
+      #debug-overlay {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        width: 100%;
+        z-index: 30;
+        display: none; /* Hidden by default, shown when toggled */
+        text-align: center;
+        pointer-events: none; /* Allow clicks to pass through */
+      }
+
+      #debug-text {
+        display: inline-block;
+        margin: 0 auto;
+        padding: 5px 10px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: #00ff00; /* Terminal green color */
+        font-family: monospace;
+        font-size: 12px;
+        border-radius: 5px;
+        text-align: left;
+        max-width: 80%;
+      }
     </style>
   </head>
   <body>
@@ -60,6 +85,11 @@
       <object class="cockpit-screen" type="image/svg+xml" data="artwork/cockpit-background-border.svg"></object>
 
       <object class="instruments" id="oxygenGauge" type="image/svg+xml" data="artwork/oxygen.svg"></object>
+
+      <!-- Debug overlay div -->
+      <div id="debug-overlay">
+        <pre id="debug-text"></pre>
+      </div>
 
       <script src="js/game.js"></script>
       <script src="js/controls.js"></script>

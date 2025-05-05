@@ -5,10 +5,93 @@ const controlConfig = {
   thrusterIncrement: 10, // 10% per keypress
 };
 
+// Define our debug toggle key (backtick key)
+const DEBUG_TOGGLE_KEY = "Backquote"; // This is the ` key (backtick)
+
+// Track the debug overlay state
+let debugOverlayVisible = false;
+
 // Set up keyboard event listeners
 function setupKeyboardControls() {
-  // Key down handler only - for single event triggers
+  // Key down handler for submarine controls
   document.addEventListener("keydown", handleKeyPress);
+
+  // Key down handler for debug overlay toggle
+  document.addEventListener("keydown", function (event) {
+    // Check if the key pressed is our debug toggle key (backtick)
+    if (event.code === DEBUG_TOGGLE_KEY) {
+      // Toggle debug visibility
+      debugOverlayVisible = !debugOverlayVisible;
+
+      // Update debug overlay visibility
+      const debugOverlay = document.getElementById("debug-overlay");
+      if (debugOverlay) {
+        debugOverlay.style.display = debugOverlayVisible ? "block" : "none";
+      } else {
+        // If the overlay doesn't exist, create it dynamically
+        createDebugOverlay();
+      }
+
+      console.log("Debug overlay toggled:", debugOverlayVisible ? "visible" : "hidden");
+
+      // Prevent default behavior for our toggle key
+      event.preventDefault();
+    }
+  });
+
+  // Ensure the debug overlay exists
+  ensureDebugOverlayExists();
+
+  console.log(`Debug overlay toggle initialized. Press the \`${DEBUG_TOGGLE_KEY}\` key to toggle.`);
+}
+
+// Create debug overlay dynamically if it doesn't exist
+function ensureDebugOverlayExists() {
+  if (!document.getElementById("debug-overlay")) {
+    createDebugOverlay();
+  }
+}
+
+// Create the debug overlay elements
+function createDebugOverlay() {
+  // Create the overlay container
+  const debugOverlay = document.createElement("div");
+  debugOverlay.id = "debug-overlay";
+  debugOverlay.style.position = "absolute";
+  debugOverlay.style.top = "10px";
+  debugOverlay.style.left = "0";
+  debugOverlay.style.width = "100%";
+  debugOverlay.style.zIndex = "30";
+  debugOverlay.style.display = debugOverlayVisible ? "block" : "none";
+  debugOverlay.style.textAlign = "center";
+  debugOverlay.style.pointerEvents = "none";
+
+  // Create the text container
+  const debugText = document.createElement("pre");
+  debugText.id = "debug-text";
+  debugText.style.display = "inline-block";
+  debugText.style.margin = "0 auto";
+  debugText.style.padding = "5px 10px";
+  debugText.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+  debugText.style.color = "#00ff00";
+  debugText.style.fontFamily = "monospace";
+  debugText.style.fontSize = "12px";
+  debugText.style.borderRadius = "5px";
+  debugText.style.textAlign = "left";
+  debugText.style.maxWidth = "80%";
+
+  // Add text container to overlay
+  debugOverlay.appendChild(debugText);
+
+  // Add overlay to the container
+  const container = document.getElementById("container");
+  if (container) {
+    container.appendChild(debugOverlay);
+  } else {
+    document.body.appendChild(debugOverlay);
+  }
+
+  console.log("Debug overlay created dynamically");
 }
 
 // Process key presses individually
@@ -51,11 +134,11 @@ function handleKeyPress(event) {
     // Rudder (yaw) controls
     case "a":
     case "j":
-      adjustRudder(controlConfig.thrusterIncrement);
+      adjustRudder(-controlConfig.thrusterIncrement);
       break;
     case "d":
     case "l":
-      adjustRudder(-controlConfig.thrusterIncrement);
+      adjustRudder(controlConfig.thrusterIncrement);
       break;
 
     // Aft thruster controls
@@ -249,4 +332,24 @@ window.submarineControls = {
 
   // Special functions
   emergencyBlowTanks,
+
+  // Debug overlay functions
+  isDebugOverlayVisible: function () {
+    return debugOverlayVisible;
+  },
+
+  toggleDebugOverlay: function (show) {
+    if (show !== undefined) {
+      debugOverlayVisible = show;
+    } else {
+      debugOverlayVisible = !debugOverlayVisible;
+    }
+
+    const debugOverlay = document.getElementById("debug-overlay");
+    if (debugOverlay) {
+      debugOverlay.style.display = debugOverlayVisible ? "block" : "none";
+    }
+
+    return debugOverlayVisible;
+  },
 };
