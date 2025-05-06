@@ -132,7 +132,21 @@ function updateSubmarineState(deltaTime) {
 
     // Apply turning effect from differential thrust
     // This creates additional yaw rotation based on thrust difference
-    gameState.angularVelocity.yaw += diffThrust * 0.5 * deltaTime;
+    gameState.angularVelocity.yaw -= diffThrust * 0.5 * deltaTime;
+
+    // Apply deadzone to angular velocities
+    const ANGULAR_DEADZONE = 0.01; // Adjust this value as needed
+
+    // Apply deadzone to angular velocities
+    if (Math.abs(gameState.angularVelocity.pitch) < ANGULAR_DEADZONE) {
+      gameState.angularVelocity.pitch = 0;
+    }
+    if (Math.abs(gameState.angularVelocity.yaw) < ANGULAR_DEADZONE) {
+      gameState.angularVelocity.yaw = 0;
+    }
+    if (Math.abs(gameState.angularVelocity.roll) < ANGULAR_DEADZONE) {
+      gameState.angularVelocity.roll = 0;
+    }
 
     // 2. Apply Rudder effect (yaw control)
     // Rudder effect is proportional to forward speed
