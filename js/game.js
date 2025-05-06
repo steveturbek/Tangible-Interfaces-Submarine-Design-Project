@@ -71,6 +71,8 @@ const gameState = {
   },
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 // Example update function to be called each frame
 function updateSubmarineState(deltaTime) {
   // Update time
@@ -194,6 +196,7 @@ function updateSubmarineState(deltaTime) {
     updateCounter();
   }
 }
+//////////////////////////////////////////////////////////////////////////////////////////
 
 // Apply boundary constraints to prevent the submarine from going out of bounds
 function applyBoundaryConstraints() {
@@ -209,94 +212,86 @@ function applyBoundaryConstraints() {
   const effectiveSeabedDepth = seabedDepth + 0.5; // Position slightly above seabed so it's visible
   const effectiveWaterSurface = waterSurface - 5; // Keep below water surface to maintain blue color
 
-  // Track if we're bouncing (for sound effects or visual feedback in the future)
-  let isBouncing = false;
+  // Track if we're hitting a boundary
+  let isHittingBoundary = false;
 
   // Check and constrain X position (east-west boundary)
   if (x < -worldBoundary) {
     gameState.position.x = -worldBoundary + 0.5; // Push slightly inward to prevent sticking
-    // Invert horizontal velocity with energy loss
-    if (gameState.velocity.x < 0) {
-      gameState.velocity.x = -gameState.velocity.x * 0.5; // 50% energy retention
-      isBouncing = true;
-    }
+    // Stop all movement instead of bouncing
+    gameState.velocity.x = 0;
+    gameState.velocity.y = 0;
+    gameState.velocity.z = 0;
+    gameState.angularVelocity.pitch = 0;
+    gameState.angularVelocity.yaw = 0;
+    gameState.angularVelocity.roll = 0;
+    isHittingBoundary = true;
+    console.log("Hit west boundary wall - stopping submarine");
   } else if (x > worldBoundary) {
     gameState.position.x = worldBoundary - 0.5; // Push slightly inward to prevent sticking
-    // Invert horizontal velocity with energy loss
-    if (gameState.velocity.x > 0) {
-      gameState.velocity.x = -gameState.velocity.x * 0.5; // 50% energy retention
-      isBouncing = true;
-    }
+    // Stop all movement
+    gameState.velocity.x = 0;
+    gameState.velocity.y = 0;
+    gameState.velocity.z = 0;
+    gameState.angularVelocity.pitch = 0;
+    gameState.angularVelocity.yaw = 0;
+    gameState.angularVelocity.roll = 0;
+    isHittingBoundary = true;
+    console.log("Hit east boundary wall - stopping submarine");
   }
 
   // Check and constrain Y position (north-south boundary)
   if (y < -worldBoundary) {
     gameState.position.y = -worldBoundary + 0.5; // Push slightly inward to prevent sticking
-    // Invert forward/backward velocity with energy loss
-    if (gameState.velocity.y < 0) {
-      gameState.velocity.y = -gameState.velocity.y * 0.5; // 50% energy retention
-      isBouncing = true;
-    }
+    // Stop all movement
+    gameState.velocity.x = 0;
+    gameState.velocity.y = 0;
+    gameState.velocity.z = 0;
+    gameState.angularVelocity.pitch = 0;
+    gameState.angularVelocity.yaw = 0;
+    gameState.angularVelocity.roll = 0;
+    isHittingBoundary = true;
+    console.log("Hit south boundary wall - stopping submarine");
   } else if (y > worldBoundary) {
     gameState.position.y = worldBoundary - 0.5; // Push slightly inward to prevent sticking
-    // Invert forward/backward velocity with energy loss
-    if (gameState.velocity.y > 0) {
-      gameState.velocity.y = -gameState.velocity.y * 0.5; // 50% energy retention
-      isBouncing = true;
-    }
+    // Stop all movement
+    gameState.velocity.x = 0;
+    gameState.velocity.y = 0;
+    gameState.velocity.z = 0;
+    gameState.angularVelocity.pitch = 0;
+    gameState.angularVelocity.yaw = 0;
+    gameState.angularVelocity.roll = 0;
+    isHittingBoundary = true;
+    console.log("Hit north boundary wall - stopping submarine");
   }
 
   // Check and constrain Z position (depth)
-  // Prevent going below seabed with strong bounce
+  // Prevent going below seabed
   if (z < effectiveSeabedDepth) {
     gameState.position.z = effectiveSeabedDepth + 0.5; // Push up slightly to prevent sticking
-
-    // Strong bounce effect - invert vertical velocity
-    if (gameState.velocity.z < 0) {
-      // Use a bounce factor that depends on impact velocity
-      // Harder impacts lose more energy (realistic physics)
-      const impactSpeed = Math.abs(gameState.velocity.z);
-      const bounceFactor = Math.max(0.4, 0.8 - impactSpeed * 0.05);
-
-      // Invert velocity with energy loss
-      gameState.velocity.z = -gameState.velocity.z * bounceFactor;
-
-      // Add a minimum bounce for very slow impacts
-      if (gameState.velocity.z < 1.0) {
-        gameState.velocity.z = Math.max(gameState.velocity.z, 1.0);
-      }
-
-      isBouncing = true;
-
-      // Console feedback for testing
-      console.log("Bounced off seabed with speed: " + gameState.velocity.z.toFixed(2));
-    }
+    // Stop all movement
+    gameState.velocity.x = 0;
+    gameState.velocity.y = 0;
+    gameState.velocity.z = 0;
+    gameState.angularVelocity.pitch = 0;
+    gameState.angularVelocity.yaw = 0;
+    gameState.angularVelocity.roll = 0;
+    isHittingBoundary = true;
+    console.log("Hit seabed - stopping submarine");
   }
 
-  // Prevent going above water surface with strong bounce
+  // Prevent going above water surface
   if (z > effectiveWaterSurface) {
     gameState.position.z = effectiveWaterSurface - 0.5; // Push down slightly to prevent sticking
-
-    // Strong bounce effect - invert vertical velocity
-    if (gameState.velocity.z > 0) {
-      // Use a bounce factor that depends on impact velocity
-      // Harder impacts lose more energy (realistic physics)
-      const impactSpeed = Math.abs(gameState.velocity.z);
-      const bounceFactor = Math.max(0.4, 0.8 - impactSpeed * 0.05);
-
-      // Invert velocity with energy loss
-      gameState.velocity.z = -gameState.velocity.z * bounceFactor;
-
-      // Add a minimum bounce for very slow impacts
-      if (gameState.velocity.z > -1.0) {
-        gameState.velocity.z = Math.min(gameState.velocity.z, -1.0);
-      }
-
-      isBouncing = true;
-
-      // Console feedback for testing
-      console.log("Bounced off water surface with speed: " + gameState.velocity.z.toFixed(2));
-    }
+    // Stop all movement
+    gameState.velocity.x = 0;
+    gameState.velocity.y = 0;
+    gameState.velocity.z = 0;
+    gameState.angularVelocity.pitch = 0;
+    gameState.angularVelocity.yaw = 0;
+    gameState.angularVelocity.roll = 0;
+    isHittingBoundary = true;
+    console.log("Hit water surface - stopping submarine");
   }
 
   // Create a boundary warning indicator for the player
@@ -310,9 +305,11 @@ function applyBoundaryConstraints() {
     z < effectiveSeabedDepth + depthWarningThreshold ||
     z > effectiveWaterSurface - depthWarningThreshold;
 
-  // Return bounce state in case we want to trigger effects
-  return isBouncing;
+  // Return boundary hit state in case we want to trigger effects
+  return isHittingBoundary;
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
 
 function updateCounter() {
   // console.log(gameState.navigation.distanceToTarget);
@@ -362,6 +359,8 @@ function updateCounter() {
 }
 
 // Calculate values derived from core state
+//////////////////////////////////////////////////////////////////////////////////////////
+
 function updateDerivedValues() {
   // Calculate distance to target
   const dx = gameState.navigation.targetPosition.x - gameState.position.x;
@@ -420,6 +419,8 @@ function gameLoop(currentTime) {
     animationFrameId = requestAnimationFrame(gameLoop);
   }
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
 
 // Function to start the game
 function startGame() {
