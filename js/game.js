@@ -1,7 +1,7 @@
 // Submarine Game State Structure
 const gameState = {
   // Position & Orientation (using Three.js coordinate system)
-  position: { x: 0, y: 99, z: 0 }, // x: right/left, y: up/down, z: forward/backward
+  position: { x: 0, y: 90, z: 0 }, // x: right/left, y: up/down, z: forward/backward
   rotation: { x: 0, y: 0, z: 0 }, // x: pitch, y: yaw, z: roll
   velocity: { x: 0, y: 0, z: 0 }, // velocity vector in Three.js coordinates
   angularVelocity: { x: 0, y: 0, z: 0 }, // rotation speed in Three.js coordinates
@@ -217,8 +217,9 @@ function applyBoundaryConstraints() {
 
   // CRITICAL FIX: Properly define the valid Y range in Three.js coordinates
   // In Three.js: Y-up means higher Y values are toward water surface
-  const threeJsSeabedY = 0; // Bottom of the world (was incorrectly using -seabedDepth)
-  const threeJsWaterSurfaceY = 100; // Water surface (was incorrectly using waterSurface)
+
+  const threeJsSeabedY = gameState.constants.seabedDepth; // Bottom of the world
+  const threeJsWaterSurfaceY = gameState.constants.waterSurface; // Water surface
 
   // Console log the current position for debugging
   //console.log(`Position before bounds check: x=${x.toFixed(2)}, y=${y.toFixed(2)}, z=${z.toFixed(2)}`);

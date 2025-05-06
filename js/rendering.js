@@ -10,8 +10,9 @@ let clock;
 let underwaterFog;
 
 // Environment settings
-const WORLD_SIZE = 2000; // World dimensions
-const SEABED_DEPTH = 0; // Depth of the seabed
+const WORLD_SIZE = gameState.constants.worldBoundary * 2; // World dimensions
+const SEABED_DEPTH = gameState.constants.seabedDepth; // Depth of the seabed
+
 const WATER_COLOR = 0x0096ff; // Bright Caribbean blue
 const DEEP_WATER_COLOR = 0x0073cf; // Deeper Caribbean blue for gradient
 const TARGET_COLOR = 0xff5500; // Bright orange target (more visible in blue water)
@@ -490,7 +491,8 @@ function createWaterEffects() {
   // Create water mesh
   water = new THREE.Mesh(waterGeometry, waterMaterial);
   water.rotation.x = Math.PI / 2; // Make it horizontal
-  water.position.y = 50; // Water surface level
+  water.position.y = gameState.constants.waterSurface; // Water surface level
+
   scene.add(water);
 
   // Add underwater particles for better depth perception
@@ -743,7 +745,8 @@ function updateScene() {
 
   // Create gentle water surface movement
   if (water) {
-    water.position.y = 50 + Math.sin(time * 0.2) * 0.5;
+    // Animate water around the water surface constant
+    water.position.y = gameState.constants.waterSurface + Math.sin(time * 0.2) * 0.5;
 
     // Animate water texture if normal map is loaded
     if (water.material && water.material.normalMap) {
