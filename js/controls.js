@@ -33,22 +33,22 @@ function handleKeyPress(event) {
       break;
 
     // Left thruster controls
-    case "q":
-    case "u":
+    case "e":
+    case "o":
       adjustLeftThruster(controlConfig.thrusterIncrement);
       break;
-    case "z":
-    case "m":
+    case "c":
+    case ".":
       adjustLeftThruster(-controlConfig.thrusterIncrement);
       break;
 
     // Right thruster controls
-    case "e":
-    case "o":
+    case "q":
+    case "u":
       adjustRightThruster(controlConfig.thrusterIncrement);
       break;
-    case "c":
-    case ".":
+    case "z":
+    case "m":
       adjustRightThruster(-controlConfig.thrusterIncrement);
       break;
 
