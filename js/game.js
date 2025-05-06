@@ -33,6 +33,7 @@ const gameState = {
     batteryLevel: 100, // 0-100%
     // hullIntegrity: 100, // 0-100% (optional: damage model)
     depth: 0, // 0 to maxDepth (positive number for UI clarity)
+    boundaryWarning: false, // Flag to indicate proximity to boundaries
   },
 
   // Navigation & Environment
@@ -56,6 +57,9 @@ const gameState = {
     dragCoefficient: 0.05, // Water resistance factor
     mass: 1000, // Mass affects momentum
     maxDistance: 100000, // Example value, adjust based on your world size
+    worldBoundary: 1000, // Half of WORLD_SIZE (2000) from rendering.js
+    seabedDepth: -100, // Depth of the seabed from rendering.js
+    waterSurface: 50, // Water surface level from rendering.js
   },
 
   // Game time tracking
@@ -177,6 +181,9 @@ function updateSubmarineState(deltaTime) {
   gameState.rotation.yaw += gameState.angularVelocity.yaw * deltaTime;
   gameState.rotation.roll += gameState.angularVelocity.roll * deltaTime;
 
+  // Apply boundary constraints to keep submarine within the playable area
+  applyBoundaryConstraints();
+
   // Calculate derived values
   updateDerivedValues();
 
@@ -187,6 +194,126 @@ function updateSubmarineState(deltaTime) {
     updateCounter();
   }
 }
+
+// Apply boundary constraints to prevent the submarine from going out of bounds
+function applyBoundaryConstraints() {
+  // Get current position
+  const { x, y, z } = gameState.position;
+
+  // Get boundary constants
+  const worldBoundary = gameState.constants.worldBoundary;
+  const seabedDepth = gameState.constants.seabedDepth;
+  const waterSurface = gameState.constants.waterSurface;
+
+  // Use slightly adjusted values for better gameplay
+  const effectiveSeabedDepth = seabedDepth + 0.5; // Position slightly above seabed so it's visible
+  const effectiveWaterSurface = waterSurface - 5; // Keep below water surface to maintain blue color
+
+  // Track if we're bouncing (for sound effects or visual feedback in the future)
+  let isBouncing = false;
+
+  // Check and constrain X position (east-west boundary)
+  if (x < -worldBoundary) {
+    gameState.position.x = -worldBoundary + 0.5; // Push slightly inward to prevent sticking
+    // Invert horizontal velocity with energy loss
+    if (gameState.velocity.x < 0) {
+      gameState.velocity.x = -gameState.velocity.x * 0.5; // 50% energy retention
+      isBouncing = true;
+    }
+  } else if (x > worldBoundary) {
+    gameState.position.x = worldBoundary - 0.5; // Push slightly inward to prevent sticking
+    // Invert horizontal velocity with energy loss
+    if (gameState.velocity.x > 0) {
+      gameState.velocity.x = -gameState.velocity.x * 0.5; // 50% energy retention
+      isBouncing = true;
+    }
+  }
+
+  // Check and constrain Y position (north-south boundary)
+  if (y < -worldBoundary) {
+    gameState.position.y = -worldBoundary + 0.5; // Push slightly inward to prevent sticking
+    // Invert forward/backward velocity with energy loss
+    if (gameState.velocity.y < 0) {
+      gameState.velocity.y = -gameState.velocity.y * 0.5; // 50% energy retention
+      isBouncing = true;
+    }
+  } else if (y > worldBoundary) {
+    gameState.position.y = worldBoundary - 0.5; // Push slightly inward to prevent sticking
+    // Invert forward/backward velocity with energy loss
+    if (gameState.velocity.y > 0) {
+      gameState.velocity.y = -gameState.velocity.y * 0.5; // 50% energy retention
+      isBouncing = true;
+    }
+  }
+
+  // Check and constrain Z position (depth)
+  // Prevent going below seabed with strong bounce
+  if (z < effectiveSeabedDepth) {
+    gameState.position.z = effectiveSeabedDepth + 0.5; // Push up slightly to prevent sticking
+
+    // Strong bounce effect - invert vertical velocity
+    if (gameState.velocity.z < 0) {
+      // Use a bounce factor that depends on impact velocity
+      // Harder impacts lose more energy (realistic physics)
+      const impactSpeed = Math.abs(gameState.velocity.z);
+      const bounceFactor = Math.max(0.4, 0.8 - impactSpeed * 0.05);
+
+      // Invert velocity with energy loss
+      gameState.velocity.z = -gameState.velocity.z * bounceFactor;
+
+      // Add a minimum bounce for very slow impacts
+      if (gameState.velocity.z < 1.0) {
+        gameState.velocity.z = Math.max(gameState.velocity.z, 1.0);
+      }
+
+      isBouncing = true;
+
+      // Console feedback for testing
+      console.log("Bounced off seabed with speed: " + gameState.velocity.z.toFixed(2));
+    }
+  }
+
+  // Prevent going above water surface with strong bounce
+  if (z > effectiveWaterSurface) {
+    gameState.position.z = effectiveWaterSurface - 0.5; // Push down slightly to prevent sticking
+
+    // Strong bounce effect - invert vertical velocity
+    if (gameState.velocity.z > 0) {
+      // Use a bounce factor that depends on impact velocity
+      // Harder impacts lose more energy (realistic physics)
+      const impactSpeed = Math.abs(gameState.velocity.z);
+      const bounceFactor = Math.max(0.4, 0.8 - impactSpeed * 0.05);
+
+      // Invert velocity with energy loss
+      gameState.velocity.z = -gameState.velocity.z * bounceFactor;
+
+      // Add a minimum bounce for very slow impacts
+      if (gameState.velocity.z > -1.0) {
+        gameState.velocity.z = Math.min(gameState.velocity.z, -1.0);
+      }
+
+      isBouncing = true;
+
+      // Console feedback for testing
+      console.log("Bounced off water surface with speed: " + gameState.velocity.z.toFixed(2));
+    }
+  }
+
+  // Create a boundary warning indicator for the player
+  const boundaryWarningThreshold = worldBoundary * 0.9; // 90% of the way to boundary
+  const depthWarningThreshold = 5; // 5 units from surface or seabed
+
+  // Set boundary warning flag
+  gameState.status.boundaryWarning =
+    Math.abs(x) > boundaryWarningThreshold ||
+    Math.abs(y) > boundaryWarningThreshold ||
+    z < effectiveSeabedDepth + depthWarningThreshold ||
+    z > effectiveWaterSurface - depthWarningThreshold;
+
+  // Return bounce state in case we want to trigger effects
+  return isBouncing;
+}
+
 function updateCounter() {
   // console.log(gameState.navigation.distanceToTarget);
   //are you at target?
@@ -206,7 +333,7 @@ function updateCounter() {
   const formatPos = (val) => val.toFixed(2);
 
   // Update sub-data overlay text
-  document.getElementById("sub-data-text").textContent =
+  let overlayText =
     `Position(${formatPos(gameState.position.x)},${formatPos(gameState.position.y)},${formatPos(gameState.position.z)}) | ` +
     `compassHeading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
     `Speed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
@@ -223,9 +350,17 @@ function updateCounter() {
     `Elevator: ${gameState.controls.PitchElevatorAngle}% | ` +
     `AftThruster: ${gameState.controls.AftThruster}%`;
 
+  // Add boundary warning if needed
+  if (gameState.status.boundaryWarning) {
+    overlayText += `\n⚠️ BOUNDARY WARNING: Approaching boundary!`;
+  }
+
+  document.getElementById("sub-data-text").textContent = overlayText;
+
   // Update instruments
   updateInstruments();
 }
+
 // Calculate values derived from core state
 function updateDerivedValues() {
   // Calculate distance to target
@@ -251,6 +386,72 @@ function updateDerivedValues() {
   // Convert depth to positive number for display (assuming negative z is down)
   gameState.status.depth = Math.min(gameState.constants.maxDepth, -gameState.position.z);
 }
+
+// Fix for water color issue and fog density
+window.addEventListener(
+  "load",
+  function () {
+    // Wait for game initialization to complete
+    setTimeout(function () {
+      // Fix the fog coloring calculation in rendering.js
+      if (typeof window.updateFogWithDepth === "function") {
+        // Store original function
+        const originalUpdateFogWithDepth = window.updateFogWithDepth;
+
+        // Create fixed function with reduced fog density
+        window.updateFogWithDepth = function () {
+          // Get current depth (modified to enforce minimum of 0)
+          const depth = Math.max(0, gameState.status.depth);
+
+          // Make water get darker and visibility decrease with depth
+          const depthFactor = Math.min(1, depth / gameState.constants.maxDepth);
+
+          // Blend from surface color to deep color using the corrected depthFactor
+          const r1 = (WATER_COLOR >> 16) & 255;
+          const g1 = (WATER_COLOR >> 8) & 255;
+          const b1 = WATER_COLOR & 255;
+
+          const r2 = (DEEP_WATER_COLOR >> 16) & 255;
+          const g2 = (DEEP_WATER_COLOR >> 8) & 255;
+          const b2 = DEEP_WATER_COLOR & 255;
+
+          const r = Math.floor(r1 * (1 - depthFactor) + r2 * depthFactor);
+          const g = Math.floor(g1 * (1 - depthFactor) + g2 * depthFactor);
+          const b = Math.floor(b1 * (1 - depthFactor) + b2 * depthFactor);
+
+          const blendedColor = (r << 16) | (g << 8) | b;
+
+          // Update fog and scene color
+          underwaterFog.color.setHex(blendedColor);
+          scene.background.setHex(blendedColor);
+
+          // REDUCED FOG DENSITY - double the visible range
+          // Original values: FOG_NEAR + depthFactor * 5, FOG_FAR - depthFactor * 50
+          // Reduce fog by extending the far plane and reducing the near plane effects
+          underwaterFog.near = FOG_NEAR; // Keep constant near plane for less fog up close
+          underwaterFog.far = FOG_FAR - depthFactor * 25; // Only reduce far plane by half as much
+
+          // At max depth, original fog was from 15 to 50 units
+          // New fog at max depth will be from 10 to 75 units (much better visibility)
+        };
+
+        console.log("✅ Fixed underwater fog color blending with reduced fog density");
+      }
+
+      // Fix for seabed visibility - move it lower to ensure it's visible
+      if (typeof seabed !== "undefined" && seabed) {
+        // Adjust seabed position to be slightly lower than the submarine's max depth
+        const ADJUSTED_SEABED_DEPTH = -105; // 5 units lower than max submarine depth
+        seabed.position.y = ADJUSTED_SEABED_DEPTH;
+
+        console.log("✅ Adjusted seabed position for better visibility");
+      }
+
+      console.log("All submarine world boundary and color fixes applied!");
+    }, 2000); // Wait 2 seconds to ensure game is fully loaded
+  },
+  { once: true }
+);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
