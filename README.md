@@ -136,7 +136,7 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 (in your fork)
 
 1. Modify the SVG elements in the HTML/CSS for cockpit design
-1. Update the configuration in `config.js` for control scaling
+<!--1. Update the configuration in `config.js` for control scaling -->
 1. Test your implementation using keyboard controls
 1. Integrate Micro:bit controls using the provided examples
 
@@ -150,7 +150,7 @@ The repository is organized as follows:
 │   ├── game.js         # Core game mechanics
 │   ├── controls.js     # Input handling
 │   ├── rendering.js    # 3D scene rendering
-│   ├── config.js       # Placeholder in case student needs to write javascript to customize game
+<!--│   ├── config.js       # Placeholder in case student needs to write javascript to customize game -->
 │   └── instruments.js  # Cockpit instrument displays
 ├── artwork/            # Images, CSS, and other assets to customize the game **Edit only these files**
 ├── assets/             # Images, CSS, and other assets to customize the game **Do not edit only these files**
