@@ -73,7 +73,6 @@ const gameState = {
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// Example update function to be called each frame
 function updateSubmarineState(deltaTime) {
   // Update time
   gameState.time.deltaTime = deltaTime;
@@ -147,11 +146,18 @@ function updateSubmarineState(deltaTime) {
     const elevatorEffect =
       (gameState.controls.PitchElevatorAngle / 100) * (forwardSpeed / gameState.constants.maxSpeed) * gameState.constants.maxPitchAngle * 0.5 * deltaTime;
     gameState.angularVelocity.x += elevatorEffect;
+    // INTENTIONALLY NOT AFFECTING Z (ROLL) AXIS
 
     // Apply aft thrusters (vertical control)
     const aftThrustFactor = 0.2;
     const aftEffect = (gameState.controls.AftThruster / 100) * aftThrustFactor * deltaTime;
     gameState.angularVelocity.x += aftEffect;
+    // INTENTIONALLY NOT AFFECTING Z (ROLL) AXIS
+
+    // ADDED: Actively dampen roll to zero - this is the key fix
+    // This ensures any inadvertent roll quickly returns to neutral
+    gameState.angularVelocity.z *= 0.7; // Strong damping factor specifically for roll
+    gameState.rotation.z *= 0.95; // Also gradually reduce any roll that has accumulated
   }
 
   // Apply drag to velocities
@@ -192,6 +198,7 @@ function updateSubmarineState(deltaTime) {
     updateCounter();
   }
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////
 
 // REPLACE the applyBoundaryConstraints function with this corrected version:
