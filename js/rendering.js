@@ -17,8 +17,8 @@ const DEEP_WATER_COLOR = 0x0073cf; // Deeper Caribbean blue for gradient
 const TARGET_COLOR = 0xff5500; // Bright orange target (more visible in blue water)
 const TARGET_SIZE = 5; // Target sphere size
 const FOG_COLOR = 0x0096ff; // Match water color
-const FOG_NEAR = 1000; //10; // Start fog effect at 10 units
-const FOG_FAR = 10000; // 100; Max visibility distance
+const FOG_NEAR = 10000; //10; // Start fog effect at 10 units
+const FOG_FAR = 100000; // 100; Max visibility distance
 
 // Check Three.js version and provide compatibility
 const isNewThreeVersion = THREE.REVISION >= 125; // r125+ uses only BufferGeometry
