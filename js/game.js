@@ -435,7 +435,7 @@ window.addEventListener(
           // New fog at max depth will be from 10 to 75 units (much better visibility)
         };
 
-        console.log("✅ Fixed underwater fog color blending with reduced fog density");
+        // console.log("✅ Fixed underwater fog color blending with reduced fog density");
       }
 
       // Fix for seabed visibility - move it lower to ensure it's visible
@@ -444,10 +444,10 @@ window.addEventListener(
         const ADJUSTED_SEABED_DEPTH = -105; // 5 units lower than max submarine depth
         seabed.position.y = ADJUSTED_SEABED_DEPTH;
 
-        console.log("✅ Adjusted seabed position for better visibility");
+        // console.log("✅ Adjusted seabed position for better visibility");
       }
 
-      console.log("All submarine world boundary and color fixes applied!");
+      // console.log("All submarine world boundary and color fixes applied!");
     }, 2000); // Wait 2 seconds to ensure game is fully loaded
   },
   { once: true }

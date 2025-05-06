@@ -76,6 +76,9 @@ function initScene() {
   // Add coral reef elements
   createCoralReef();
 
+  // Add boundary walls with rock textures
+  createBoundaryWalls();
+
   // Handle window resize
   window.addEventListener("resize", onWindowResize);
 
@@ -279,6 +282,111 @@ function createCoralFormation(coralColors) {
   return coralGroup;
 }
 
+// Create rock walls around the world boundaries
+function createBoundaryWalls() {
+  // console.log("Creating boundary walls with rock textures...");
+
+  const WALL_HEIGHT = 150; // Height of the walls
+  const wallsGroup = new THREE.Group();
+
+  const textureLoader = new THREE.TextureLoader();
+
+  // Create rock material
+  const rockMaterial = new THREE.MeshStandardMaterial({
+    color: 0x777777,
+    roughness: 0.9,
+    metalness: 0.1,
+    side: THREE.DoubleSide,
+  });
+
+  // Try to load rock texture
+  textureLoader.load(
+    "artwork/rock_texture.jpg",
+    function (texture) {
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(5, 3); // Repeat to avoid stretching
+      rockMaterial.map = texture;
+      rockMaterial.needsUpdate = true;
+      // console.log("✅ Rock texture loaded successfully");
+    },
+    undefined,
+    function (err) {
+      // console.log("Using fallback rock color (texture failed to load)");
+    }
+  );
+
+  // Try to load rock normal map for added detail
+  textureLoader.load(
+    "artwork/rock_normal.jpg",
+    function (normalMap) {
+      normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
+      normalMap.repeat.set(5, 3);
+      rockMaterial.normalMap = normalMap;
+      rockMaterial.normalScale.set(1, 1);
+      rockMaterial.needsUpdate = true;
+      // console.log("✅ Rock normal map loaded successfully");
+    },
+    undefined,
+    function (err) {
+      // console.log("Rock normal map failed to load");
+    }
+  );
+
+  // Create four walls (North, South, East, West)
+  // North wall
+  const northWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(WORLD_SIZE, WALL_HEIGHT, 16, 8), rockMaterial);
+  northWall.position.set(0, WORLD_SIZE / 2, (SEABED_DEPTH + 50) / 2); // Middle of water and seabed
+  northWall.rotation.y = Math.PI; // Face inward
+  wallsGroup.add(northWall);
+
+  // South wall
+  const southWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(WORLD_SIZE, WALL_HEIGHT, 16, 8), rockMaterial);
+  southWall.position.set(0, -WORLD_SIZE / 2, (SEABED_DEPTH + 50) / 2);
+  // No rotation needed, already facing inward
+  wallsGroup.add(southWall);
+
+  // East wall
+  const eastWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(WORLD_SIZE, WALL_HEIGHT, 16, 8), rockMaterial);
+  eastWall.position.set(WORLD_SIZE / 2, 0, (SEABED_DEPTH + 50) / 2);
+  eastWall.rotation.y = -Math.PI / 2; // Face inward
+  wallsGroup.add(eastWall);
+
+  // West wall
+  const westWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(WORLD_SIZE, WALL_HEIGHT, 16, 8), rockMaterial);
+  westWall.position.set(-WORLD_SIZE / 2, 0, (SEABED_DEPTH + 50) / 2);
+  westWall.rotation.y = Math.PI / 2; // Face inward
+  wallsGroup.add(westWall);
+
+  // Add some variation to the walls
+  for (let wall of [northWall, southWall, eastWall, westWall]) {
+    // Add some displacement to make the walls look more natural
+    if (wall.geometry.attributes && wall.geometry.attributes.position) {
+      const positions = wall.geometry.attributes.position.array;
+      const simplex = new SimplexNoise(); // Using the same noise generator as seabed
+
+      for (let i = 0; i < positions.length; i += 3) {
+        const x = positions[i];
+        const y = positions[i + 1];
+
+        // Apply noise to z coordinate to create rocky surface
+        const noise = simplex.noise2D(x * 0.05, y * 0.05) * 5;
+        positions[i + 2] = noise;
+      }
+
+      wall.geometry.attributes.position.needsUpdate = true;
+      wall.geometry.computeVertexNormals();
+    }
+  }
+
+  // Add walls to scene
+  scene.add(wallsGroup);
+
+  // console.log("✅ Boundary walls created");
+
+  // Return for potential later reference
+  return wallsGroup;
+}
+
 // Create target destination marker
 function createTarget() {
   const targetGeometry = new THREE.SphereBufferGeometry(TARGET_SIZE, 16, 16);
@@ -311,53 +419,68 @@ function createTarget() {
   targetSphere.add(beam);
 }
 
-// Create underwater effects (caustics, particles, water surface)
+// Create underwater effects (caustics, particles, water surface) with improved water texture
 function createWaterEffects() {
-  // Create water surface with ripple effect
-  const waterGeometry = new THREE.PlaneBufferGeometry(WORLD_SIZE, WORLD_SIZE, 10, 10);
-  const waterMaterial = new THREE.MeshPhongMaterial({
+  // Create water surface with improved texture and ripple effect
+  const waterGeometry = new THREE.PlaneBufferGeometry(WORLD_SIZE, WORLD_SIZE, 32, 32);
+
+  // Create better material for water with physical properties
+  const waterMaterial = new THREE.MeshPhysicalMaterial({
     color: WATER_COLOR,
     transparent: true,
-    opacity: 0.6,
-    specular: 0xffffff,
-    shininess: 90,
+    opacity: 0.8,
+    roughness: 0.2,
+    metalness: 0.1,
+    clearcoat: 0.5,
+    clearcoatRoughness: 0.2,
     side: THREE.DoubleSide,
+    envMapIntensity: 1.5,
   });
 
+  // Load water texture and normal map
+  const textureLoader = new THREE.TextureLoader();
+
+  // Try to load water texture
+  textureLoader.load(
+    "artwork/water_texture.jpg",
+    function (texture) {
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(10, 10); // Repeat the texture for better detail
+      waterMaterial.map = texture;
+      waterMaterial.needsUpdate = true;
+      // console.log("✅ Water texture loaded successfully");
+    },
+    undefined,
+    function (err) {
+      console.log("Using fallback water color (texture failed to load)");
+    }
+  );
+
+  // Try to load normal map for water ripples
+  textureLoader.load(
+    "artwork/water_normal.jpg",
+    function (normalMap) {
+      normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
+      normalMap.repeat.set(15, 15); // More repetition for normals gives finer detail
+      waterMaterial.normalMap = normalMap;
+      waterMaterial.normalScale.set(0.3, 0.3); // Adjust normal intensity
+      waterMaterial.needsUpdate = true;
+      // console.log("✅ Water normal map loaded successfully");
+    },
+    undefined,
+    function (err) {
+      console.log("Water normal map failed to load");
+    }
+  );
+
+  // Create water mesh
   water = new THREE.Mesh(waterGeometry, waterMaterial);
-  water.rotation.x = Math.PI / 2;
+  water.rotation.x = Math.PI / 2; // Make it horizontal
   water.position.y = 50; // Water surface level
   scene.add(water);
 
   // Add underwater particles for better depth perception
   addUnderwaterParticles();
-
-  // Add caustic light effect
-  // addCausticEffect();
-}
-
-// Add caustic light effect (simulated light patterns through water)
-function addCausticEffect() {
-  const causticLight = new THREE.DirectionalLight(0xffffff, 0.5);
-  causticLight.position.set(0, 50, 0);
-  scene.add(causticLight);
-
-  // Create animated caustic texture if available
-  const textureLoader = new THREE.TextureLoader();
-  textureLoader.load(
-    "artwork/caustics.jpg",
-    function (texture) {
-      // If texture loads, create a projector
-      const causticProjector = new THREE.SpotLight(0xffffff, 1, 100, Math.PI / 4, 0.5);
-      causticProjector.position.set(0, 20, 0);
-      causticProjector.map = texture;
-      scene.add(causticProjector);
-    },
-    undefined,
-    function (err) {
-      console.log("Caustic texture not available, using simplified lighting");
-    }
-  );
 }
 
 // Add floating particles to enhance underwater effect
@@ -549,7 +672,7 @@ function updateCameraPosition() {
   }
 
   // Update fog density and color based on depth
-  updateFogWithDepth();
+  // updateFogWithDepth();
 }
 
 // Adjust fog based on water depth
@@ -617,6 +740,13 @@ function updateScene() {
   // Create gentle water surface movement
   if (water) {
     water.position.y = 50 + Math.sin(time * 0.2) * 0.5;
+
+    // Animate water texture if normal map is loaded
+    if (water.material && water.material.normalMap) {
+      // Animate normal map by shifting the UV coordinates
+      water.material.normalMap.offset.x = time * 0.01;
+      water.material.normalMap.offset.y = time * 0.01;
+    }
   }
 
   // Update camera position for first person view

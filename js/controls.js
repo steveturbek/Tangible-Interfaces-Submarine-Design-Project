@@ -118,7 +118,6 @@ function clamp(value, min, max) {
 function setLeftThruster(percent) {
   if (!gameState || !gameState.controls) return;
 
-  console.log(percent);
   gameState.controls.ThrottleLeft = clamp(percent, -gameState.controls.MaxThrottle, gameState.controls.MaxThrottle);
 
   console.log(`Left Thruster: ${gameState.controls.ThrottleLeft}%`);
