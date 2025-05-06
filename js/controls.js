@@ -2,7 +2,7 @@
 
 // Control configurations
 const controlConfig = {
-  thrusterIncrement: 10, // 10% per keypress
+  thrusterIncrement: 5, // 10% per keypress
   flapIncrement: 1, // 10% per keypress
 };
 
