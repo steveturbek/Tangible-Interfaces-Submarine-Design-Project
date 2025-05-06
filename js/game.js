@@ -194,18 +194,6 @@ function updateSubmarineState(deltaTime) {
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// === FIXED BOUNDARY CONSTRAINTS FOR THREE.JS COORDINATES ===
-//
-// The problem: There's a critical issue in the boundary constraint logic that's
-// causing the submarine to oscillate between extreme depths. The code is trying
-// to keep the submarine within valid bounds, but the boundary conditions are
-// incorrectly defined for the Three.js coordinate system.
-//
-// In Three.js coordinates:
-// - Y axis is UP (positive is up, negative is down)
-// - The water surface should be at a higher Y value than the seabed
-// - Valid Y positions are between seabed and water surface
-
 // REPLACE the applyBoundaryConstraints function with this corrected version:
 
 function applyBoundaryConstraints() {
@@ -235,6 +223,8 @@ function applyBoundaryConstraints() {
     gameState.angularVelocity.x = 0;
     gameState.angularVelocity.y = 0;
     gameState.angularVelocity.z = 0;
+    gameState.controls.ThrottleLeft = 0;
+    gameState.controls.ThrottleRight = 0;
   };
 
   // Make a copy of the position to track changes
@@ -322,7 +312,7 @@ function updateCounter() {
     `compassHeading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
     `Speed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
     `Depth: ${gameState.status.depth.toFixed(2)}m | ` +
-    `Pitch: ${Math.round(gameState.rotation.pitch)}°` +
+    `Pitch: ${Math.round(gameState.rotation.x)}°` +
     `\n` +
     `O₂: ${gameState.status.oxygenLevel}% | ` +
     `Batt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +

@@ -15,11 +15,12 @@ const SEABED_DEPTH = gameState.constants.seabedDepth; // Depth of the seabed
 
 const WATER_COLOR = 0x0096ff; // Bright Caribbean blue
 const DEEP_WATER_COLOR = 0x0073cf; // Deeper Caribbean blue for gradient
+const FOG_COLOR = 0x0096ff; // Match water color
+
 const TARGET_COLOR = 0xff5500; // Bright orange target (more visible in blue water)
 const TARGET_SIZE = 5; // Target sphere size
-const FOG_COLOR = 0x0096ff; // Match water color
-const FOG_NEAR = 10000; //10; // Start fog effect at 10 units
-const FOG_FAR = 100000; // 100; Max visibility distance
+const FOG_NEAR = 10; //10; // Start fog effect at 10 units
+const FOG_FAR = 1000; // 100; Max visibility distance
 
 // Check Three.js version and provide compatibility
 const isNewThreeVersion = THREE.REVISION >= 125; // r125+ uses only BufferGeometry
@@ -97,35 +98,74 @@ function setupPostProcessing() {
 }
 
 // Set up scene lighting for a bright Caribbean day
+// Set up scene lighting for a bright Caribbean day with enhanced underwater effects
 function setupLighting() {
-  // Bright sunlight (directional light)
-  directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
-  directionalLight.position.set(100, 100, 100);
+  // Bright sunlight (directional light) - increased intensity
+  directionalLight = new THREE.DirectionalLight(0xffffdd, 2.5); // Increased from 1.5 to 2.5, warmer color
+  directionalLight.position.set(100, 150, 100); // Raised position for better angle
   directionalLight.castShadow = true;
+
+  // Improve shadow properties
+  directionalLight.shadow.mapSize.width = 1024;
+  directionalLight.shadow.mapSize.height = 1024;
+  directionalLight.shadow.camera.near = 0.5;
+  directionalLight.shadow.camera.far = 500;
+  directionalLight.shadow.bias = -0.001;
+
   scene.add(directionalLight);
 
-  // Add sunrays with light shafts (volumetric lighting effect)
-  const sunRayLight = new THREE.SpotLight(0xffffbb, 2, 100, Math.PI / 6, 0.5);
-  sunRayLight.position.set(50, 80, 50);
+  // Add sunrays with light shafts (volumetric lighting effect) - increased range and intensity
+  const sunRayLight = new THREE.SpotLight(0xffffcc, 3, 150, Math.PI / 5, 0.3); // Increased intensity and range
+  sunRayLight.position.set(50, 120, 50); // Higher position
+  sunRayLight.castShadow = true;
   scene.add(sunRayLight);
 
-  // Warm ambient light for overall scene illumination
-  ambientLight = new THREE.AmbientLight(0x6699cc, 0.8);
+  // Add a target for the spotlight to aim at the water
+  const spotLightTarget = new THREE.Object3D();
+  spotLightTarget.position.set(0, 0, 0);
+  scene.add(spotLightTarget);
+  sunRayLight.target = spotLightTarget;
+
+  // Warm ambient light for overall scene illumination - increased intensity
+  ambientLight = new THREE.AmbientLight(0x88bbff, 1.2); // Increased from 0.8 to 1.2, bluer tint
   scene.add(ambientLight);
 
-  // Add a bright blue point light to simulate water scattering
-  const waterLight = new THREE.PointLight(0x00ffff, 0.6, 150);
-  waterLight.position.set(0, 20, 0);
+  // Add a bright blue point light to simulate water scattering - increased intensity and range
+  const waterLight = new THREE.PointLight(0x00ffff, 1.0, 200); // Increased from 0.6 to 1.0, range from 150 to 200
+  waterLight.position.set(0, 50, 0); // Higher position (was 20)
   scene.add(waterLight);
 
-  // Add secondary light sources to simulate light refraction in water
-  const refractedLight1 = new THREE.PointLight(0x00ccff, 0.4, 80);
-  refractedLight1.position.set(30, 10, -20);
+  // Add secondary light sources to simulate light refraction in water - increased intensity
+  const refractedLight1 = new THREE.PointLight(0x00ccff, 0.7, 100); // Increased from 0.4 to 0.7, range from 80 to 100
+  refractedLight1.position.set(30, 40, -20); // Higher position (was 10)
   scene.add(refractedLight1);
 
-  const refractedLight2 = new THREE.PointLight(0x88ccff, 0.3, 60);
-  refractedLight2.position.set(-40, 5, 15);
+  const refractedLight2 = new THREE.PointLight(0x88ccff, 0.6, 80); // Increased from 0.3 to 0.6, range from 60 to 80
+  refractedLight2.position.set(-40, 35, 15); // Higher position (was 5)
   scene.add(refractedLight2);
+
+  // NEW: Add caustics effect using additional lights
+  const causticsLight = new THREE.SpotLight(0xaaffff, 1.5, 100, Math.PI / 4, 0.8);
+  causticsLight.position.set(0, 90, 0);
+  causticsLight.castShadow = false;
+  scene.add(causticsLight);
+
+  // Animate the caustics light position subtly
+  function animateCaustics() {
+    const time = clock ? clock.getElapsedTime() : 0;
+
+    // Subtle movement pattern for caustics
+    if (causticsLight) {
+      causticsLight.position.x = Math.sin(time * 0.5) * 20;
+      causticsLight.position.z = Math.cos(time * 0.3) * 20;
+      causticsLight.intensity = 1.0 + Math.sin(time * 2) * 0.5; // Intensity fluctuation
+    }
+
+    requestAnimationFrame(animateCaustics);
+  }
+
+  // Start caustics animation
+  animateCaustics();
 }
 
 // 1. Replace the createSeabed function with this version
@@ -432,21 +472,24 @@ function createTarget() {
 }
 
 // Create underwater effects (caustics, particles, water surface) with improved water texture
+
 function createWaterEffects() {
   // Create water surface with improved texture and ripple effect
   const waterGeometry = new THREE.PlaneBufferGeometry(WORLD_SIZE, WORLD_SIZE, 32, 32);
 
-  // Create better material for water with physical properties
+  // Create better material for water with updated properties for lighter appearance from below
   const waterMaterial = new THREE.MeshPhysicalMaterial({
     color: WATER_COLOR,
     transparent: true,
-    opacity: 0.8,
-    roughness: 0.2,
-    metalness: 0.1,
-    clearcoat: 0.5,
-    clearcoatRoughness: 0.2,
+    opacity: 0.6,
+    roughness: 0.1,
+    metalness: 0.0,
+    clearcoat: 0.8,
+    clearcoatRoughness: 0.1,
     side: THREE.DoubleSide,
-    envMapIntensity: 1.5,
+    envMapIntensity: 2.0,
+    transmission: 0.5,
+    reflectivity: 0.3,
   });
 
   // Load water texture and normal map
@@ -457,10 +500,9 @@ function createWaterEffects() {
     "artwork/water_texture.jpg",
     function (texture) {
       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.set(10, 10); // Repeat the texture for better detail
+      texture.repeat.set(10, 10);
       waterMaterial.map = texture;
       waterMaterial.needsUpdate = true;
-      // console.log("Water texture loaded successfully");
     },
     undefined,
     function (err) {
@@ -473,11 +515,10 @@ function createWaterEffects() {
     "artwork/water_normal.jpg",
     function (normalMap) {
       normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
-      normalMap.repeat.set(15, 15); // More repetition for normals gives finer detail
+      normalMap.repeat.set(15, 15);
       waterMaterial.normalMap = normalMap;
-      waterMaterial.normalScale.set(0.3, 0.3); // Adjust normal intensity
+      waterMaterial.normalScale.set(0.2, 0.2);
       waterMaterial.needsUpdate = true;
-      // console.log("Water normal map loaded successfully");
     },
     undefined,
     function (err) {
@@ -487,13 +528,15 @@ function createWaterEffects() {
 
   // Create water mesh
   water = new THREE.Mesh(waterGeometry, waterMaterial);
-  water.rotation.x = Math.PI / 2; // Make it horizontal
-  water.position.y = gameState.constants.waterSurface; // Water surface level
-
+  water.rotation.x = Math.PI / 2;
+  water.position.y = gameState.constants.waterSurface;
   scene.add(water);
 
   // Add underwater particles for better depth perception
   addUnderwaterParticles();
+
+  // NEW: Add caustics effect to the seabed
+  addCausticsEffect();
 }
 
 // Add floating particles to enhance underwater effect
@@ -740,18 +783,42 @@ function updateScene() {
     beam.material.opacity = 0.1 + Math.sin(time) * 0.05;
   }
 
-  // Create gentle water surface movement
+  // Create gentle water surface movement with enhanced effect
   if (water) {
-    // Animate water around the water surface constant
-    water.position.y = gameState.constants.waterSurface + Math.sin(time * 0.2) * 0.5;
+    // Animate water around the water surface constant with more pronounced movement
+    water.position.y = gameState.constants.waterSurface + Math.sin(time * 0.2) * 0.8;
 
-    // Animate water texture if normal map is loaded
+    // Animate water texture if normal map is loaded with more dramatic rippling
     if (water.material && water.material.normalMap) {
-      // Animate normal map by shifting the UV coordinates
-      water.material.normalMap.offset.x = time * 0.01;
-      water.material.normalMap.offset.y = time * 0.01;
+      // Animate normal map by shifting the UV coordinates with varying speeds
+      water.material.normalMap.offset.x = Math.sin(time * 0.1) * 0.1 + time * 0.02;
+      water.material.normalMap.offset.y = Math.cos(time * 0.15) * 0.1 + time * 0.01;
+    }
+
+    // NEW: Add subtle color variations to the water for more dynamic appearance
+    if (water.material) {
+      // Subtle color shift based on time
+      const hueShift = Math.sin(time * 0.1) * 0.05; // Small hue variation
+      const saturationBoost = Math.sin(time * 0.2) * 0.1 + 0.1; // Small saturation boost
+      water.material.emissive.setHSL(0.55 + hueShift, 0.7 + saturationBoost, 0.5);
+      water.material.emissiveIntensity = 0.2 + Math.sin(time * 0.3) * 0.1;
     }
   }
+
+  // NEW: Simulate light rays through water (if sunrays object exists)
+  scene.children.forEach((child) => {
+    if (child.type === "SpotLight" && child !== targetSphere) {
+      // Gently move the light position for dynamic light effect
+      child.position.x += Math.sin(time * 0.2) * 0.2;
+      child.position.z += Math.cos(time * 0.3) * 0.2;
+
+      // Vary intensity slightly
+      if (Math.random() > 0.95) {
+        // Occasional intensity flicker
+        child.intensity = child.intensity * (0.95 + Math.random() * 0.1);
+      }
+    }
+  });
 
   // Update camera position for first person view
   updateCameraPosition();
