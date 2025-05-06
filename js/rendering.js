@@ -190,7 +190,7 @@ function createSeabed() {
     function (texture) {
       // Success callback
       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.set(100, 100);
+      texture.repeat.set(50, 50);
       seabedMaterial.map = texture;
       seabedMaterial.needsUpdate = true;
     },
