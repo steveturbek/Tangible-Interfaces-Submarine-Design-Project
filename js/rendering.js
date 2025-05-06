@@ -11,7 +11,7 @@ let underwaterFog;
 
 // Environment settings
 const WORLD_SIZE = 2000; // World dimensions
-const SEABED_DEPTH = -100; // Depth of the seabed
+const SEABED_DEPTH = 0; // Depth of the seabed
 const WATER_COLOR = 0x0096ff; // Bright Caribbean blue
 const DEEP_WATER_COLOR = 0x0073cf; // Deeper Caribbean blue for gradient
 const TARGET_COLOR = 0xff5500; // Bright orange target (more visible in blue water)
@@ -163,8 +163,7 @@ function createSeabed() {
   // Create seabed mesh and position it
   seabed = new THREE.Mesh(seabedGeometry, seabedMaterial);
   seabed.rotation.x = -Math.PI / 2; // Rotate to horizontal
-  seabed.position.y = SEABED_DEPTH + 25; // FIX: Add 25 units to ensure walls and seabed connect visually
-  // This 25-unit adjustment creates proper overlap between walls and seabed
+  seabed.position.y = SEABED_DEPTH;
 
   scene.add(seabed);
 
@@ -655,45 +654,30 @@ function addUnderwaterParticles() {
 // Update camera position for first-person view
 function updateCameraPosition() {
   // Position camera at submarine position
-  camera.position.set(gameState.position.x, gameState.position.y, gameState.position.z);
+  camera.position.copy(gameState.position);
 
-  // Convert game coordinates to Three.js coordinates
-  // Based on thruster and movement behavior:
-  // Game: +X axis is right, +Y axis is forward
-  // Three.js: +X is right, -Z is forward
+  // Create quaternion from Euler angles
+  const quaternion = new THREE.Quaternion();
+  quaternion.setFromEuler(
+    new THREE.Euler(
+      THREE.MathUtils.degToRad(gameState.rotation.x),
+      THREE.MathUtils.degToRad(gameState.rotation.y),
+      THREE.MathUtils.degToRad(gameState.rotation.z),
+      "XYZ"
+    )
+  );
 
-  // Calculate orientation angles
-  const pitchRad = THREE.MathUtils.degToRad(gameState.rotation.pitch);
-  const yawRad = THREE.MathUtils.degToRad(-gameState.rotation.yaw - 90); // Adjust for coordinate system difference
-  const rollRad = THREE.MathUtils.degToRad(gameState.rotation.roll);
+  // Set camera quaternion
+  camera.quaternion.copy(quaternion);
 
-  // Calculate forward vector in Three.js coordinates
-  const lookX = -Math.sin(yawRad) * Math.cos(pitchRad);
-  const lookY = Math.sin(pitchRad);
-  const lookZ = -Math.cos(yawRad) * Math.cos(pitchRad);
-
-  // Create look target point
-  const target = new THREE.Vector3(camera.position.x + lookX, camera.position.y + lookY, camera.position.z + lookZ);
-
-  // Look at calculated target
-  camera.lookAt(target);
-
-  // Apply roll (if needed)
-  if (rollRad !== 0) {
-    // Calculate up vector with roll applied
-    camera.up.set(Math.sin(rollRad) * Math.sin(yawRad), Math.cos(rollRad), Math.sin(rollRad) * Math.cos(yawRad));
-  } else {
-    camera.up.set(0, 1, 0); // Default up direction in Three.js
-  }
-
-  // Update fog density and color based on depth
+  // Update fog based on depth
   updateFogWithDepth();
 }
 
 // Adjust fog based on water depth
 function updateFogWithDepth() {
-  // Get current depth (modified to enforce minimum of 0)
-  const depth = Math.max(0, gameState.status.depth);
+  // Get current depth (in Three.js, depth is negative Y from water surface)
+  const depth = Math.max(0, -gameState.position.y + gameState.constants.waterSurface);
 
   // Make water get darker and visibility decrease with depth
   const depthFactor = Math.min(1, depth / gameState.constants.maxDepth);

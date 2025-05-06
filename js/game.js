@@ -1,10 +1,10 @@
 // Submarine Game State Structure
 const gameState = {
-  // Position & Orientation (full 3D representation)
-  position: { x: 0, y: 0, z: 0 }, // Absolute position in world space
-  rotation: { pitch: 0, yaw: 0, roll: 0 }, // Orientation in degrees
-  velocity: { x: 0, y: 0, z: 0 }, // Current movement vector
-  angularVelocity: { pitch: 0, yaw: 0, roll: 0 }, // Current rotation speed
+  // Position & Orientation (using Three.js coordinate system)
+  position: { x: 0, y: 99, z: 0 }, // x: right/left, y: up/down, z: forward/backward
+  rotation: { x: 0, y: 0, z: 0 }, // x: pitch, y: yaw, z: roll
+  velocity: { x: 0, y: 0, z: 0 }, // velocity vector in Three.js coordinates
+  angularVelocity: { x: 0, y: 0, z: 0 }, // rotation speed in Three.js coordinates
 
   // Controls & Input (player inputs or AI controls)
   controls: {
@@ -38,7 +38,7 @@ const gameState = {
 
   // Navigation & Environment
   navigation: {
-    targetPosition: { x: 1000, y: 0, z: 0 }, // target location
+    targetPosition: { x: 0, y: 0, z: -1000 }, // target location
     distanceToTarget: 0, // 0-100% (scaled)
     headingToTarget: 0, // 0-359 degrees
     // proximityWarning: 0, // 0-100% (distance to nearest obstacle)
@@ -58,8 +58,8 @@ const gameState = {
     mass: 1000, // Mass affects momentum
     maxDistance: 100000, // Example value, adjust based on your world size
     worldBoundary: 1000, // Half of WORLD_SIZE (2000) from rendering.js
-    seabedDepth: -100, // Depth of the seabed from rendering.js
-    waterSurface: 50, // Water surface level from rendering.js
+    seabedDepth: 0, // Depth of the seabed from rendering.js
+    waterSurface: 100, // Water surface level from rendering.js
   },
 
   // Game time tracking
@@ -99,108 +99,90 @@ function updateSubmarineState(deltaTime) {
 
   gameState.status.batteryLevel = Math.max(0, gameState.status.batteryLevel - totalPowerDrain);
 
-  // Apply water resistance (drag) to slow down the submarine when no thrust is applied
-  const drag = gameState.constants.dragCoefficient;
-
   // Calculate forward thrust vector based on submarine orientation
-  // Convert yaw from degrees to radians for trigonometry calculations
-  const yawRad = (gameState.rotation.yaw * Math.PI) / 180;
-  const pitchRad = (gameState.rotation.pitch * Math.PI) / 180;
+  // Get orientation angles in radians (for Three.js coordinates)
+  const pitch = THREE.MathUtils.degToRad(gameState.rotation.x);
+  const yaw = THREE.MathUtils.degToRad(gameState.rotation.y);
+  const roll = THREE.MathUtils.degToRad(gameState.rotation.z);
 
-  // Calculate thruster impacts on velocity
-  // Only apply thrust if battery has power
+  // Calculate thrust based on thruster values
   if (gameState.status.batteryLevel > 0) {
-    // 1. Apply Left and Right Thrusters (main propulsion)
-    // Scale thruster values to appropriate acceleration
+    // Calculate thrust factor
     const thrustFactor = gameState.constants.maxSpeed / 100;
 
     // Calculate net forward thrust from both thrusters
     const netThrust = (gameState.controls.ThrottleLeft + gameState.controls.ThrottleRight) / 2;
 
-    // Calculate turning effect from differential thrust (like tank treads)
+    // Calculate turning effect from differential thrust
     const diffThrust = (gameState.controls.ThrottleRight - gameState.controls.ThrottleLeft) / 2;
 
-    // Apply thrust vectors based on current orientation
-    // Forward/backward movement
-    const thrustAccelX = Math.cos(yawRad) * Math.cos(pitchRad) * netThrust * thrustFactor * deltaTime;
-    const thrustAccelY = Math.sin(yawRad) * Math.cos(pitchRad) * netThrust * thrustFactor * deltaTime;
-    const thrustAccelZ = Math.sin(pitchRad) * netThrust * thrustFactor * deltaTime;
+    // Apply thrust vectors using Three.js coordinates
+    // Forward thrust: -Z direction (Three.js forward is -Z)
+    // Side thrust: X direction
+    // Vertical thrust: Y direction
 
-    gameState.velocity.x += thrustAccelX;
-    gameState.velocity.y += thrustAccelY;
-    gameState.velocity.z += thrustAccelZ;
+    // Create quaternion for proper 3D rotation
+    const quaternion = new THREE.Quaternion();
+    quaternion.setFromEuler(new THREE.Euler(pitch, yaw, roll, "XYZ"));
+
+    // Create thrust vector (pointing forward in local space)
+    const thrustVector = new THREE.Vector3(0, 0, -1);
+    thrustVector.multiplyScalar(netThrust * thrustFactor * deltaTime);
+    thrustVector.applyQuaternion(quaternion);
+
+    // Apply to velocity
+    gameState.velocity.x += thrustVector.x;
+    gameState.velocity.y += thrustVector.y;
+    gameState.velocity.z += thrustVector.z;
 
     // Apply turning effect from differential thrust
-    // This creates additional yaw rotation based on thrust difference
-    gameState.angularVelocity.yaw -= diffThrust * 0.5 * deltaTime;
+    gameState.angularVelocity.y -= diffThrust * 0.5 * deltaTime;
 
-    // Apply deadzone to angular velocities
-    const ANGULAR_DEADZONE = 0.01; // Adjust this value as needed
-
-    // Apply deadzone to angular velocities
-    if (Math.abs(gameState.angularVelocity.pitch) < ANGULAR_DEADZONE) {
-      gameState.angularVelocity.pitch = 0;
-    }
-    if (Math.abs(gameState.angularVelocity.yaw) < ANGULAR_DEADZONE) {
-      gameState.angularVelocity.yaw = 0;
-    }
-    if (Math.abs(gameState.angularVelocity.roll) < ANGULAR_DEADZONE) {
-      gameState.angularVelocity.roll = 0;
-    }
-
-    // 2. Apply Rudder effect (yaw control)
-    // Rudder effect is proportional to forward speed
-    const forwardSpeed = Math.sqrt(gameState.velocity.x * gameState.velocity.x + gameState.velocity.y * gameState.velocity.y);
-
-    // Rudder is more effective at higher speeds
+    // Apply rudder effect (yaw control)
+    const forwardSpeed = Math.abs(gameState.velocity.z);
     const rudderEffect = (gameState.controls.YawRudderAngle / 100) * (forwardSpeed / gameState.constants.maxSpeed) * gameState.constants.maxYawRate * deltaTime;
+    gameState.angularVelocity.y += rudderEffect;
 
-    gameState.angularVelocity.yaw += rudderEffect;
-
-    // 3. Apply Elevator effect (pitch control)
-    // Like rudder, elevator effect is proportional to forward speed
+    // Apply elevator effect (pitch control)
     const elevatorEffect =
       (gameState.controls.PitchElevatorAngle / 100) * (forwardSpeed / gameState.constants.maxSpeed) * gameState.constants.maxPitchAngle * 0.5 * deltaTime;
+    gameState.angularVelocity.x += elevatorEffect;
 
-    gameState.angularVelocity.pitch += elevatorEffect;
-
-    // 4. Apply Aft Thrusters (vertical control when stationary)
-    // These work regardless of forward speed, but are slower
-    const aftThrustFactor = 0.2; // Aft thrusters are weaker than main thrusters
+    // Apply aft thrusters (vertical control)
+    const aftThrustFactor = 0.2;
     const aftEffect = (gameState.controls.AftThruster / 100) * aftThrustFactor * deltaTime;
-
-    // Aft thrusters directly affect pitch velocity
-    gameState.angularVelocity.pitch += aftEffect;
+    gameState.angularVelocity.x += aftEffect;
   }
 
-  // Apply drag/water resistance to velocities
+  // Apply drag to velocities
+  const drag = gameState.constants.dragCoefficient;
   gameState.velocity.x *= 1 - drag * deltaTime;
   gameState.velocity.y *= 1 - drag * deltaTime;
   gameState.velocity.z *= 1 - drag * deltaTime;
 
   // Apply drag to angular velocities
-  gameState.angularVelocity.pitch *= 1 - drag * 2 * deltaTime;
-  gameState.angularVelocity.yaw *= 1 - drag * 2 * deltaTime;
-  gameState.angularVelocity.roll *= 1 - drag * 2 * deltaTime;
+  gameState.angularVelocity.x *= 1 - drag * 2 * deltaTime;
+  gameState.angularVelocity.y *= 1 - drag * 2 * deltaTime;
+  gameState.angularVelocity.z *= 1 - drag * 2 * deltaTime;
 
-  // Limit maximum pitch to avoid submarine flipping over
+  // Limit maximum pitch angle
   const maxPitch = gameState.constants.maxPitchAngle;
-  gameState.rotation.pitch = Math.max(-maxPitch, Math.min(maxPitch, gameState.rotation.pitch));
+  gameState.rotation.x = Math.max(-maxPitch, Math.min(maxPitch, gameState.rotation.x));
 
-  // Apply physics: update position based on velocity
+  // Update position based on velocity
   gameState.position.x += gameState.velocity.x * deltaTime;
   gameState.position.y += gameState.velocity.y * deltaTime;
   gameState.position.z += gameState.velocity.z * deltaTime;
 
   // Update rotation based on angular velocity
-  gameState.rotation.pitch += gameState.angularVelocity.pitch * deltaTime;
-  gameState.rotation.yaw += gameState.angularVelocity.yaw * deltaTime;
-  gameState.rotation.roll += gameState.angularVelocity.roll * deltaTime;
+  gameState.rotation.x += gameState.angularVelocity.x * deltaTime;
+  gameState.rotation.y += gameState.angularVelocity.y * deltaTime;
+  gameState.rotation.z += gameState.angularVelocity.z * deltaTime;
 
-  // Apply boundary constraints to keep submarine within the playable area
+  // Apply boundary constraints
   applyBoundaryConstraints();
 
-  // Calculate derived values
+  // Update derived values
   updateDerivedValues();
 
   // run this every so often to update instruments, etc
@@ -212,114 +194,104 @@ function updateSubmarineState(deltaTime) {
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// Apply boundary constraints to prevent the submarine from going out of bounds
+// === FIXED BOUNDARY CONSTRAINTS FOR THREE.JS COORDINATES ===
+//
+// The problem: There's a critical issue in the boundary constraint logic that's
+// causing the submarine to oscillate between extreme depths. The code is trying
+// to keep the submarine within valid bounds, but the boundary conditions are
+// incorrectly defined for the Three.js coordinate system.
+//
+// In Three.js coordinates:
+// - Y axis is UP (positive is up, negative is down)
+// - The water surface should be at a higher Y value than the seabed
+// - Valid Y positions are between seabed and water surface
+
+// REPLACE the applyBoundaryConstraints function with this corrected version:
+
 function applyBoundaryConstraints() {
   // Get current position
   const { x, y, z } = gameState.position;
 
   // Get boundary constants
   const worldBoundary = gameState.constants.worldBoundary;
-  const seabedDepth = gameState.constants.seabedDepth;
-  const waterSurface = gameState.constants.waterSurface;
 
-  // Use slightly adjusted values for better gameplay
-  const effectiveSeabedDepth = seabedDepth + 0.5; // Position slightly above seabed so it's visible
-  const effectiveWaterSurface = waterSurface - 5; // Keep below water surface to maintain blue color
+  // CRITICAL FIX: Properly define the valid Y range in Three.js coordinates
+  // In Three.js: Y-up means higher Y values are toward water surface
+  const threeJsSeabedY = 0; // Bottom of the world (was incorrectly using -seabedDepth)
+  const threeJsWaterSurfaceY = 100; // Water surface (was incorrectly using waterSurface)
+
+  // Console log the current position for debugging
+  //console.log(`Position before bounds check: x=${x.toFixed(2)}, y=${y.toFixed(2)}, z=${z.toFixed(2)}`);
 
   // Track if we're hitting a boundary
   let isHittingBoundary = false;
 
-  // Check and constrain X position (east-west boundary)
-  if (x < -worldBoundary) {
-    gameState.position.x = -worldBoundary + 0.5; // Push slightly inward to prevent sticking
-    // Stop all movement instead of bouncing
+  // Reset velocity helper function
+  const resetVelocities = () => {
     gameState.velocity.x = 0;
     gameState.velocity.y = 0;
     gameState.velocity.z = 0;
-    gameState.angularVelocity.pitch = 0;
-    gameState.angularVelocity.yaw = 0;
-    gameState.angularVelocity.roll = 0;
+    gameState.angularVelocity.x = 0;
+    gameState.angularVelocity.y = 0;
+    gameState.angularVelocity.z = 0;
+  };
+
+  // Make a copy of the position to track changes
+  const newPosition = { x, y, z };
+
+  // X boundary (left/right)
+  if (Math.abs(x) > worldBoundary) {
+    newPosition.x = Math.sign(x) * (worldBoundary - 0.5);
+    resetVelocities();
     isHittingBoundary = true;
-    console.log("Hit west boundary wall - stopping submarine");
-  } else if (x > worldBoundary) {
-    gameState.position.x = worldBoundary - 0.5; // Push slightly inward to prevent sticking
-    // Stop all movement
-    gameState.velocity.x = 0;
-    gameState.velocity.y = 0;
-    gameState.velocity.z = 0;
-    gameState.angularVelocity.pitch = 0;
-    gameState.angularVelocity.yaw = 0;
-    gameState.angularVelocity.roll = 0;
-    isHittingBoundary = true;
-    console.log("Hit east boundary wall - stopping submarine");
+    console.log("Hit side boundary - stopping submarine");
   }
 
-  // Check and constrain Y position (north-south boundary)
-  if (y < -worldBoundary) {
-    gameState.position.y = -worldBoundary + 0.5; // Push slightly inward to prevent sticking
-    // Stop all movement
-    gameState.velocity.x = 0;
-    gameState.velocity.y = 0;
-    gameState.velocity.z = 0;
-    gameState.angularVelocity.pitch = 0;
-    gameState.angularVelocity.yaw = 0;
-    gameState.angularVelocity.roll = 0;
-    isHittingBoundary = true;
-    console.log("Hit south boundary wall - stopping submarine");
-  } else if (y > worldBoundary) {
-    gameState.position.y = worldBoundary - 0.5; // Push slightly inward to prevent sticking
-    // Stop all movement
-    gameState.velocity.x = 0;
-    gameState.velocity.y = 0;
-    gameState.velocity.z = 0;
-    gameState.angularVelocity.pitch = 0;
-    gameState.angularVelocity.yaw = 0;
-    gameState.angularVelocity.roll = 0;
-    isHittingBoundary = true;
-    console.log("Hit north boundary wall - stopping submarine");
-  }
-
-  // Check and constrain Z position (depth)
-  // Prevent going below seabed
-  if (z < effectiveSeabedDepth) {
-    gameState.position.z = effectiveSeabedDepth + 0.5; // Push up slightly to prevent sticking
-    // Stop all movement
-    gameState.velocity.x = 0;
-    gameState.velocity.y = 0;
-    gameState.velocity.z = 0;
-    gameState.angularVelocity.pitch = 0;
-    gameState.angularVelocity.yaw = 0;
-    gameState.angularVelocity.roll = 0;
+  // Y boundary (vertical: seabed and water surface)
+  if (y < threeJsSeabedY) {
+    // Below seabed
+    newPosition.y = threeJsSeabedY + 0.5;
+    resetVelocities();
     isHittingBoundary = true;
     console.log("Hit seabed - stopping submarine");
-  }
-
-  // Prevent going above water surface
-  if (z > effectiveWaterSurface) {
-    gameState.position.z = effectiveWaterSurface - 0.5; // Push down slightly to prevent sticking
-    // Stop all movement
-    gameState.velocity.x = 0;
-    gameState.velocity.y = 0;
-    gameState.velocity.z = 0;
-    gameState.angularVelocity.pitch = 0;
-    gameState.angularVelocity.yaw = 0;
-    gameState.angularVelocity.roll = 0;
+  } else if (y > threeJsWaterSurfaceY) {
+    // Above water surface
+    newPosition.y = threeJsWaterSurfaceY - 0.5;
+    resetVelocities();
     isHittingBoundary = true;
     console.log("Hit water surface - stopping submarine");
   }
 
-  // Create a boundary warning indicator for the player
-  const boundaryWarningThreshold = worldBoundary * 0.9; // 90% of the way to boundary
-  const depthWarningThreshold = 5; // 5 units from surface or seabed
+  // Z boundary (forward/backward)
+  if (Math.abs(z) > worldBoundary) {
+    newPosition.z = Math.sign(z) * (worldBoundary - 0.5);
+    resetVelocities();
+    isHittingBoundary = true;
+    console.log("Hit forward/backward boundary - stopping submarine");
+  }
+
+  // Update position with corrected values
+  gameState.position.x = newPosition.x;
+  gameState.position.y = newPosition.y;
+  gameState.position.z = newPosition.z;
+
+  // Console log the corrected position
+  if (isHittingBoundary) {
+    console.log(
+      `Position after bounds check: x=${gameState.position.x.toFixed(2)}, y=${gameState.position.y.toFixed(2)}, z=${gameState.position.z.toFixed(2)}`
+    );
+  }
 
   // Set boundary warning flag
+  const boundaryWarningThreshold = worldBoundary * 0.9;
+  const depthWarningThreshold = 5;
+
   gameState.status.boundaryWarning =
     Math.abs(x) > boundaryWarningThreshold ||
-    Math.abs(y) > boundaryWarningThreshold ||
-    z < effectiveSeabedDepth + depthWarningThreshold ||
-    z > effectiveWaterSurface - depthWarningThreshold;
+    Math.abs(z) > boundaryWarningThreshold ||
+    y < threeJsSeabedY + depthWarningThreshold ||
+    y > threeJsWaterSurfaceY - depthWarningThreshold;
 
-  // Return boundary hit state in case we want to trigger effects
   return isHittingBoundary;
 }
 
@@ -341,15 +313,15 @@ function updateCounter() {
   }
 
   // Format position values with 2 decimal places
-  const formatPos = (val) => val.toFixed(2);
+  // const formatPos = (val) => val.toFixed(2);
 
   // Update sub-data overlay text
   let overlayText =
-    `Position(${formatPos(gameState.position.x)},${formatPos(gameState.position.y)},${formatPos(gameState.position.z)}) | ` +
+    `Position(${gameState.position.x.toFixed(2)},${gameState.position.y.toFixed(2)},${gameState.position.z.toFixed(2)}) | ` +
     `compassHeading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
     `Speed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
-    `Depth: ${formatPos(gameState.status.depth)}m | ` +
-    `Pitch: ${formatPos(gameState.rotation.pitch)}°` +
+    `Depth: ${gameState.status.depth.toFixed(2)}m | ` +
+    `Pitch: ${Math.round(gameState.rotation.pitch)}°` +
     `\n` +
     `O₂: ${gameState.status.oxygenLevel}% | ` +
     `Batt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
@@ -385,10 +357,11 @@ function updateDerivedValues() {
   // Scale distance to 0-100%
   gameState.navigation.distanceToTarget = Math.min(100, (distance / gameState.constants.maxDistance) * 100);
 
-  // Calculate compass heading (simplified - assumes y is up)
-  gameState.navigation.headingToTarget = ((Math.atan2(dy, dx) * 180) / Math.PI + 360) % 360;
+  // Calculate compass heading (in XZ plane)
+  gameState.navigation.headingToTarget = ((Math.atan2(dx, -dz) * 180) / Math.PI + 360) % 360;
 
-  gameState.navigation.compassHeading = ((gameState.rotation.yaw % 360) + 360) % 360;
+  // Use raw yaw value for compass heading
+  gameState.navigation.compassHeading = ((gameState.rotation.y % 360) + 360) % 360;
 
   // Calculate current speed as percentage of max
   const speed = Math.sqrt(
@@ -396,8 +369,10 @@ function updateDerivedValues() {
   );
   gameState.navigation.currentSpeed = (speed / gameState.constants.maxSpeed) * 100;
 
-  // Convert depth to positive number for display (assuming negative z is down)
-  gameState.status.depth = Math.min(gameState.constants.maxDepth, -gameState.position.z);
+  // Convert depth to positive number for display (Y is up, so negative Y is depth)
+  // OLD gameState.status.depth = Math.min(gameState.constants.maxDepth, -gameState.position.y + gameState.constants.waterSurface);
+
+  gameState.status.depth = Math.min(gameState.constants.maxDepth, 100 - gameState.position.y);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
