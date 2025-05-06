@@ -163,7 +163,10 @@ function createSeabed() {
   // Create seabed mesh and position it
   seabed = new THREE.Mesh(seabedGeometry, seabedMaterial);
   seabed.rotation.x = -Math.PI / 2; // Rotate to horizontal
-  seabed.position.y = SEABED_DEPTH;
+  seabed.position.y = SEABED_DEPTH - 105; // 5 units lower than max submarine depth
+  // Adjust seabed position to be slightly lower than the submarine's max depth
+  // This ensures it's always visible at max depth
+
   scene.add(seabed);
 
   // Add wave patterns to seabed for realism
@@ -672,18 +675,18 @@ function updateCameraPosition() {
   }
 
   // Update fog density and color based on depth
-  // updateFogWithDepth();
+  updateFogWithDepth();
 }
 
 // Adjust fog based on water depth
 function updateFogWithDepth() {
-  // Get current depth
-  const depth = gameState.status.depth;
+  // Get current depth (modified to enforce minimum of 0)
+  const depth = Math.max(0, gameState.status.depth);
 
   // Make water get darker and visibility decrease with depth
   const depthFactor = Math.min(1, depth / gameState.constants.maxDepth);
 
-  // Blend from surface color to deep color
+  // Blend from surface color to deep color using the corrected depthFactor
   const r1 = (WATER_COLOR >> 16) & 255;
   const g1 = (WATER_COLOR >> 8) & 255;
   const b1 = WATER_COLOR & 255;
@@ -702,9 +705,14 @@ function updateFogWithDepth() {
   underwaterFog.color.setHex(blendedColor);
   scene.background.setHex(blendedColor);
 
-  // Reduce visibility with depth
-  underwaterFog.near = FOG_NEAR + depthFactor * 5;
-  underwaterFog.far = FOG_FAR - depthFactor * 50; // Maximum visibility decreases with depth
+  // REDUCED FOG DENSITY - double the visible range
+  // Original values: FOG_NEAR + depthFactor * 5, FOG_FAR - depthFactor * 50
+  // Reduce fog by extending the far plane and reducing the near plane effects
+  underwaterFog.near = FOG_NEAR; // Keep constant near plane for less fog up close
+  underwaterFog.far = FOG_FAR - depthFactor * 25; // Only reduce far plane by half as much
+
+  // At max depth, original fog was from 15 to 50 units
+  // New fog at max depth will be from 10 to 75 units (much better visibility)
 }
 
 // Handle window resize
