@@ -334,32 +334,29 @@ function createBoundaryWalls() {
   );
 
   // Create four walls (North, South, East, West)
-  // The wall positions are actually correct, as explained in the analysis
-  // The wall bottoms are at -100, which matches SEABED_DEPTH
-  // We're keeping the original position calculation since it works
 
-  // North wall
+  //// North wall - at negative Z boundary (north is -Z in Three.js)
   const northWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(WORLD_SIZE, WALL_HEIGHT, 16, 8), rockMaterial);
-  northWall.position.set(0, WORLD_SIZE / 2, (SEABED_DEPTH + 50) / 2);
-  northWall.rotation.y = Math.PI; // Face inward
+  northWall.position.set(0, SEABED_DEPTH + WALL_HEIGHT / 2, -WORLD_SIZE / 2);
+  northWall.rotation.y = 0; // No rotation needed, default orientation faces -Z
   wallsGroup.add(northWall);
 
-  // South wall
+  // South wall - at positive Z boundary
   const southWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(WORLD_SIZE, WALL_HEIGHT, 16, 8), rockMaterial);
-  southWall.position.set(0, -WORLD_SIZE / 2, (SEABED_DEPTH + 50) / 2);
-  // No rotation needed, already facing inward
+  southWall.position.set(0, SEABED_DEPTH + WALL_HEIGHT / 2, WORLD_SIZE / 2);
+  southWall.rotation.y = Math.PI; // Rotate to face the -Z direction (inward)
   wallsGroup.add(southWall);
 
-  // East wall
+  // East wall - at positive X boundary
   const eastWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(WORLD_SIZE, WALL_HEIGHT, 16, 8), rockMaterial);
-  eastWall.position.set(WORLD_SIZE / 2, 0, (SEABED_DEPTH + 50) / 2);
-  eastWall.rotation.y = -Math.PI / 2; // Face inward
+  eastWall.position.set(WORLD_SIZE / 2, SEABED_DEPTH + WALL_HEIGHT / 2, 0);
+  eastWall.rotation.y = -Math.PI / 2; // Rotate to face the -X direction (inward)
   wallsGroup.add(eastWall);
 
-  // West wall
+  // West wall - at negative X boundary
   const westWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(WORLD_SIZE, WALL_HEIGHT, 16, 8), rockMaterial);
-  westWall.position.set(-WORLD_SIZE / 2, 0, (SEABED_DEPTH + 50) / 2);
-  westWall.rotation.y = Math.PI / 2; // Face inward
+  westWall.position.set(-WORLD_SIZE / 2, SEABED_DEPTH + WALL_HEIGHT / 2, 0);
+  westWall.rotation.y = Math.PI / 2; // Rotate to face the +X direction (inward)
   wallsGroup.add(westWall);
 
   // Add some variation to the walls
