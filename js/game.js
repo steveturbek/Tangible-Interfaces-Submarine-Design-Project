@@ -352,7 +352,7 @@ function updateCounter() {
 
   // Add boundary warning if needed
   if (gameState.status.boundaryWarning) {
-    overlayText += `\n⚠️ BOUNDARY WARNING: Approaching boundary!`;
+    overlayText += `\n⚠️ Approaching boundary!`;
   }
 
   document.getElementById("sub-data-text").textContent = overlayText;

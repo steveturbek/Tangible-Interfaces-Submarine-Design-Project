@@ -17,8 +17,8 @@ const DEEP_WATER_COLOR = 0x0073cf; // Deeper Caribbean blue for gradient
 const TARGET_COLOR = 0xff5500; // Bright orange target (more visible in blue water)
 const TARGET_SIZE = 5; // Target sphere size
 const FOG_COLOR = 0x0096ff; // Match water color
-const FOG_NEAR = 10; //10; // Start fog effect at 10 units
-const FOG_FAR = 1000; // 100; Max visibility distance
+const FOG_NEAR = 1000; //10; // Start fog effect at 10 units
+const FOG_FAR = 10000; // 100; Max visibility distance
 
 // Check Three.js version and provide compatibility
 const isNewThreeVersion = THREE.REVISION >= 125; // r125+ uses only BufferGeometry
@@ -127,7 +127,7 @@ function setupLighting() {
   scene.add(refractedLight2);
 }
 
-// Create a tropical sandy seabed with coral elements
+// 1. Replace the createSeabed function with this version
 function createSeabed() {
   // Create a large plane for the seabed
   const seabedGeometry = new THREE.PlaneBufferGeometry(WORLD_SIZE, WORLD_SIZE, 80, 80);
@@ -163,9 +163,8 @@ function createSeabed() {
   // Create seabed mesh and position it
   seabed = new THREE.Mesh(seabedGeometry, seabedMaterial);
   seabed.rotation.x = -Math.PI / 2; // Rotate to horizontal
-  seabed.position.y = SEABED_DEPTH; //- 5; // 5 units lower than max submarine depth
-  // Adjust seabed position to be slightly lower than the submarine's max depth
-  // This ensures it's always visible at max depth
+  seabed.position.y = SEABED_DEPTH + 25; // FIX: Add 25 units to ensure walls and seabed connect visually
+  // This 25-unit adjustment creates proper overlap between walls and seabed
 
   scene.add(seabed);
 
@@ -285,7 +284,6 @@ function createCoralFormation(coralColors) {
   return coralGroup;
 }
 
-// Create rock walls around the world boundaries
 function createBoundaryWalls() {
   // console.log("Creating boundary walls with rock textures...");
 
@@ -310,7 +308,7 @@ function createBoundaryWalls() {
       texture.repeat.set(5, 3); // Repeat to avoid stretching
       rockMaterial.map = texture;
       rockMaterial.needsUpdate = true;
-      // console.log("✅ Rock texture loaded successfully");
+      // console.log("Rock texture loaded successfully");
     },
     undefined,
     function (err) {
@@ -327,7 +325,7 @@ function createBoundaryWalls() {
       rockMaterial.normalMap = normalMap;
       rockMaterial.normalScale.set(1, 1);
       rockMaterial.needsUpdate = true;
-      // console.log("✅ Rock normal map loaded successfully");
+      // console.log("Rock normal map loaded successfully");
     },
     undefined,
     function (err) {
@@ -336,9 +334,13 @@ function createBoundaryWalls() {
   );
 
   // Create four walls (North, South, East, West)
+  // The wall positions are actually correct, as explained in the analysis
+  // The wall bottoms are at -100, which matches SEABED_DEPTH
+  // We're keeping the original position calculation since it works
+
   // North wall
   const northWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(WORLD_SIZE, WALL_HEIGHT, 16, 8), rockMaterial);
-  northWall.position.set(0, WORLD_SIZE / 2, (SEABED_DEPTH + 50) / 2); // Middle of water and seabed
+  northWall.position.set(0, WORLD_SIZE / 2, (SEABED_DEPTH + 50) / 2);
   northWall.rotation.y = Math.PI; // Face inward
   wallsGroup.add(northWall);
 
@@ -372,8 +374,18 @@ function createBoundaryWalls() {
         const y = positions[i + 1];
 
         // Apply noise to z coordinate to create rocky surface
-        const noise = simplex.noise2D(x * 0.05, y * 0.05) * 5;
-        positions[i + 2] = noise;
+        // But reduce displacement near the bottom to ensure better connection with seabed
+        const noise = simplex.noise2D(x * 0.05, y * 0.05) * 3;
+
+        // Check if this vertex is near the bottom of the wall
+        // WALL_HEIGHT/2 = 75, so bottom vertices are at y ≈ -75
+        if (y < -WALL_HEIGHT / 2 + 10) {
+          // For vertices near the bottom, reduce displacement for better seabed connection
+          const factor = (y + WALL_HEIGHT / 2) / 10; // 0 at bottom, 1 at 10 units up
+          positions[i + 2] = noise * factor;
+        } else {
+          positions[i + 2] = noise;
+        }
       }
 
       wall.geometry.attributes.position.needsUpdate = true;
@@ -384,7 +396,7 @@ function createBoundaryWalls() {
   // Add walls to scene
   scene.add(wallsGroup);
 
-  // console.log("✅ Boundary walls created");
+  // console.log("Boundary walls created");
 
   // Return for potential later reference
   return wallsGroup;
@@ -451,7 +463,7 @@ function createWaterEffects() {
       texture.repeat.set(10, 10); // Repeat the texture for better detail
       waterMaterial.map = texture;
       waterMaterial.needsUpdate = true;
-      // console.log("✅ Water texture loaded successfully");
+      // console.log("Water texture loaded successfully");
     },
     undefined,
     function (err) {
@@ -468,7 +480,7 @@ function createWaterEffects() {
       waterMaterial.normalMap = normalMap;
       waterMaterial.normalScale.set(0.3, 0.3); // Adjust normal intensity
       waterMaterial.needsUpdate = true;
-      // console.log("✅ Water normal map loaded successfully");
+      // console.log("Water normal map loaded successfully");
     },
     undefined,
     function (err) {
