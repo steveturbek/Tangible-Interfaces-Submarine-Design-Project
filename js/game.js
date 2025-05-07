@@ -14,11 +14,11 @@ const gameState = {
 
     //Elevator flaps on the horizontal tail produce pitch
     PitchElevatorAngle: 0, // -100 to +100 (down to up)
-    maxPitchElevatorAngle: 100, // absolute number
+    maxPitchElevatorAngle: 30, // absolute number
 
     //rudder on the vertical tail produces yaw
     YawRudderAngle: 0, // -100 to +100 (left to right)
-    maxRudderAngle: 100, // absolute number
+    maxRudderAngle: 30, // absolute number
 
     //Aft Thruster on the horizontal tail produce pitch
     AftThruster: 0, // -100 to +100 (down to up)

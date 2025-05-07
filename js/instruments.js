@@ -20,6 +20,16 @@ function initializeInstruments() {
   if (gameState && gameState.status) {
     updateInstrumentsOxygen(gameState.status.oxygenLevel);
   }
+
+  // Check if Web Serial API is supported
+  if ("serial" in navigator) {
+    // console.log("serial is supported by browser");
+    document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").setAttribute("fill", "#ffffff");
+    document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").addEventListener("click", connectToMicrobit);
+  } else {
+    outputDiv.textContent = "Web Serial API is not supported in this browser. Please use Chrome or Edge.";
+    document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").setAttribute("fill", "#ff0000");
+  }
 }
 
 // Initialize instruments when the window loads

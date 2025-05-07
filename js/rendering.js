@@ -43,10 +43,10 @@ function initScene() {
   camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
 
   // For debugging - log initial orientation
-  console.log("Initial camera setup at game start");
-  console.log("Game state initial rotation (degrees):", "Pitch: 0, Yaw: 0, Roll: 0");
-  console.log("Adding 90 degrees to yaw for camera orientation");
-  console.log("Expected camera to look towards (1,0,0) world coordinates");
+  // console.log("Initial camera setup at game start");
+  // console.log("Game state initial rotation (degrees):", "Pitch: 0, Yaw: 0, Roll: 0");
+  // console.log("Adding 90 degrees to yaw for camera orientation");
+  // console.log("Expected camera to look towards (1,0,0) world coordinates");
 
   // Create renderer and attach to canvas
   const canvas = document.getElementById("outside-scene");
@@ -609,7 +609,7 @@ function addCausticsEffect() {
       texture.repeat.set(10, 10);
       causticsMaterial.map = texture;
       causticsMaterial.needsUpdate = true;
-      console.log("Caustics texture loaded successfully");
+      // console.log("Caustics texture loaded successfully");
     },
     undefined,
     function (err) {
