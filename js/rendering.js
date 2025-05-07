@@ -19,8 +19,8 @@ const FOG_COLOR = 0x0096ff; // Match water color
 
 const TARGET_COLOR = 0xff5500; // Bright orange target (more visible in blue water)
 const TARGET_SIZE = 5; // Target sphere size
-const FOG_NEAR = 10; //10; // Start fog effect at 10 units
-const FOG_FAR = 1000; // 100; Max visibility distance
+const FOG_NEAR = 50; //10; // Start fog effect at 10 units
+const FOG_FAR = 500; // 100; Max visibility distance
 
 // Check Three.js version and provide compatibility
 const isNewThreeVersion = THREE.REVISION >= 125; // r125+ uses only BufferGeometry
@@ -66,6 +66,11 @@ function initScene() {
   // Add lighting for bright Caribbean day
   setupLighting();
 
+  // plain flat area to make it look better outside world area
+
+  //maybe this is limited to world size?
+  // createSimpleExtendedSeabed();
+
   // Create seabed with coral formations
   createSeabed();
 
@@ -79,7 +84,7 @@ function initScene() {
   createCoralReef();
 
   // Add boundary walls with rock textures
-  createBoundaryWalls();
+  // createBoundaryWalls();
 
   // Handle window resize
   window.addEventListener("resize", onWindowResize);
@@ -148,7 +153,7 @@ function setupLighting() {
   const causticsLight = new THREE.SpotLight(0xaaffff, 1.5, 100, Math.PI / 4, 0.8);
   causticsLight.position.set(0, 90, 0);
   causticsLight.castShadow = false;
-  scene.add(causticsLight);
+  // scene.add(causticsLight);
 
   // Animate the caustics light position subtly
   function animateCaustics() {
@@ -322,6 +327,47 @@ function createCoralFormation(coralColors) {
   }
 
   return coralGroup;
+}
+
+// Add this function to create a simple extended seabed
+function createSimpleExtendedSeabed() {
+  // Get the current world size
+  const currentWorldSize = gameState.constants.worldBoundary * 2;
+
+  // Define how much larger the extension should be (e.g., 3x the current world size)
+  const extensionSize = currentWorldSize * 3;
+
+  // Create a simple flat plane geometry for the extension
+  const extendedSeabedGeometry = new THREE.PlaneBufferGeometry(
+    gameState.constants.worldBoundary * 1, // Width
+    gameState.constants.worldBoundary * 1, // Height
+    1, // Width segments (minimal)
+    1 // Height segments (minimal)
+  );
+
+  // Create a simple material with a solid color
+  // Using a slightly darker color than the main seabed for subtle differentiation
+  const extendedSeabedMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffffff, // Slightly darker than main seabed
+    side: THREE.FrontSide,
+  });
+
+  // Create the mesh
+  const extendedSeabed = new THREE.Mesh(extendedSeabedGeometry, extendedSeabedMaterial);
+
+  // Position it at the same depth as the main seabed, but ensure it's slightly lower
+  // to prevent z-fighting with the main seabed
+  extendedSeabed.position.y = SEABED_DEPTH - 0.1;
+
+  // Rotate to horizontal
+  extendedSeabed.rotation.x = -Math.PI / 2;
+
+  // Add to scene before the main seabed so the main seabed renders on top
+  scene.add(extendedSeabed);
+
+  console.log("Simple extended seabed created");
+
+  return extendedSeabed;
 }
 
 function createBoundaryWalls() {
@@ -537,6 +583,95 @@ function createWaterEffects() {
 
   // NEW: Add caustics effect to the seabed
   addCausticsEffect();
+}
+
+// NEW: Function to add water caustics effect to the scene
+function addCausticsEffect() {
+  // Create caustics texture plane for the seabed
+  const causticsGeometry = new THREE.PlaneBufferGeometry(WORLD_SIZE, WORLD_SIZE, 1, 1);
+
+  // Create caustics material
+  const causticsMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.3,
+    blending: THREE.AdditiveBlending,
+    side: THREE.FrontSide,
+    depthWrite: false,
+  });
+
+  // Try to load caustics texture
+  const textureLoader = new THREE.TextureLoader();
+  textureLoader.load(
+    "artwork/sand_texture.jpg", // You'll need to add this image to your assets
+    function (texture) {
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(10, 10);
+      causticsMaterial.map = texture;
+      causticsMaterial.needsUpdate = true;
+      console.log("Caustics texture loaded successfully");
+    },
+    undefined,
+    function (err) {
+      console.log("Using fallback caustics (texture failed to load)");
+      // Create a dynamic caustics texture if image fails to load
+      const canvas = document.createElement("canvas");
+      canvas.width = 256;
+      canvas.height = 256;
+      const ctx = canvas.getContext("2d");
+
+      // Create a simple caustics-like pattern
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < 50; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const radius = Math.random() * 20 + 5;
+
+        const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        gradient.addColorStop(0, "rgba(255, 255, 255, 0.8)");
+        gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      const dynamicTexture = new THREE.CanvasTexture(canvas);
+      dynamicTexture.wrapS = dynamicTexture.wrapT = THREE.RepeatWrapping;
+      dynamicTexture.repeat.set(5, 5);
+
+      causticsMaterial.map = dynamicTexture;
+      causticsMaterial.needsUpdate = true;
+    }
+  );
+
+  // Create the caustics plane
+  const causticsPlane = new THREE.Mesh(causticsGeometry, causticsMaterial);
+  causticsPlane.rotation.x = -Math.PI / 2; // Align with seabed
+  causticsPlane.position.y = SEABED_DEPTH + 0.1; // Slightly above seabed
+  scene.add(causticsPlane);
+
+  // Animate the caustics
+  function animateCaustics() {
+    if (causticsMaterial.map) {
+      const time = clock.getElapsedTime();
+
+      // Move the texture for a swimming pool light effect
+      causticsMaterial.map.offset.x = time * 0.05;
+      causticsMaterial.map.offset.y = time * 0.03;
+
+      // Vary the opacity slightly
+      causticsMaterial.opacity = 0.2 + Math.sin(time * 1.5) * 0.1;
+    }
+
+    requestAnimationFrame(animateCaustics);
+  }
+
+  // Start caustics animation
+  animateCaustics();
 }
 
 // Add floating particles to enhance underwater effect
