@@ -2,8 +2,8 @@
 
 // Control configurations
 const controlConfig = {
-  thrusterIncrement: 5, // 10% per keypress
-  flapIncrement: 1, // 10% per keypress
+  thrusterIncrement: 5, // per keypress
+  flapIncrement: 10, // per keypress
 };
 
 // Set up keyboard event listeners

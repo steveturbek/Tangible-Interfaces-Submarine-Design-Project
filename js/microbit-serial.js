@@ -90,7 +90,7 @@ async function autoConnectToMicrobit() {
     const ports = await navigator.serial.getPorts();
 
     if (ports.length === 0) {
-      console.log("No previously paired devices found. Please connect manually.");
+      // console.log("No previously paired devices found. Please connect manually.");
       return;
     }
 
