@@ -79,7 +79,41 @@ By completing this project, you will:
 
 ### Current State
 
-The game is functional, can be navigated with keyboard keys or with a microbit. More would need to be done to make it more interestingf
+The game is functional, can be navigated with keyboard keys or with a microbit. See Github Issues for ideas.
+
+# Submarine Control Guide - Left Hand Keyboard Layout
+
+Note the game is intended to be played with custom hardware controls, but can be steered with keyboard for development.
+
+## ⌨️ Left Hand 🕹️ Key Controls
+
+| Key     | Function               | Effect                                                      |
+| ------- | ---------------------- | ----------------------------------------------------------- |
+| `W`     | Elevator Up            | Pitches the submarine downward (descend)                    |
+| `S`     | Elevator Down          | Pitches the submarine upward (ascend)                       |
+| `A`     | Rudder Left            | Turns the submarine to the left                             |
+| `D`     | Rudder Right           | Turns the submarine to the right                            |
+| `Q`     | Left Thruster Increase | Increases power to the left thruster                        |
+| `Z`     | Left Thruster Decrease | Decreases power to the left thruster                        |
+| `E`     | Left Thruster Increase | Increases power to the left thruster                        |
+| `C`     | Left Thruster Decrease | Decreases power to the left thruster                        |
+| `` ` `` | Data Console Toggle    | Toggles the submarine data overlay (press the backtick key) |
+
+## 📊 Less Common Controls
+
+| Key | Function              | Effect                                     |
+| --- | --------------------- | ------------------------------------------ |
+| `2` | Aft Thruster Increase | Increases power to the aft (rear) thruster |
+| `X` | Aft Thruster Decrease | Decreases power to the aft thruster        |
+| `B` | Emergency Surface     | Activates emergency surfacing procedure    |
+
+## 💡 Tips for New Pilots
+
+1. **Start slow**: Begin with small adjustments to get a feel for the submarine's response.
+2. **Watch your depth**: Use `W` and `S` to control your ascent and descent.
+3. **Turn gradually**: Gentle adjustments with `A` and `D` will help maintain control.
+4. **Monitor your systems**: Toggle the data console with the backtick key (`` ` ``) to view important submarine metrics.
+5. **Emergency surface**: If you get into trouble, press `B` to initiate emergency surfacing.
 
 ### Game Mechanics
 
@@ -140,7 +174,6 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 (in your fork)
 
 1. Modify the SVG elements in the HTML/CSS for cockpit design
-<!--1. Update the configuration in `config.js` for control scaling -->
 1. Test your implementation using keyboard controls
 1. Integrate Micro:bit controls using the provided examples
 
@@ -160,18 +193,3 @@ The repository is organized as follows:
 ├── assets/             # Images, CSS, and other assets to customize the game **Do not edit only these files**
 └── examples/           # Example code
 ```
-
-## Potential Future Game Ideas
-
-- Damage mechanics (wall collisions, shark attacks)
-- Use of lights to see better (with strategic consequences, uses electricity, attracts sharks)
-- Different vehicle designs with tradeoffs
-- Supplies (oxygen)
-- Supply grabber arm
-- Beacon placement system
-
-## Technical References, not all used in project
-
-- https://support.microbit.org/support/solutions/articles/19000071689-can-i-control-my-pc-or-simulate-a-keyboard-and-mouse-
-- https://edges.ideo.com/posts/figproxy
-- https://microflow.vercel.app/
