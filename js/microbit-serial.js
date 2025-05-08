@@ -129,7 +129,7 @@ function parseMicrobitSerialLine(lineIn) {
   const stringArray = lineIn.split(","); //text is separated by commas, split into an array (a list)
   if (stringArray.length != 10) return; //we will always send 10 values as an error check, so skip this read if not 10 values
 
-  console.log(stringArray);
+  // console.log(stringArray);
   // Convert to numbers and replace empty or NaN values with 0
   const intArray = stringArray.map((str) => {
     const num = +str;

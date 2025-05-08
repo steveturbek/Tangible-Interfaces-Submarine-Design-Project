@@ -145,10 +145,14 @@ function setRightThruster(percent) {
 function setElevator(percent) {
   if (!gameState || !gameState.controls) return;
 
-  percent *= 0.01 * gameState.controls.maxRudderAngle; // convert from percent to absolute
-  gameState.controls.PitchElevatorAngle = clamp(percent, -gameState.controls.maxPitchElevatorAngle, gameState.controls.maxPitchElevatorAngle);
+  percent = clamp(
+    percent * 0.01 * gameState.controls.maxPitchElevatorAngle,
+    -gameState.controls.maxPitchElevatorAngle,
+    gameState.controls.maxPitchElevatorAngle
+  );
+  gameState.controls.PitchElevatorAngle = (gameState.controls.PitchElevatorAngle + percent) / 2;
 
-  console.log(`Elevator Angle: ${gameState.controls.PitchElevatorAngle}%`);
+  // console.log(`Elevator Angle: ${gameState.controls.PitchElevatorAngle}%`);
 }
 
 /**
@@ -159,10 +163,10 @@ function setElevator(percent) {
 function setRudder(percent) {
   if (!gameState || !gameState.controls) return;
 
-  percent *= 0.01 * gameState.controls.YawRudderAngle; // convert from percent to absolute
-  gameState.controls.YawRudderAngle = clamp(percent, -gameState.controls.maxRudderAngle, gameState.controls.maxRudderAngle);
-
-  console.log(`Rudder Angle: ${gameState.controls.YawRudderAngle}%`);
+  // percent *= 0.01 * gameState.controls.maxYawRudderAngle; // convert from percent to absolute
+  percent = clamp(percent * 0.01 * gameState.controls.maxYawRudderAngle, -gameState.controls.maxYawRudderAngle, gameState.controls.maxYawRudderAngle);
+  gameState.controls.YawRudderAngle = (gameState.controls.YawRudderAngle + percent) / 2;
+  // console.log(`Rudder Angle: ${percent}%`);
 }
 
 /**

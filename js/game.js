@@ -1,5 +1,5 @@
 // Submarine Game State Structure
-const gameState = {
+const gameState_original = {
   // Position & Orientation (using Three.js coordinate system)
   position: { x: 0, y: 90, z: 0 }, // x: right/left, y: up/down, z: forward/backward
   rotation: { x: 0, y: 0, z: 0 }, // x: pitch, y: yaw, z: roll
@@ -18,7 +18,7 @@ const gameState = {
 
     //rudder on the vertical tail produces yaw
     YawRudderAngle: 0, // -100 to +100 (left to right)
-    maxRudderAngle: 30, // absolute number
+    maxYawRudderAngle: 30, // absolute number
 
     //Aft Thruster on the horizontal tail produce pitch
     AftThruster: 0, // -100 to +100 (down to up)
@@ -70,6 +70,74 @@ const gameState = {
     logTimeCounterLengthMS: 0.5, //500 milliseconds
   },
 };
+
+const gameState = [];
+
+Object.keys(gameState_original).forEach((key) => {
+  if (typeof gameState_original[key] === "object" && gameState_original[key] !== null) {
+    gameState[key] = JSON.parse(JSON.stringify(gameState_original[key]));
+  } else {
+    gameState[key] = gameState_original[key];
+  }
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// Function to start the game
+function startGame() {
+  if (!isGameRunning) {
+    console.log("Starting game");
+    isGameRunning = true;
+    lastFrameTime = 0; // Reset the time tracker
+    animationFrameId = requestAnimationFrame(gameLoop);
+  } else stopGame();
+}
+
+// Function to stop the game
+function stopGame() {
+  if (isGameRunning) {
+    console.log("Stopping game");
+    isGameRunning = false;
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+  }
+}
+
+// Function to restart the game
+function restartGame() {
+  // console.log("Resetting game...");
+
+  // Stop the current game loop
+  stopGame();
+
+  // Reset game state to original values (deep copy)
+  // This properly copies all nested objects
+  Object.keys(gameState_original).forEach((key) => {
+    if (typeof gameState_original[key] === "object" && gameState_original[key] !== null) {
+      gameState[key] = JSON.parse(JSON.stringify(gameState_original[key]));
+    } else {
+      gameState[key] = gameState_original[key];
+    }
+  });
+
+  document.getElementById("sub-data-text").textContent = "";
+
+  // Restart the game loop
+  setTimeout(startGame, 500);
+}
+
+// Start the game after everything else is loaded
+window.addEventListener(
+  "load",
+  function () {
+    // console.log("Window loaded, starting game in 500ms");
+    // Start the game loop after a delay to ensure all initialization is complete
+    setTimeout(startGame, 500);
+  },
+  { once: true }
+); // Only attach this listener once
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -195,7 +263,7 @@ function updateSubmarineState(deltaTime) {
   if (gameState.time.logTimeCounter > gameState.time.logTimeCounterLengthMS) {
     gameState.time.logTimeCounter = 0;
 
-    updateCounter();
+    updateUI();
   }
 }
 
@@ -295,7 +363,7 @@ function applyBoundaryConstraints() {
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-function updateCounter() {
+function updateUI() {
   // console.log(gameState.navigation.distanceToTarget);
   //are you at target?
   if (gameState.navigation.distanceToTarget < 0.1) {
@@ -327,8 +395,8 @@ function updateCounter() {
     `\n` +
     `LeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
     `RightThrust: ${gameState.controls.ThrottleRight}% | ` +
-    `Rudder: ${gameState.controls.YawRudderAngle}% | ` +
-    `Elevator: ${gameState.controls.PitchElevatorAngle}% | ` +
+    `Rudder: ${gameState.controls.YawRudderAngle.toFixed(1)}% | ` +
+    `Elevator: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% | ` +
     `AftThruster: ${gameState.controls.AftThruster}%`;
 
   // Add boundary warning if needed
@@ -408,36 +476,3 @@ function gameLoop(currentTime) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
-// Function to start the game
-function startGame() {
-  if (!isGameRunning) {
-    console.log("Starting game loop");
-    isGameRunning = true;
-    lastFrameTime = 0; // Reset the time tracker
-    animationFrameId = requestAnimationFrame(gameLoop);
-  }
-}
-
-// Function to stop the game
-function stopGame() {
-  if (isGameRunning) {
-    console.log("Stopping game loop");
-    isGameRunning = false;
-    if (animationFrameId) {
-      cancelAnimationFrame(animationFrameId);
-      animationFrameId = null;
-    }
-  }
-}
-
-// Start the game after everything else is loaded
-window.addEventListener(
-  "load",
-  function () {
-    // console.log("Window loaded, starting game in 500ms");
-    // Start the game loop after a delay to ensure all initialization is complete
-    setTimeout(startGame, 500);
-  },
-  { once: true }
-); // Only attach this listener once

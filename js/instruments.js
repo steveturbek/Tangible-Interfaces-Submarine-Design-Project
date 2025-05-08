@@ -79,7 +79,7 @@ window.addEventListener(
     // Set initial state
     if (gameState && gameState.status) updateInstruments();
 
-    // document.getElementById("instruments-restart").contentDocument.getElementById("restart").addEventListener("click", restart_game);
+    document.getElementById("instruments-restart").contentDocument.getElementById("restart").addEventListener("click", restartGame);
 
     // Check if Web Serial API is supported
     if ("serial" in navigator) {
@@ -101,7 +101,6 @@ window.addEventListener(
 
 function updateInstruments() {
   if (gameState && gameState.status) {
-    updateInstruments_Oxygen();
     updateInstruments_Oxygen();
     updateInstruments_Battery();
     updateInstruments_depth();

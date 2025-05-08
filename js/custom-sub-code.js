@@ -28,7 +28,7 @@ function getSerialMessageFromMicrobit(ArrayOfValues) {
 
   /* example code
    */
-  //   console.log(ArrayOfValues);
+  // console.log(ArrayOfValues);
 
   if (ArrayOfValues[0] == 1) {
     window.submarineControls.adjustLeftThruster(10); // Increases/decreases left thruster by specified amount - Example: window.submarineControls.adjustLeftThruster(10);
@@ -38,5 +38,5 @@ function getSerialMessageFromMicrobit(ArrayOfValues) {
   }
 
   window.submarineControls.setElevator(ArrayOfValues[2]); // Sets elevator angle to an exact percentage value (-100 to 100) - Example: window.submarineControls.setElevator(-30);
-  //   window.submarineControls.setRudder(ArrayOfValues[3]); // Sets rudder angle to an exact percentage value (-100 to 100) - Example: window.submarineControls.setRudder(25);
+  window.submarineControls.setRudder(ArrayOfValues[3]); // Sets rudder angle to an exact percentage value (-100 to 100) - Example: window.submarineControls.setRudder(25);
 }
