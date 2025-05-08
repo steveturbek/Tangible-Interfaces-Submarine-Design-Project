@@ -75,6 +75,60 @@ async function disconnectFromMicrobit() {
 }
 
 ////////////////////////////////////////////////////////////////////////
+// Try to auto-connect when the game loads - this is activated in instruments.js window.addEventListener(load)
+async function autoConnectToMicrobit() {
+  console.log("Attempting to auto-connect to Micro:bit...");
+
+  try {
+    // Check if Web Serial API is available
+    if (!("serial" in navigator)) {
+      console.log("Web Serial API is not supported in this browser.");
+      return;
+    }
+
+    // Get list of previously paired devices
+    const ports = await navigator.serial.getPorts();
+
+    if (ports.length === 0) {
+      console.log("No previously paired devices found. Please connect manually.");
+      return;
+    }
+
+    // Assume the first port is the Micro:bit (you could add more logic to identify it if needed)
+    port = ports[0];
+
+    // Open the port with appropriate settings for Micro:bit
+    await port.open({ baudRate: 115200 });
+
+    // Start reading data
+    readSerialData();
+
+    console.log("Auto-connected to Micro:bit successfully");
+    document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").setAttribute("fill", "#00ff00");
+
+    document
+      .getElementById("instruments-microBitGauge")
+      .contentDocument.getElementById("circuit-board-top-layer")
+      .removeEventListener("click", connectToMicrobit);
+    document
+      .getElementById("instruments-microBitGauge")
+      .contentDocument.getElementById("circuit-board-top-layer")
+      .addEventListener("click", disconnectFromMicrobit);
+  } catch (error) {
+    console.log(`Auto-connect error: ${error.message}`);
+    // If auto-connect fails, we leave the manual connect option available
+  }
+}
+
+// Modify the window.addEventListener in instruments.js to call autoConnectToMicrobit
+// Add this to the end of the load event listener in instruments.js:
+//
+// if ("serial" in navigator) {
+//   // Try to auto-connect first
+//   autoConnectToMicrobit();
+// }
+
+////////////////////////////////////////////////////////////////////////
 async function readSerialData() {
   if (readingInProgress) return;
   readingInProgress = true;
