@@ -66,11 +66,11 @@ function handleKeyPress(event) {
     // Rudder (yaw) controls
     case "a":
     case "j":
-      adjustRudder(-controlConfig.flapIncrement);
+      adjustRudder(controlConfig.flapIncrement);
       break;
     case "d":
     case "l":
-      adjustRudder(controlConfig.flapIncrement);
+      adjustRudder(-controlConfig.flapIncrement);
       break;
 
     // Aft thruster controls

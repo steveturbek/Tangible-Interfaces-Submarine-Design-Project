@@ -224,8 +224,35 @@ function updateSubmarineState(deltaTime) {
 
     // ADDED: Actively dampen roll to zero - this is the key fix
     // This ensures any inadvertent roll quickly returns to neutral
-    gameState.angularVelocity.z *= 0.7; // Strong damping factor specifically for roll
-    gameState.rotation.z *= 0.95; // Also gradually reduce any roll that has accumulated
+    // gameState.angularVelocity.z *= 0.7; // Strong damping factor specifically for roll
+    // gameState.rotation.z *= 0.95; // Also gradually reduce any roll that has accumulated
+  }
+
+  // ENHANCED: Aggressively counter any roll to maintain vertical orientation
+  // This is critical for intuitive steering, especially for new users
+  const rollStabilizationRate = 0.95; // Increased from 0.7 - more aggressive damping
+  const rollResetRate = 0.8; // Increased from 0.95 - faster return to zero
+
+  // Apply strong damping to roll velocity
+  gameState.angularVelocity.z *= 1 - rollStabilizationRate * deltaTime;
+
+  // Actively push roll back to zero with a force proportional to current roll
+  const rollCorrection = -gameState.rotation.z * rollResetRate * deltaTime;
+  gameState.angularVelocity.z += rollCorrection;
+
+  // For extreme roll values, apply even stronger correction
+  if (Math.abs(gameState.rotation.z) > 15) {
+    const emergencyCorrection = -Math.sign(gameState.rotation.z) * 3 * deltaTime;
+    gameState.angularVelocity.z += emergencyCorrection;
+  }
+
+  // Additional anti-roll logic when using rudder
+  // This counteracts the natural tendency to roll when turning
+  if (Math.abs(gameState.controls.YawRudderAngle) > 10) {
+    // Calculate anti-roll force when rudder is used
+    const yawRate = gameState.angularVelocity.y;
+    const antiRollForce = -yawRate * 0.3 * deltaTime;
+    gameState.angularVelocity.z += antiRollForce;
   }
 
   // Apply drag to velocities

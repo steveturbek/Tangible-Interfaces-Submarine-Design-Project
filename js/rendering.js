@@ -78,7 +78,7 @@ function initScene() {
   createTarget();
 
   // Add water effects - caustics, particles, etc.
-  createWaterEffects();
+  // createWaterEffects();  //there was some flashing
 
   // Add coral reef elements
   // createCoralReef();

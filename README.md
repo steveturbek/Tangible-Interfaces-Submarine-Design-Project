@@ -77,6 +77,10 @@ By completing this project, you will:
 
 ## Game Overview
 
+### Current State
+
+The game is functional, can be navigated with keyboard keys or with a microbit. More would need to be done to make it more interestingf
+
 ### Game Mechanics
 
 - Oxygen management (countdown timer)
