@@ -2,17 +2,13 @@
 
 ## Introduction
 
-Welcome to the "AquaNova Submarine" Student Design Project for Steve Turbek's "Tangible Interfaces" Industrial Design class at Pratt Institute! This collaborative challenge sits at the intersection of industrial design, user experience, and physical computing. Throughout this project, you'll work in teams to create an immersive submarine piloting experience that combines digital interfaces with physical controls.
-
-## Demo Link (in early development)
-
-[Web game experience - not yet working!](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project)
+Welcome to the Submarine Design Project for Steve Turbek's "Tangible Interfaces" Industrial Design class at Pratt Institute! This collaborative challenge sits at the intersection of industrial design, user experience, and physical computing. Throughout this project, you'll work in teams to create an immersive submarine piloting experience that combines digital interfaces with physical controls.
 
 ![Illustration of a Submarine Cockpit](assets/submarine-illus.png "Illustration of a Submarine Cockpit")
 
 ## The Design Challenge
 
-You are a design team tasked with creating the next generation of personal submersibles. Your submersible needs to navigate complex underwater environments while providing an intuitive interface for pilots of varying experience levels.
+You are a design team tasked by "AquaNova Submarine" with creating the next generation of personal submersibles. Your submersible needs to navigate complex underwater environments while providing an intuitive interface for pilots of varying experience levels.
 
 Success in this project will require balancing aesthetic appeal with functional clarity. Your instruments must be visually consistent with your cockpit design while providing clear information. Your physical controls must feel natural while providing the precision needed for delicate maneuvers.
 
@@ -34,6 +30,12 @@ Your mission:
 ## The Gameplay Experience
 
 Your submersible will navigate through an underwater maze of coral reefs. The pilot must reach an underwater base before running out of oxygen or electricity. The gameplay emphasizes careful resource management and precise navigation through challenging 3D environments.
+
+## Demo Link (in development)
+
+[Web game experience](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project)
+
+Note the game is intended to be played with custom hardware controls, but can be steered with keyboard for development. See below for tips.
 
 ## Physical Prototype
 
@@ -81,11 +83,11 @@ By completing this project, you will:
 
 The game is functional, can be navigated with keyboard keys or with a microbit. See Github Issues for ideas.
 
-# Submarine Control Guide - Left Hand Keyboard Layout
+### Submarine Control Guide - Left Hand Keyboard Layout
 
 Note the game is intended to be played with custom hardware controls, but can be steered with keyboard for development.
 
-## ⌨️ Left Hand 🕹️ Key Controls
+### ⌨️ Left Hand 🕹️ Key Controls
 
 | Key     | Function               | Effect                                                      |
 | ------- | ---------------------- | ----------------------------------------------------------- |
@@ -99,7 +101,7 @@ Note the game is intended to be played with custom hardware controls, but can be
 | `C`     | Left Thruster Decrease | Decreases power to the left thruster                        |
 | `` ` `` | Data Console Toggle    | Toggles the submarine data overlay (press the backtick key) |
 
-## 📊 Less Common Controls
+### 📊 Less Common Controls
 
 | Key | Function              | Effect                                     |
 | --- | --------------------- | ------------------------------------------ |
@@ -107,7 +109,7 @@ Note the game is intended to be played with custom hardware controls, but can be
 | `X` | Aft Thruster Decrease | Decreases power to the aft thruster        |
 | `B` | Emergency Surface     | Activates emergency surfacing procedure    |
 
-## 💡 Tips for New Pilots
+### 💡 Tips for New Pilots
 
 1. **Start slow**: Begin with small adjustments to get a feel for the submarine's response.
 2. **Watch your depth**: Use `W` and `S` to control your ascent and descent.
