@@ -10,7 +10,7 @@ let clock;
 let underwaterFog;
 
 // Environment settings
-const WORLD_SIZE = gameState.constants.worldBoundary * 2; // World dimensions
+const WORLD_SIZE = gameState.constants.worldBoundary * 4; // World dimensions
 const SEABED_DEPTH = gameState.constants.seabedDepth; // Depth of the seabed
 
 const WATER_COLOR = 0x0096ff; // Bright Caribbean blue
@@ -81,7 +81,7 @@ function initScene() {
   createWaterEffects();
 
   // Add coral reef elements
-  createCoralReef();
+  // createCoralReef();
 
   // Add boundary walls with rock textures
   // createBoundaryWalls();
@@ -173,10 +173,13 @@ function setupLighting() {
   animateCaustics();
 }
 
-// 1. Replace the createSeabed function with this version
+// Replace the existing createSeabed function with this version
 function createSeabed() {
-  // Create a large plane for the seabed
-  const seabedGeometry = new THREE.PlaneBufferGeometry(WORLD_SIZE, WORLD_SIZE, 80, 80);
+  // Create a circular plane for the seabed using CircleBufferGeometry
+  // The radius is half of WORLD_SIZE to match the diameter with the world boundary
+  const radius = WORLD_SIZE / 2;
+  const segments = 80; // Higher value for smoother circle
+  const seabedGeometry = new THREE.CircleBufferGeometry(radius, segments);
 
   // Load sand texture
   const textureLoader = new THREE.TextureLoader();
@@ -232,8 +235,36 @@ function createSeabed() {
     seabedGeometry.attributes.position.needsUpdate = true;
     seabedGeometry.computeVertexNormals();
   }
+
+  // Optional: Create a dark circular edge around the seabed to create a depth illusion
+  createSeabedEdge(radius);
 }
 
+// Add this new function to create a circular edge around the seabed
+function createSeabedEdge(radius) {
+  // Create a slightly larger ring to represent the edge/drop-off
+  const edgeOuterRadius = radius * 1.2;
+  const edgeInnerRadius = radius * 0.98; // Slightly smaller than seabed to avoid z-fighting
+  const segments = 80;
+
+  const edgeGeometry = new THREE.RingBufferGeometry(edgeInnerRadius, edgeOuterRadius, segments);
+
+  // Darker material to create depth illusion
+  const edgeMaterial = new THREE.MeshStandardMaterial({
+    color: 0x333344, // Dark blue-gray color
+    roughness: 0.9,
+    metalness: 0.2,
+    side: THREE.DoubleSide, // Render both sides
+  });
+
+  const edge = new THREE.Mesh(edgeGeometry, edgeMaterial);
+  edge.rotation.x = -Math.PI / 2; // Rotate to horizontal
+  edge.position.y = SEABED_DEPTH - 5; // Position slightly below the seabed
+
+  scene.add(edge);
+
+  return edge;
+}
 // Create tropical coral reef elements
 function createCoralReef() {
   // Create a coral reef group

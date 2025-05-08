@@ -77,7 +77,7 @@ async function disconnectFromMicrobit() {
 ////////////////////////////////////////////////////////////////////////
 // Try to auto-connect when the game loads - this is activated in instruments.js window.addEventListener(load)
 async function autoConnectToMicrobit() {
-  console.log("Attempting to auto-connect to Micro:bit...");
+  // console.log("Attempting to auto-connect to Micro:bit...");
 
   try {
     // Check if Web Serial API is available
@@ -103,7 +103,7 @@ async function autoConnectToMicrobit() {
     // Start reading data
     readSerialData();
 
-    console.log("Auto-connected to Micro:bit successfully");
+    // console.log("Auto-connected to Micro:bit successfully");
     document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").setAttribute("fill", "#00ff00");
 
     document
