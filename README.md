@@ -64,6 +64,11 @@ The submarine is an idealized, simplified vehicle to keep the project fun!
 
 ## Submarines for Inspiration
 
+- https://www.uboatworx.com/custom2
+- https://tritonsubs.com/subs/
+- https://en.wikipedia.org/wiki/DeepFlight_Super_Falcon
+- https://www.seamagine.com/small-submarines-models.html
+- https://www.thejetshark.com/
 - https://robbreport.com/motors/marine/gallery/personal-submersibles-exploration-1234848269/unknown-32/
 
 ## Learning Objectives
