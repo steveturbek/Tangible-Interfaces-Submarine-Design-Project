@@ -12,7 +12,7 @@ You are a design team tasked by "AquaNova Submarine" with creating the next gene
 
 Success in this project will require balancing aesthetic appeal with functional clarity. Your instruments must be visually consistent with your cockpit design while providing clear information. Your physical controls must feel natural while providing the precision needed for delicate maneuvers.
 
-You'll work in teams of three, with two teams designing seated cockpits and two teams designing prone cockpits. At the end of the project, visiting guests will test each design to determine which provides the most intuitive user experience, their average time to complete the mission will be a factor in rating the design of the team.
+You'll work in teams of three. Two teams will design seated cockpits and two teams will design prone (laying down) cockpits . At the end of the project, visiting guests will test each design to determine which provides the most intuitive user experience, their average time to complete the mission will be a factor in rating the design of the team.
 
 Your mission:
 
