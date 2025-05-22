@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Welcome to the Submarine Design Project for Steve Turbek's "Tangible Interfaces" Industrial Design class at Pratt Institute! This collaborative challenge sits at the intersection of industrial design, user experience, and physical computing. Throughout this project, you'll work in teams to create an immersive submarine piloting experience that combines digital interfaces with physical controls.
+Welcome to the Submarine Design Project for [Steve Turbek's "Tangible Interfaces" Industrial Design class](https://turbek.com/articles/tangible-interfaces-class.html) at Pratt Institute! This collaborative challenge sits at the intersection of industrial design, user experience, and physical computing. Throughout this project, you'll work in teams to create an immersive submarine piloting experience that combines digital interfaces with physical controls.
 
 ![Illustration of a Submarine Cockpit](assets/submarine-illus.png "Illustration of a Submarine Cockpit")
 
@@ -12,7 +12,7 @@ You are a design team tasked by "AquaNova Submarine" with creating the next gene
 
 Success in this project will require balancing aesthetic appeal with functional clarity. Your instruments must be visually consistent with your cockpit design while providing clear information. Your physical controls must feel natural while providing the precision needed for delicate maneuvers.
 
-You'll work in teams of three. Two teams will design seated cockpits and two teams will design prone (laying down) cockpits . At the end of the project, visiting guests will test each design to determine which provides the most intuitive user experience, their average time to complete the mission will be a factor in rating the design of the team.
+You'll work in teams of three to cover all the tasks. At the end of the project, visiting guests will test each design to determine which provides the most intuitive user experience, their average time to complete the mission will be a factor in rating the design of the team.
 
 Your mission:
 
@@ -39,7 +39,7 @@ Note the game is intended to be played with custom hardware controls, but can be
 
 ## Physical Prototype
 
-To make this project possible for a design student, we have a technical framework to build from. This GitHub Project builds a web app 'game' with on-screen UX instruments that can be customized. The project contains simplish recipes to connect hardware controls to this game. Very little electronics or programming is expected. Examples are provided to learn from.
+To make this project possible for a design student, we have a technical framework to build from. This GitHub Project builds a web app 'game' with on-screen UX instruments that can be customized. The project contains basic recipes to connect hardware controls to this game. Very little electronics or programming is expected. Examples are provided to learn from.
 
 The student will design and fabricate th items in diagram below
 
@@ -50,6 +50,13 @@ The student will design and fabricate th items in diagram below
 1. The laptop drive an external monitor(s) embedded in cockpit design prototype (blue rectangle)
 
 ![Goofy Hand drawn diagram of conceptual Technical Setup](assets/conceptual-diagram-of-tech.png "Diagram of conceptual Technical Setup")
+
+The four teams will each design a cockpit for a pilot who is:
+
+- Seated upright
+- Prone (like a swimmer)
+- Recumbent
+- Standing/leaning
 
 ## Submarine Description
 
@@ -87,40 +94,6 @@ By completing this project, you will:
 ### Current State
 
 The game is functional, can be navigated with keyboard keys or with a microbit. See Github Issues for ideas.
-
-### Submarine Control Guide - Left Hand Keyboard Layout
-
-Note the game is intended to be played with custom hardware controls, but can be steered with keyboard for development.
-
-### ⌨️ Left Hand 🕹️ Key Controls
-
-| Key     | Function               | Effect                                                      |
-| ------- | ---------------------- | ----------------------------------------------------------- |
-| `W`     | Elevator Up            | Pitches the submarine downward (descend)                    |
-| `S`     | Elevator Down          | Pitches the submarine upward (ascend)                       |
-| `A`     | Rudder Left            | Turns the submarine to the left                             |
-| `D`     | Rudder Right           | Turns the submarine to the right                            |
-| `Q`     | Left Thruster Increase | Increases power to the left thruster                        |
-| `Z`     | Left Thruster Decrease | Decreases power to the left thruster                        |
-| `E`     | Left Thruster Increase | Increases power to the left thruster                        |
-| `C`     | Left Thruster Decrease | Decreases power to the left thruster                        |
-| `` ` `` | Data Console Toggle    | Toggles the submarine data overlay (press the backtick key) |
-
-### 📊 Less Common Controls
-
-| Key | Function              | Effect                                     |
-| --- | --------------------- | ------------------------------------------ |
-| `2` | Aft Thruster Increase | Increases power to the aft (rear) thruster |
-| `X` | Aft Thruster Decrease | Decreases power to the aft thruster        |
-| `B` | Emergency Surface     | Activates emergency surfacing procedure    |
-
-### 💡 Tips for New Pilots
-
-1. **Start slow**: Begin with small adjustments to get a feel for the submarine's response.
-2. **Watch your depth**: Use `W` and `S` to control your ascent and descent.
-3. **Turn gradually**: Gentle adjustments with `A` and `D` will help maintain control.
-4. **Monitor your systems**: Toggle the data console with the backtick key (`` ` ``) to view important submarine metrics.
-5. **Emergency surface**: If you get into trouble, press `B` to initiate emergency surfacing.
 
 ### Game Mechanics
 
@@ -194,9 +167,42 @@ The repository is organized as follows:
 │   ├── game.js         # Core game mechanics
 │   ├── controls.js     # Input handling
 │   ├── rendering.js    # 3D scene rendering
-<!--│   ├── config.js       # Placeholder in case student needs to write javascript to customize game -->
 │   └── instruments.js  # Cockpit instrument displays
 ├── artwork/            # Images, CSS, and other assets to customize the game **Edit only these files**
 ├── assets/             # Images, CSS, and other assets to customize the game **Do not edit only these files**
 └── examples/           # Example code
 ```
+
+### Submarine Control Guide - Left Hand Keyboard Layout
+
+Note the game is intended to be played with custom hardware controls, but can be steered with keyboard for development.
+
+### ⌨️ Left Hand 🕹️ Key Controls
+
+| Key     | Function               | Effect                                                      |
+| ------- | ---------------------- | ----------------------------------------------------------- |
+| `W`     | Elevator Up            | Pitches the submarine downward (descend)                    |
+| `S`     | Elevator Down          | Pitches the submarine upward (ascend)                       |
+| `A`     | Rudder Left            | Turns the submarine to the left                             |
+| `D`     | Rudder Right           | Turns the submarine to the right                            |
+| `Q`     | Left Thruster Increase | Increases power to the left thruster                        |
+| `Z`     | Left Thruster Decrease | Decreases power to the left thruster                        |
+| `E`     | Left Thruster Increase | Increases power to the left thruster                        |
+| `C`     | Left Thruster Decrease | Decreases power to the left thruster                        |
+| `` ` `` | Data Console Toggle    | Toggles the submarine data overlay (press the backtick key) |
+
+### 📊 Less Common Controls
+
+| Key | Function              | Effect                                     |
+| --- | --------------------- | ------------------------------------------ |
+| `2` | Aft Thruster Increase | Increases power to the aft (rear) thruster |
+| `X` | Aft Thruster Decrease | Decreases power to the aft thruster        |
+| `B` | Emergency Surface     | Activates emergency surfacing procedure    |
+
+### 💡 Tips for New Pilots
+
+1. **Start slow**: Begin with small adjustments to get a feel for the submarine's response.
+2. **Watch your depth**: Use `W` and `S` to control your ascent and descent.
+3. **Turn gradually**: Gentle adjustments with `A` and `D` will help maintain control.
+4. **Monitor your systems**: Toggle the data console with the backtick key (`` ` ``) to view important submarine metrics.
+5. **Emergency surface**: If you get into trouble, press `B` to initiate emergency surfacing.
