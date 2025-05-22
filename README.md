@@ -89,6 +89,51 @@ By completing this project, you will:
 - Collaborate effectively with a design team
 - Present and defend design decisions
 
+## Design Evaluation Criteria
+
+These criteria balance the practical requirements (can users actually pilot the submarine effectively?) with the design education goals of the course (research, process, aesthetics, and user-centered thinking).
+
+- Innovation
+- Aesthetics and Desirability
+- Integration of parts into a whole
+- Teamwork
+- Presentation and communication
+
+### 1. Usability & Intuitive Control Mapping
+
+- How naturally do the physical controls map to submarine movements?
+- Can users quickly understand and operate the interface without extensive training?
+- Are critical functions easily accessible during navigation tasks?
+- Does the control layout follow established conventions or create new, logical patterns?
+
+### 2. Mission Performance & User Testing Results
+
+- Average completion time for the underwater navigation mission
+- Success rate of test users reaching the target destination
+- Oxygen and battery resource management effectiveness
+- Error rates and recovery time when users make mistakes
+
+### 3. Information Design & Visual Clarity
+
+- Effectiveness of the instrument panel in communicating critical data (oxygen, battery, depth, compass, etc.)
+- Visual hierarchy and readability under simulated underwater conditions
+- Integration between digital instruments and overall cockpit aesthetic
+- Appropriate use of color, typography, and iconography for the submarine context
+
+### 4. Physical Design Integration & Ergonomics
+
+- How well the physical controls integrate with the cockpit design (seated vs. prone configurations)
+- Comfort and reach considerations for extended use
+- Build quality and durability of the physical prototype
+- Aesthetic coherence between the brand identity, cockpit styling, and control interfaces
+
+### 5. Design Process & Research Documentation
+
+- Quality of target market research and user personas
+- Evidence of iterative design and testing cycles
+- Documentation of design decisions and problem-solving approaches
+- Brand development and its consistent application across all touchpoints
+
 ## Game Overview
 
 ### Current State
