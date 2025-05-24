@@ -82,7 +82,6 @@ window.addEventListener(
     document.getElementById("instruments-restart").contentDocument.getElementById("restart").addEventListener("click", restartGame);
     document.getElementById("instruments-restart").contentDocument.getElementById("restart").style = "cursor:pointer;";
     document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").style = "cursor:pointer;";
-    document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").setAttribute("title", "test");
 
     // Check if Web Serial API is supported
     if ("serial" in navigator) {
