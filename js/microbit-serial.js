@@ -11,7 +11,9 @@ let readingInProgress = false;
 ////////////////////////////////////////////////
 async function connectToMicrobit() {
   //   console.log("connectToMicrobit");
-  window.alert("In the next screen, pick the option named BBC micro:bit ...");
+  window.alert(
+    "This button connects to a custom hardware device.  \n\n  In the next screen, click Cancel if you don't have it.  \n\n If you do have it, pick the option named BBC micro:bit and click Connect"
+  );
   try {
     // Request a port and open a connection
     port = await navigator.serial.requestPort();
