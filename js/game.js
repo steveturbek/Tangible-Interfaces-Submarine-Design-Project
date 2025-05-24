@@ -413,12 +413,16 @@ function updateUI() {
     `Welcome to the Tangible Interfaces Class Submarine Design Project Simulator. ` +
     `<a href="https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main?tab=readme-ov-file#tangible-interfaces-submarine-design-project" target="new" style="color:white">Read Me for details</a>` +
     `\n` +
-    `This is a data panel for testing the game.  It does not appear you have the hardware controls connected \n` +
-    `You can drive this submarine using the keys \n` +
+    `This is a data panel for testing the game. Use TAB key to hide.` +
+    `\n` +
+    `\n` +
+    `It does not appear you have the hardware controls connected \n` +
+    `You can drive this submarine using keys \n` +
     `\tA	Increases power to the left thruster \n` +
     `\tZ	Decreases power to the left thruster \n` +
     `\tS	Increases power to the right thruster \n` +
     `\tX	Decreases power to the right thruster \n` +
+    `\tArrow keys for steering \n` +
     `\t(There are more controls in the Read Me) \n` +
     `\n` +
     `\n` +
@@ -436,8 +440,7 @@ function updateUI() {
     `RightThrust: ${gameState.controls.ThrottleRight}% | ` +
     `Rudder ←→: ${gameState.controls.YawRudderAngle.toFixed(1)}% | ` +
     `Elevator ↑↓: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% | ` +
-    `AftThruster: ${gameState.controls.AftThruster}%` +
-    `\n\nESC key to hide this`;
+    `AftThruster: ${gameState.controls.AftThruster}%`;
 
   // Add boundary warning if needed
   if (gameState.status.boundaryWarning) {

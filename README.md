@@ -234,7 +234,8 @@ Note the game is intended to be played with custom hardware controls, but can be
 | `z`   | Left Thruster Decrease  | Decreases power to the left thruster     |
 | `s`   | Right Thruster Increase | Increases power to the right thruster    |
 | `x`   | Right Thruster Decrease | Decreases power to the right thruster    |
-| `ESC` | Sub-Data-Overlay Toggle | Toggles the submarine data overlay       |
+| `TAB` | Sub-Data-Overlay Toggle | Toggles the submarine data overlay       |
+| `ESC` | Emergency Brake         | Slows it down                            |
 
 ### 📊 Less Common Controls
 

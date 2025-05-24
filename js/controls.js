@@ -24,7 +24,7 @@ function handleKeyPress(event) {
   // Process the key press based on which key was pressed
   switch (event.key.toLowerCase()) {
     // sub-data-overlay
-    case "escape":
+    case "tab":
       if (document.getElementById("sub-data-overlay").style.display == "block") {
         document.getElementById("sub-data-overlay").style.display = "none";
       } else {
@@ -80,7 +80,7 @@ function handleKeyPress(event) {
 
     // Emergency brake
     case "escape":
-      emergencyBlowTanks();
+      emergencyAllStop();
       break;
 
     default:
@@ -242,6 +242,28 @@ function emergencyBlowTanks() {
   setAftThruster(gameState.controls.MaxAftThruster);
 }
 
+/**
+ * Emergency all stop - zeros all controls
+ */
+function emergencyAllStop() {
+  console.log("EMERGENCY ALL STOP");
+  gameState.controls.ThrottleLeft = 0;
+  gameState.controls.ThrottleRight = 0;
+  gameState.controls.AftThruster = 0;
+  gameState.controls.PitchElevatorAngle = 0;
+  gameState.controls.YawRudderAngle = 0;
+
+  // Immediately stop all rotation
+  gameState.angularVelocity.x = 0; // Stop pitch rotation
+  gameState.angularVelocity.y = 0; // Stop yaw rotation
+  gameState.angularVelocity.z = 0; // Stop roll rotation
+
+  // Optionally reduce forward momentum (comment out if you want to coast)
+  gameState.velocity.x *= 0.5; // Reduce sideways movement
+  gameState.velocity.y *= 0.5; // Reduce vertical movement
+  gameState.velocity.z *= 0.7; // Reduce forward/backward movement (keep some momentum)
+}
+
 // Initialize keyboard controls when the window loads
 window.addEventListener("load", setupKeyboardControls, { once: true });
 
@@ -265,4 +287,5 @@ window.submarineControls = {
 
   // Special functions
   emergencyBlowTanks, // Performs emergency surfacing procedure (full upward pitch and aft thruster) - Example: window.submarineControls.emergencyBlowTanks();
+  emergencyAllStop, // Performs emergency stop procedure  - Example: window.submarineControls.emergencyAllStop();
 };
