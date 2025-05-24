@@ -11,7 +11,7 @@ function setupKeyboardControls() {
   // Key down handler for submarine controls
   document.addEventListener("keydown", handleKeyPress);
 
-  console.log("Press the ` key (backtick) key to toggle Sub data overlay.");
+  // console.log("Press the TAB key to show/hide Sub data overlay.");
 }
 
 // Process key presses individually

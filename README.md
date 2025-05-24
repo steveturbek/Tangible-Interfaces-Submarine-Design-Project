@@ -212,6 +212,7 @@ The repository is organized as follows:
 │   ├── game.js         # Core game mechanics
 │   ├── controls.js     # Input handling
 │   ├── rendering.js    # 3D scene rendering
+│   ├── hardware-controls.js    # to interpret the data coming from the microbit to send to the sub controls
 │   └── instruments.js  # Cockpit instrument displays
 ├── artwork/            # Images, CSS, and other assets to customize the game **Edit only these files**
 ├── assets/             # Images, CSS, and other assets to customize the game **Do not edit only these files**
@@ -222,7 +223,7 @@ The repository is organized as follows:
 
 Note the game is intended to be played with custom hardware controls, but can be steered with keyboard for development.
 
-### ⌨️ Left Hand 🕹️ Key Controls
+### ⌨️ 🕹️ Key Controls
 
 | Key   | Function                | Effect                                   |
 | ----- | ----------------------- | ---------------------------------------- |
@@ -248,7 +249,6 @@ Note the game is intended to be played with custom hardware controls, but can be
 ### 💡 Tips for New Pilots
 
 1. **Start slow**: Begin with small adjustments to get a feel for the submarine's response.
-2. **Watch your depth**: Use `W` and `S` to control your ascent and descent.
-3. **Turn gradually**: Gentle adjustments with `A` and `D` will help maintain control.
-4. **Monitor your systems**: Toggle the data console with the backtick key (`` ` ``) to view important submarine metrics.
-5. **Emergency surface**: If you get into trouble, press `B` to initiate emergency surfacing.
+2. **Watch your depth**
+3. **Turn gradually**
+4. **Monitor your systems**:
