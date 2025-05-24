@@ -410,6 +410,18 @@ function updateUI() {
 
   // Update sub-data overlay text
   let overlayText =
+    `Welcome to the Tangible Interfaces Class Submarine Design Project Simulator. ` +
+    `<a href="https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main?tab=readme-ov-file#tangible-interfaces-submarine-design-project" target="new" style="color:white">Read Me for details</a>` +
+    `\n` +
+    `This is a data panel for testing the game.  It does not appear you have the hardware controls connected \n` +
+    `You can drive this submarine using the keys \n` +
+    `\tQ	Increases power to the left thruster \n` +
+    `\tZ	Decreases power to the left thruster \n` +
+    `\tE	Increases power to the right thruster \n` +
+    `\tC	Decreases power to the right thruster \n` +
+    `\t (There are more controls in the read me) \n` +
+    `\n` +
+    `\n` +
     `Position(${gameState.position.x.toFixed(2)},${gameState.position.y.toFixed(2)},${gameState.position.z.toFixed(2)}) | ` +
     `compassHeading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
     `Speed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
@@ -431,7 +443,7 @@ function updateUI() {
     overlayText += `\n⚠️ Approaching boundary!`;
   }
 
-  document.getElementById("sub-data-text").textContent = overlayText;
+  document.getElementById("sub-data-text").innerHTML = overlayText;
 
   // Update instruments
   updateInstruments();

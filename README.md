@@ -224,17 +224,17 @@ Note the game is intended to be played with custom hardware controls, but can be
 
 ### ⌨️ Left Hand 🕹️ Key Controls
 
-| Key     | Function               | Effect                                                      |
-| ------- | ---------------------- | ----------------------------------------------------------- |
-| `W`     | Elevator Up            | Pitches the submarine downward (descend)                    |
-| `S`     | Elevator Down          | Pitches the submarine upward (ascend)                       |
-| `A`     | Rudder Left            | Turns the submarine to the left                             |
-| `D`     | Rudder Right           | Turns the submarine to the right                            |
-| `Q`     | Left Thruster Increase | Increases power to the left thruster                        |
-| `Z`     | Left Thruster Decrease | Decreases power to the left thruster                        |
-| `E`     | Left Thruster Increase | Increases power to the left thruster                        |
-| `C`     | Left Thruster Decrease | Decreases power to the left thruster                        |
-| `` ` `` | Data Console Toggle    | Toggles the submarine data overlay (press the backtick key) |
+| Key     | Function                | Effect                                                      |
+| ------- | ----------------------- | ----------------------------------------------------------- |
+| `W`     | Elevator Up             | Pitches the submarine downward (descend)                    |
+| `S`     | Elevator Down           | Pitches the submarine upward (ascend)                       |
+| `A`     | Rudder Left             | Turns the submarine to the left                             |
+| `D`     | Rudder Right            | Turns the submarine to the right                            |
+| `Q`     | Left Thruster Increase  | Increases power to the left thruster                        |
+| `Z`     | Left Thruster Decrease  | Decreases power to the left thruster                        |
+| `E`     | Right Thruster Increase | Increases power to the right thruster                       |
+| `C`     | Right Thruster Decrease | Decreases power to the right thruster                       |
+| `` ` `` | Sub-Data-Overlay Toggle | Toggles the submarine data overlay (press the backtick key) |
 
 ### 📊 Less Common Controls
 

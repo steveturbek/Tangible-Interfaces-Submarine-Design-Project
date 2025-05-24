@@ -23,7 +23,7 @@ function handleKeyPress(event) {
 
   // Process the key press based on which key was pressed
   switch (event.key.toLowerCase()) {
-    // ship controls data console layer
+    // sub-data-overlay
     case "`":
       if (document.getElementById("sub-data-overlay").style.display == "block") {
         document.getElementById("sub-data-overlay").style.display = "none";
