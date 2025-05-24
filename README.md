@@ -224,24 +224,24 @@ Note the game is intended to be played with custom hardware controls, but can be
 
 ### ⌨️ Left Hand 🕹️ Key Controls
 
-| Key     | Function                | Effect                                                      |
-| ------- | ----------------------- | ----------------------------------------------------------- |
-| `W`     | Elevator Up             | Pitches the submarine downward (descend)                    |
-| `S`     | Elevator Down           | Pitches the submarine upward (ascend)                       |
-| `A`     | Rudder Left             | Turns the submarine to the left                             |
-| `D`     | Rudder Right            | Turns the submarine to the right                            |
-| `Q`     | Left Thruster Increase  | Increases power to the left thruster                        |
-| `Z`     | Left Thruster Decrease  | Decreases power to the left thruster                        |
-| `E`     | Right Thruster Increase | Increases power to the right thruster                       |
-| `C`     | Right Thruster Decrease | Decreases power to the right thruster                       |
-| `` ` `` | Sub-Data-Overlay Toggle | Toggles the submarine data overlay (press the backtick key) |
+| Key   | Function                | Effect                                   |
+| ----- | ----------------------- | ---------------------------------------- |
+| `↑`   | Elevator Up             | Pitches the submarine downward (descend) |
+| `↓`   | Elevator Down           | Pitches the submarine upward (ascend)    |
+| `←`   | Rudder Left             | Turns the submarine to the left          |
+| `→`   | Rudder Right            | Turns the submarine to the right         |
+| `a`   | Left Thruster Increase  | Increases power to the left thruster     |
+| `z`   | Left Thruster Decrease  | Decreases power to the left thruster     |
+| `s`   | Right Thruster Increase | Increases power to the right thruster    |
+| `x`   | Right Thruster Decrease | Decreases power to the right thruster    |
+| `ESC` | Sub-Data-Overlay Toggle | Toggles the submarine data overlay       |
 
 ### 📊 Less Common Controls
 
 | Key | Function              | Effect                                     |
 | --- | --------------------- | ------------------------------------------ |
-| `2` | Aft Thruster Increase | Increases power to the aft (rear) thruster |
-| `X` | Aft Thruster Decrease | Decreases power to the aft thruster        |
+| `P` | Aft Thruster Increase | Increases power to the aft (rear) thruster |
+| `L` | Aft Thruster Decrease | Decreases power to the aft thruster        |
 | `B` | Emergency Surface     | Activates emergency surfacing procedure    |
 
 ### 💡 Tips for New Pilots

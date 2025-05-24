@@ -415,11 +415,11 @@ function updateUI() {
     `\n` +
     `This is a data panel for testing the game.  It does not appear you have the hardware controls connected \n` +
     `You can drive this submarine using the keys \n` +
-    `\tQ	Increases power to the left thruster \n` +
+    `\tA	Increases power to the left thruster \n` +
     `\tZ	Decreases power to the left thruster \n` +
-    `\tE	Increases power to the right thruster \n` +
-    `\tC	Decreases power to the right thruster \n` +
-    `\t (There are more controls in the read me) \n` +
+    `\tS	Increases power to the right thruster \n` +
+    `\tX	Decreases power to the right thruster \n` +
+    `\t(There are more controls in the Read Me) \n` +
     `\n` +
     `\n` +
     `Position(${gameState.position.x.toFixed(2)},${gameState.position.y.toFixed(2)},${gameState.position.z.toFixed(2)}) | ` +
@@ -434,13 +434,14 @@ function updateUI() {
     `\n` +
     `LeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
     `RightThrust: ${gameState.controls.ThrottleRight}% | ` +
-    `Rudder: ${gameState.controls.YawRudderAngle.toFixed(1)}% | ` +
-    `Elevator: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% | ` +
-    `AftThruster: ${gameState.controls.AftThruster}%`;
+    `Rudder ←→: ${gameState.controls.YawRudderAngle.toFixed(1)}% | ` +
+    `Elevator ↑↓: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% | ` +
+    `AftThruster: ${gameState.controls.AftThruster}%` +
+    `\n\nESC key to hide this`;
 
   // Add boundary warning if needed
   if (gameState.status.boundaryWarning) {
-    overlayText += `\n⚠️ Approaching boundary!`;
+    overlayText += `\n\n⚠️ Approaching boundary!`;
   }
 
   document.getElementById("sub-data-text").innerHTML = overlayText;

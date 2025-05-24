@@ -24,7 +24,7 @@ function handleKeyPress(event) {
   // Process the key press based on which key was pressed
   switch (event.key.toLowerCase()) {
     // sub-data-overlay
-    case "`":
+    case "escape":
       if (document.getElementById("sub-data-overlay").style.display == "block") {
         document.getElementById("sub-data-overlay").style.display = "none";
       } else {
@@ -33,58 +33,53 @@ function handleKeyPress(event) {
       break;
 
     // Left thruster controls
-    case "q":
-    case "u":
+    case "a":
       adjustLeftThruster(controlConfig.thrusterIncrement);
       break;
     case "z":
-    case "m":
       adjustLeftThruster(-controlConfig.thrusterIncrement);
       break;
 
     // Right thruster controls
-    case "e":
-    case "o":
+    case "s":
       adjustRightThruster(controlConfig.thrusterIncrement);
       break;
 
-    case "c":
-    case ".":
+    case "x":
       adjustRightThruster(-controlConfig.thrusterIncrement);
       break;
 
     // Elevator (pitch) controls
-    case "w":
-    case "i":
+    case "arrowup":
       adjustElevator(-controlConfig.flapIncrement);
       break;
-    case "s":
-    case "k":
+    case "arrowdown":
       adjustElevator(controlConfig.flapIncrement);
       break;
 
     // Rudder (yaw) controls
-    case "a":
-    case "j":
+    case "arrowleft":
       adjustRudder(controlConfig.flapIncrement);
       break;
-    case "d":
-    case "l":
+    case "arrowright":
       adjustRudder(-controlConfig.flapIncrement);
       break;
 
     // Aft thruster controls
-    case "2":
-    case "8":
+    case "p":
       adjustAftThruster(controlConfig.thrusterIncrement);
       break;
-    case "x":
-    case ",":
+    case "l":
       adjustAftThruster(-controlConfig.thrusterIncrement);
       break;
 
     // Emergency controls
     case "b":
+      emergencyBlowTanks();
+      break;
+
+    // Emergency brake
+    case "escape":
       emergencyBlowTanks();
       break;
 

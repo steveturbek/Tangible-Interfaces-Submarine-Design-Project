@@ -68,6 +68,11 @@
         text-align: left;
         max-width: 80%;
       }
+
+      object,
+      svg {
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -88,14 +93,15 @@
         id="instruments-microBitGauge"
         type="image/svg+xml"
         data="artwork/instruments-circuit-board.svg"
-        style="position: absolute; top: 20; right: 50; z-index: 20; width: 5%; pointer-events: auto"
+        style="position: absolute; top: 20; right: 50; z-index: 20; width: 3%; pointer-events: auto"
+        title="This connects to the hardware controls to steer the submarine.  Read README for more details."
       ></object>
       <object
         class="instruments"
         id="instruments-restart"
         type="image/svg+xml"
         data="artwork/instruments-restart.svg"
-        style="position: absolute; top: 15; right: 170; z-index: 20; width: 30; pointer-events: auto"
+        style="position: absolute; top: 15; right: 170; z-index: 20; width: 30; pointer-events: auto; cursor: pointer"
       ></object>
 
       <!-- sub-data overlay div -->
