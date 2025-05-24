@@ -52,8 +52,8 @@ const gameState_original = {
     maxBatteryTime: 150, // 2.5 minutes at full throttle
     maxDepth: 100, // Maximum dive depth
     maxSpeed: 10, // Units per second at 100% throttle
-    maxPitchAngle: 45, // Maximum physical pitch in degrees
-    maxYawRate: 30, // Maximum yaw rate in degrees per second
+    maxPitchAngle: 25, // Maximum physical pitch in degrees
+    maxYawRate: 20, // Maximum yaw rate in degrees per second
     dragCoefficient: 0.05, // Water resistance factor
     mass: 1000, // Mass affects momentum
     maxDistance: 100000, // Example value, adjust based on your world size
@@ -262,8 +262,8 @@ function updateSubmarineState(deltaTime) {
   gameState.velocity.z *= 1 - drag * deltaTime;
 
   // Apply drag to angular velocities
-  gameState.angularVelocity.x *= 1 - drag * 2 * deltaTime;
-  gameState.angularVelocity.y *= 1 - drag * 2 * deltaTime;
+  gameState.angularVelocity.x *= 1 - drag * 4 * deltaTime;
+  gameState.angularVelocity.y *= 1 - drag * 4 * deltaTime;
   gameState.angularVelocity.z *= 1 - drag * 2 * deltaTime;
 
   // Limit maximum pitch angle
