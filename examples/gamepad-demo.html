@@ -7,9 +7,9 @@
     <style>
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        max-width: 800px;
+        /* max-width: 800px; */
         margin: 0 auto;
-        padding: 20px;
+        /* padding: 20px; */
         background-color: #f5f5f5;
         color: #333;
       }
@@ -20,10 +20,11 @@
       }
 
       .container {
-        background-color: white;
+        /* background-color: white; */
         border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* padding: 20px; */
+        display: flex;
+        /* border: 1px solid blue; */
       }
 
       .status {
@@ -45,10 +46,13 @@
       }
 
       .gamepad {
-        display: flex;
-        flex-direction: column;
+        /* display: flex; */
+        float: left;
         align-items: center;
-        margin-top: 30px;
+        /* margin-top: 30px; */
+        width: 48%;
+        /* border:1px solid red; */
+        margin-left: 10%
       }
 
       .gamepad-visual {
@@ -57,6 +61,8 @@
         background-color: #333;
         border-radius: 15px;
         position: relative;
+        /* padding: 40px; */
+        ;
       }
 
       .d-pad {
@@ -125,7 +131,7 @@
         left: 0;
       }
 
-      .shoulder-buttons {
+      .shoulder-buttons, .trigger-buttons {
         display: flex;
         justify-content: space-between;
         width: 380px;
@@ -188,17 +194,18 @@
       }
 
       .data-panel {
-        margin-top: 30px;
+        /* margin-top: 30px; */
         background-color: #eee;
         padding: 15px;
         border-radius: 8px;
-        max-height: 300px;
-        overflow-y: auto;
+        /* max-height: 300px;
+        overflow-y: auto; */
+        width: 49%;
       }
 
       .data-row {
         display: grid;
-        grid-template-columns: 100px 100px 1fr;
+        grid-template-columns: 140px 80px 1fr;
         gap: 10px;
         margin-bottom: 5px;
       }
@@ -219,17 +226,21 @@
     </style>
   </head>
   <body>
-    <div class="container">
       <h1>Chrome Web / Gamepad Demo</h1>
 
-      <div class="instruction">
+          <div id="status" class="status disconnected">
+        <div class="instruction">
         <p>Connect your USB Gamepad to your computer and press any button to begin.</p>
         <p>This demo will show which buttons are being pressed and display analog values for sticks and triggers.</p>
       </div>
+        
+        Waiting for gamepad connection...</div>
 
-      <div id="status" class="status disconnected">Waiting for gamepad connection...</div>
+    <div class="container">
+ 
 
       <div class="gamepad">
+
         <div class="gamepad-visual">
           <div class="d-pad">
             <div id="dpad-up" class="d-pad-button d-pad-up"></div>
@@ -239,10 +250,10 @@
           </div>
 
           <div class="face-buttons">
-            <div id="button-y" class="face-button button-y"></div>
-            <div id="button-b" class="face-button button-b"></div>
             <div id="button-a" class="face-button button-a"></div>
+            <div id="button-y" class="face-button button-y"></div>
             <div id="button-x" class="face-button button-x"></div>
+            <div id="button-b" class="face-button button-b"></div>
           </div>
 
           <div class="center-buttons">
@@ -264,14 +275,22 @@
           <div id="button-lb" class="shoulder-button"></div>
           <div id="button-rb" class="shoulder-button"></div>
         </div>
+        <div class="trigger-buttons">
+          <div id="button-lt" class="shoulder-button"></div>
+          <div id="button-rt" class="shoulder-button"></div>
+        </div>
       </div>
+      
+      
 
       <div class="data-panel">
-        <h3>Raw Input Data</h3>
+        <!-- <h3>Raw Input Data</h3> -->
         <div id="raw-data"></div>
       </div>
     </div>
-
+  </div>
+  
+  
     <script>
       // Elements
       const statusEl = document.getElementById("status");
@@ -280,10 +299,10 @@
       // Button mappings specific to Logitech F310
       // These may need adjustment based on browser/platform
       const buttonMappings = {
-        0: "button-a",
+        0: "button-y",
         1: "button-b",
-        2: "button-x",
-        3: "button-y",
+        2: "button-a",
+        3: "button-x",
         4: "button-lb",
         5: "button-rb",
         6: "button-lt", // Trigger
@@ -298,6 +317,44 @@
         15: "dpad-right",
         16: "button-home", // Mode/Home button
       };
+
+      // Human-readable button names
+      const buttonNames = {
+        0: "Y Button",
+        1: "B Button",
+        2: "A Button",
+        3: "X Button",
+        4: "Left Bumper",
+        5: "Right Bumper",
+        6: "Left Trigger",
+        7: "Right Trigger",
+        8: "Back/Select",
+        9: "Start",
+        10: "Left Stick Click",
+        11: "Right Stick Click",
+        12: "D-Pad Up",
+        13: "D-Pad Down",
+        14: "D-Pad Left",
+        15: "D-Pad Right",
+        16: "Home/Mode",
+      };
+
+      // Human-readable axis names
+      const axisNames = {
+        0: "Left Stick X",
+        1: "Left Stick Y",
+        2: "Right Stick Y",
+        3: "Unused Axis 5",
+        4: "Triggers Combined", // Often LT/RT combined axis
+        5: "Right Stick X",
+        6: "D-Pad X (Analog)",
+        7: "D-Pad Y (Analog)",
+        8: "Unused Axis 8",
+        9: "Unused Axis 9",
+      };
+
+      // Axes that should be ignored/hidden
+      const ignoredAxes = new Set([3, 4, 6,7,8, 9]);
 
       // State
       let controllers = {};
@@ -406,12 +463,12 @@
           const pressed = button.pressed;
           const value = button.value;
 
-          // Create row in raw data panel
+          // Create row in raw data panel with human-readable name
           const row = document.createElement("div");
           row.className = "data-row";
 
           const labelEl = document.createElement("div");
-          labelEl.textContent = `Button ${i}:`;
+          labelEl.textContent = buttonNames[i] || `Button ${i}`;
 
           const valueEl = document.createElement("div");
           valueEl.textContent = value.toFixed(2);
@@ -445,24 +502,65 @@
         for (let i = 0; i < gamepad.axes.length; i++) {
           const value = gamepad.axes[i];
 
-          // Create row in raw data panel
+          // Skip ignored/non-functional axes
+          if (ignoredAxes.has(i)) {
+            continue;
+          }
+
+          // Create row in raw data panel with human-readable name
           const row = document.createElement("div");
           row.className = "data-row";
 
           const labelEl = document.createElement("div");
-          labelEl.textContent = `Axis ${i}:`;
+          labelEl.textContent = axisNames[i] || `Axis ${i}`;
 
           const valueEl = document.createElement("div");
-          valueEl.textContent = value.toFixed(2);
+
+          // Special handling for D-pad axes (6, 7) - they're often digital despite being axes
+          if (i === 6 || i === 7) {
+            // D-pad axes are typically -1, 0, or 1
+            if (Math.abs(value) < 0.1) {
+              valueEl.textContent = "0.00 (Center)";
+            } else if (value > 0.5) {
+              valueEl.textContent = i === 6 ? "1.00 (Right)" : "1.00 (Down)";
+            } else if (value < -0.5) {
+              valueEl.textContent = i === 6 ? "-1.00 (Left)" : "-1.00 (Up)";
+            } else {
+              valueEl.textContent = value.toFixed(2);
+            }
+          } else {
+            valueEl.textContent = value.toFixed(2);
+          }
 
           const barContainer = document.createElement("div");
           barContainer.style.width = "100%";
 
           const bar = document.createElement("div");
           bar.className = "value-bar";
-          // Normalize -1 to 1 range to 0-100%
-          const normalizedWidth = ((value + 1) / 2) * 100;
-          bar.style.width = `${normalizedWidth}%`;
+
+          // Special handling for D-pad axes - make them more visible
+          if (i === 6 || i === 7) {
+            // For D-pad, show discrete positions more clearly
+            if (Math.abs(value) < 0.1) {
+              bar.style.width = "50%"; // Center position
+              bar.style.backgroundColor = "#666";
+            } else if (value > 0.5) {
+              bar.style.width = "100%"; // Full positive
+              bar.style.backgroundColor = "#0066cc";
+            } else if (value < -0.5) {
+              bar.style.width = "0%"; // Full negative
+              bar.style.backgroundColor = "#cc0066";
+            } else {
+              // Normalize -1 to 1 range to 0-100%
+              const normalizedWidth = ((value + 1) / 2) * 100;
+              bar.style.width = `${normalizedWidth}%`;
+            }
+          } else {
+            // Normal analog axis handling
+            // Normalize -1 to 1 range to 0-100%
+            const normalizedWidth = ((value + 1) / 2) * 100;
+            bar.style.width = `${normalizedWidth}%`;
+          }
 
           barContainer.appendChild(bar);
           row.appendChild(labelEl);
@@ -470,8 +568,10 @@
           row.appendChild(barContainer);
           rawDataEl.appendChild(row);
 
-          // Update visual sticks
-          updateVisualSticks(i, value);
+          // Update visual sticks (only for main stick axes)
+          if (i <= 5) {
+            updateVisualSticks(i, value);
+          }
         }
       }
 
@@ -489,14 +589,19 @@
           const currentX = leftStick.style.transform.match(/translateX\(([^)]+)\)/) ? leftStick.style.transform.match(/translateX\(([^)]+)\)/)[1] : "0px";
           leftStick.style.transform = `translateX(${currentX}) translateY(${value * maxDistance}px)`;
         } else if (axisIndex === 2 && rightStick) {
-          // X-axis for right stick
-          const currentY = rightStick.style.transform.match(/translateY\(([^)]+)\)/) ? rightStick.style.transform.match(/translateY\(([^)]+)\)/)[1] : "0px";
-          rightStick.style.transform = `translateX(${value * maxDistance}px) translateY(${currentY})`;
-        } else if (axisIndex === 3 && rightStick) {
           // Y-axis for right stick
           const currentX = rightStick.style.transform.match(/translateX\(([^)]+)\)/) ? rightStick.style.transform.match(/translateX\(([^)]+)\)/)[1] : "0px";
           rightStick.style.transform = `translateX(${currentX}) translateY(${value * maxDistance}px)`;
+
+        } else if (axisIndex === 5 && rightStick) {
+          
+          // X-axis for right stick          
+          const currentY = rightStick.style.transform.match(/translateY\(([^)]+)\)/) ? rightStick.style.transform.match(/translateY\(([^)]+)\)/)[1] : "0px";
+          rightStick.style.transform = ` translateX(${value * maxDistance}px) translateY(${currentY})`;
+          
         }
+
+        
       }
 
       // Check if browser supports Gamepad API
