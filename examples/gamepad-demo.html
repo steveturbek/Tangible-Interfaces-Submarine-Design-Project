@@ -136,6 +136,7 @@
         justify-content: space-between;
         width: 380px;
         margin-top: 10px;
+        margin-left: 10px;
       }
 
       .shoulder-button {
@@ -241,6 +242,15 @@
 
       <div class="gamepad">
 
+        <div class="shoulder-buttons">
+          <div id="button-lb" class="shoulder-button"></div>
+          <div id="button-rb" class="shoulder-button"></div>
+        </div>
+        <div class="trigger-buttons">
+          <div id="button-lt" class="shoulder-button"></div>
+          <div id="button-rt" class="shoulder-button"></div>
+        </div>
+
         <div class="gamepad-visual">
           <div class="d-pad">
             <div id="dpad-up" class="d-pad-button d-pad-up"></div>
@@ -271,14 +281,6 @@
           </div>
         </div>
 
-        <div class="shoulder-buttons">
-          <div id="button-lb" class="shoulder-button"></div>
-          <div id="button-rb" class="shoulder-button"></div>
-        </div>
-        <div class="trigger-buttons">
-          <div id="button-lt" class="shoulder-button"></div>
-          <div id="button-rt" class="shoulder-button"></div>
-        </div>
       </div>
       
       
@@ -309,8 +311,8 @@
         7: "button-rt", // Trigger
         8: "button-back",
         9: "button-start",
-        10: "button-lstick", // Left stick press
-        11: "button-rstick", // Right stick press
+        10: "button-left-stick", // Left stick press
+        11: "button-right-stick", // Right stick press
         12: "dpad-up",
         13: "dpad-down",
         14: "dpad-left",
@@ -350,11 +352,11 @@
         6: "D-Pad X (Analog)",
         7: "D-Pad Y (Analog)",
         8: "Unused Axis 8",
-        9: "Unused Axis 9",
+        9: "D Pad",
       };
 
       // Axes that should be ignored/hidden
-      const ignoredAxes = new Set([3, 4, 6,7,8, 9]);
+      const ignoredAxes = new Set([3, 4, 6,7,8]);
 
       // State
       let controllers = {};
@@ -519,15 +521,15 @@
           // Special handling for D-pad axes (6, 7) - they're often digital despite being axes
           if (i === 6 || i === 7) {
             // D-pad axes are typically -1, 0, or 1
-            if (Math.abs(value) < 0.1) {
-              valueEl.textContent = "0.00 (Center)";
-            } else if (value > 0.5) {
-              valueEl.textContent = i === 6 ? "1.00 (Right)" : "1.00 (Down)";
-            } else if (value < -0.5) {
-              valueEl.textContent = i === 6 ? "-1.00 (Left)" : "-1.00 (Up)";
-            } else {
-              valueEl.textContent = value.toFixed(2);
-            }
+            // if (Math.abs(value) < 0.1) {
+            //   valueEl.textContent = "0.00 (Center)";
+            // } else if (value > 0.5) {
+            //   valueEl.textContent = i === 6 ? "1.00 (Right)" : "1.00 (Down)";
+            // } else if (value < -0.5) {
+            //   valueEl.textContent = i === 6 ? "-1.00 (Left)" : "-1.00 (Up)";
+            // } else {
+            //   valueEl.textContent = value.toFixed(2);
+            // }
           } else {
             valueEl.textContent = value.toFixed(2);
           }
@@ -540,36 +542,39 @@
 
           // Special handling for D-pad axes - make them more visible
           if (i === 6 || i === 7) {
-            // For D-pad, show discrete positions more clearly
-            if (Math.abs(value) < 0.1) {
-              bar.style.width = "50%"; // Center position
-              bar.style.backgroundColor = "#666";
-            } else if (value > 0.5) {
-              bar.style.width = "100%"; // Full positive
-              bar.style.backgroundColor = "#0066cc";
-            } else if (value < -0.5) {
-              bar.style.width = "0%"; // Full negative
-              bar.style.backgroundColor = "#cc0066";
-            } else {
-              // Normalize -1 to 1 range to 0-100%
-              const normalizedWidth = ((value + 1) / 2) * 100;
-              bar.style.width = `${normalizedWidth}%`;
-            }
-          } else {
+            // // For D-pad, show discrete positions more clearly
+            // if (Math.abs(value) < 0.1) {
+            //   bar.style.width = "50%"; // Center position
+            //   bar.style.backgroundColor = "#666";
+            // } else if (value > 0.5) {
+            //   bar.style.width = "100%"; // Full positive
+            //   bar.style.backgroundColor = "#0066cc";
+            // } else if (value < -0.5) {
+            //   bar.style.width = "0%"; // Full negative
+            //   bar.style.backgroundColor = "#cc0066";
+            // } else {
+            //   // Normalize -1 to 1 range to 0-100%
+            //   const normalizedWidth = ((value + 1) / 2) * 100;
+            //   bar.style.width = `${normalizedWidth}%`;
+            // }
+          // } else if (i === 9 ) {
+            // return;
+          }else {
             // Normal analog axis handling
             // Normalize -1 to 1 range to 0-100%
             const normalizedWidth = ((value + 1) / 2) * 100;
             bar.style.width = `${normalizedWidth}%`;
           }
 
+          if (i != 9) {
           barContainer.appendChild(bar);
           row.appendChild(labelEl);
           row.appendChild(valueEl);
           row.appendChild(barContainer);
           rawDataEl.appendChild(row);
-
+          }
           // Update visual sticks (only for main stick axes)
-          if (i <= 5) {
+          if (i <= 9) {
             updateVisualSticks(i, value);
           }
         }
@@ -599,9 +604,34 @@
           const currentY = rightStick.style.transform.match(/translateY\(([^)]+)\)/) ? rightStick.style.transform.match(/translateY\(([^)]+)\)/)[1] : "0px";
           rightStick.style.transform = ` translateX(${value * maxDistance}px) translateY(${currentY})`;
           
+        } else if (axisIndex === 9 ) {
+          
+
+          if ((value > 3.2) && (value < 3.3) ) {
+
+            document.getElementById("dpad-up").classList.remove("active");
+            document.getElementById("dpad-left").classList.remove("active");
+            document.getElementById("dpad-right").classList.remove("active");
+            document.getElementById("dpad-down").classList.remove("active");
+
+                return; //no buttons pressed
+           } else if (value == -1) {
+              // console.log('D-up')
+              document.getElementById("dpad-up").classList.add("active");
+           } else if ( (value > .7) && (value < .75) ) {
+              //  console.log('D-Left')
+              document.getElementById("dpad-left").classList.add("active");
+          } else if (value < -0.41)  {
+              // console.log('D-right')
+              document.getElementById("dpad-right").classList.add("active");
+          } else if ( (value > 0.14) && (value < 0.144) ) {
+              // console.log('D-bottom')
+              document.getElementById("dpad-down").classList.add("active");
+          } else {
+          // console.log(value);          
+          }
         }
 
-        
       }
 
       // Check if browser supports Gamepad API
