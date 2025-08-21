@@ -52,7 +52,7 @@
         /* margin-top: 30px; */
         width: 48%;
         /* border:1px solid red; */
-        margin-left: 10%
+        margin-left: 10%;
       }
 
       .gamepad-visual {
@@ -62,7 +62,6 @@
         border-radius: 15px;
         position: relative;
         /* padding: 40px; */
-        ;
       }
 
       .d-pad {
@@ -131,7 +130,8 @@
         left: 0;
       }
 
-      .shoulder-buttons, .trigger-buttons {
+      .shoulder-buttons,
+      .trigger-buttons {
         display: flex;
         justify-content: space-between;
         width: 380px;
@@ -227,21 +227,19 @@
     </style>
   </head>
   <body>
-      <h1>Chrome Web / Gamepad Demo</h1>
+    <h1>Chrome Web / Gamepad Demo</h1>
 
-          <div id="status" class="status disconnected">
-        <div class="instruction">
+    <div id="status" class="status disconnected">
+      <div class="instruction">
         <p>Connect your USB Gamepad to your computer and press any button to begin.</p>
         <p>This demo will show which buttons are being pressed and display analog values for sticks and triggers.</p>
       </div>
-        
-        Waiting for gamepad connection...</div>
+
+      Waiting for gamepad connection...
+    </div>
 
     <div class="container">
- 
-
       <div class="gamepad">
-
         <div class="shoulder-buttons">
           <div id="button-lb" class="shoulder-button"></div>
           <div id="button-rb" class="shoulder-button"></div>
@@ -280,19 +278,14 @@
             </div>
           </div>
         </div>
-
       </div>
-      
-      
 
       <div class="data-panel">
         <!-- <h3>Raw Input Data</h3> -->
         <div id="raw-data"></div>
       </div>
     </div>
-  </div>
-  
-  
+
     <script>
       // Elements
       const statusEl = document.getElementById("status");
@@ -356,7 +349,7 @@
       };
 
       // Axes that should be ignored/hidden
-      const ignoredAxes = new Set([3, 4, 6,7,8]);
+      const ignoredAxes = new Set([3, 4, 6, 7, 8]);
 
       // State
       let controllers = {};
@@ -557,9 +550,9 @@
             //   const normalizedWidth = ((value + 1) / 2) * 100;
             //   bar.style.width = `${normalizedWidth}%`;
             // }
-          // } else if (i === 9 ) {
+            // } else if (i === 9 ) {
             // return;
-          }else {
+          } else {
             // Normal analog axis handling
             // Normalize -1 to 1 range to 0-100%
             const normalizedWidth = ((value + 1) / 2) * 100;
@@ -567,11 +560,11 @@
           }
 
           if (i != 9) {
-          barContainer.appendChild(bar);
-          row.appendChild(labelEl);
-          row.appendChild(valueEl);
-          row.appendChild(barContainer);
-          rawDataEl.appendChild(row);
+            barContainer.appendChild(bar);
+            row.appendChild(labelEl);
+            row.appendChild(valueEl);
+            row.appendChild(barContainer);
+            rawDataEl.appendChild(row);
           }
           // Update visual sticks (only for main stick axes)
           if (i <= 9) {
@@ -597,41 +590,34 @@
           // Y-axis for right stick
           const currentX = rightStick.style.transform.match(/translateX\(([^)]+)\)/) ? rightStick.style.transform.match(/translateX\(([^)]+)\)/)[1] : "0px";
           rightStick.style.transform = `translateX(${currentX}) translateY(${value * maxDistance}px)`;
-
         } else if (axisIndex === 5 && rightStick) {
-          
-          // X-axis for right stick          
+          // X-axis for right stick
           const currentY = rightStick.style.transform.match(/translateY\(([^)]+)\)/) ? rightStick.style.transform.match(/translateY\(([^)]+)\)/)[1] : "0px";
           rightStick.style.transform = ` translateX(${value * maxDistance}px) translateY(${currentY})`;
-          
-        } else if (axisIndex === 9 ) {
-          
-
-          if ((value > 3.2) && (value < 3.3) ) {
-
+        } else if (axisIndex === 9) {
+          if (value > 3.2 && value < 3.3) {
             document.getElementById("dpad-up").classList.remove("active");
             document.getElementById("dpad-left").classList.remove("active");
             document.getElementById("dpad-right").classList.remove("active");
             document.getElementById("dpad-down").classList.remove("active");
 
-                return; //no buttons pressed
-           } else if (value == -1) {
-              // console.log('D-up')
-              document.getElementById("dpad-up").classList.add("active");
-           } else if ( (value > .7) && (value < .75) ) {
-              //  console.log('D-Left')
-              document.getElementById("dpad-left").classList.add("active");
-          } else if (value < -0.41)  {
-              // console.log('D-right')
-              document.getElementById("dpad-right").classList.add("active");
-          } else if ( (value > 0.14) && (value < 0.144) ) {
-              // console.log('D-bottom')
-              document.getElementById("dpad-down").classList.add("active");
+            return; //no buttons pressed
+          } else if (value == -1) {
+            // console.log('D-up')
+            document.getElementById("dpad-up").classList.add("active");
+          } else if (value > 0.7 && value < 0.75) {
+            //  console.log('D-Left')
+            document.getElementById("dpad-left").classList.add("active");
+          } else if (value < -0.41) {
+            // console.log('D-right')
+            document.getElementById("dpad-right").classList.add("active");
+          } else if (value > 0.14 && value < 0.144) {
+            // console.log('D-bottom')
+            document.getElementById("dpad-down").classList.add("active");
           } else {
-          // console.log(value);          
+            // console.log(value);
           }
         }
-
       }
 
       // Check if browser supports Gamepad API
