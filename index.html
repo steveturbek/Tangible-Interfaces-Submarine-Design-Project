@@ -53,7 +53,7 @@
         z-index: 30;
         display: none; /* Hidden by default, shown when toggled */
         text-align: center;
-        pointer-events: none; /* Allow clicks to pass through */
+        /* pointer-events: none; Allow clicks to pass through */
       }
 
       #sub-data-text {
@@ -100,10 +100,7 @@
       ></object>
 
       <!-- sub-data overlay div -->
-      <div
-        id="sub-data-overlay"
-        style="position: absolute; top: 10px; left: 0; width: 100%; zindex: 30; display: block; textalign: center; pointerevents: none"
-      >
+      <div id="sub-data-overlay" style="position: absolute; top: 10px; left: 0; width: 100%; zindex: 30; display: block; textalign: center">
         <pre
           id="sub-data-text"
           style="
