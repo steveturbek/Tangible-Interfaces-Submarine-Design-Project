@@ -192,7 +192,7 @@ function parseMicrobitSerialLine(lineIn) {
   // serial data can have errors, missing values, etc
 
   const stringArray = lineIn.split(","); //text is separated by commas, split into an array (a list)
-  if (stringArray.length != 12) return; //we will always send 12 values as an error check, so skip this read if not 10 values
+  if (stringArray.length != 12) return; //we will always send 12 values as an error check, so skip this read if not correct number
 
   // console.log(stringArray);
   // Convert to numbers and replace empty or NaN values with 0

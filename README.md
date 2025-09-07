@@ -78,6 +78,12 @@ The submarine is an idealized, simplified vehicle to keep the project fun!
 - https://www.thejetshark.com/
 - https://robbreport.com/motors/marine/gallery/personal-submersibles-exploration-1234848269/unknown-32/
 
+## Submarine Technical Reference
+
+- [Pressure Vessel for Human Occupancy](https://en.wikipedia.org/wiki/Pressure_vessel_for_human_occupancy)
+- [PVHO-1 - Safety Standard for Pressure Vessels for Human Occupancy](https://www.asme.org/codes-standards/find-codes-standards/safety-standard-for-pressure-vessels-for-human-occupancy/2023/pdf)
+- [DNV Manned submersibles classification ](https://www.dnv.com/services/manned-submersibles-1102/)
+
 ## Learning Objectives
 
 By completing this project, you will:
@@ -132,7 +138,7 @@ These criteria balance the practical requirements (can users actually pilot the 
 - Quality of target market research and user personas
 - Evidence of iterative design and testing cycles
 - Documentation of design decisions and problem-solving approaches
-- Brand development and its consistent application across all touchpoints
+- Brand development and its consistent application across all designs
 
 ## Game Overview
 
@@ -240,11 +246,11 @@ Note the game is intended to be played with custom hardware controls, but can be
 
 ### 📊 Less Common Controls
 
-| Key | Function              | Effect                                     |
-| --- | --------------------- | ------------------------------------------ |
-| `P` | Aft Thruster Increase | Increases power to the aft (rear) thruster |
-| `L` | Aft Thruster Decrease | Decreases power to the aft thruster        |
-| `B` | Emergency Surface     | Activates emergency surfacing procedure    |
+| Key | Function              | Effect                                                                          |
+| --- | --------------------- | ------------------------------------------------------------------------------- |
+| `P` | Aft Thruster Increase | Increases power to the aft (rear) thruster which slowly points vehicle upward   |
+| `L` | Aft Thruster Decrease | Decreases power to the aft (rear) thruster which slowly points vehicle downward |
+| `B` | Emergency Surface     | Activates emergency surfacing procedure                                         |
 
 ### 💡 Tips for New Pilots
 
