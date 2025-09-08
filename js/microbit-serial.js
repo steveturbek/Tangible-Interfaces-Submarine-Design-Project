@@ -189,10 +189,17 @@ async function readSerialData() {
 }
 
 function parseMicrobitSerialLine(lineIn) {
+  //#r99r71r51f99f00|11
+  //#r99,r71,r51,f99,f00,1,1
+  //first character could be checksum
+  //first character must be a #
+
   // serial data can have errors, missing values, etc
 
-  const stringArray = lineIn.split(","); //text is separated by commas, split into an array (a list)
-  if (stringArray.length != 12) return; //we will always send 12 values as an error check, so skip this read if not correct number
+  console.log(lineIn);
+
+  // const stringArray = lineIn.split(","); //text is separated by commas, split into an array (a list)
+  // if (stringArray.length != 12) return; //we will always send 12 values as an error check, so skip this read if not correct number
 
   // console.log(stringArray);
   // Convert to numbers and replace empty or NaN values with 0
