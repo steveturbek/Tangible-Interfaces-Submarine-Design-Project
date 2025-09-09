@@ -211,27 +211,21 @@ function updateSubmarineState(deltaTime) {
     gameState.angularVelocity.y += rudderEffect;
 
     // Apply elevator effect (pitch control)
-    const elevatorEffect =
+    gameState.angularVelocity.x +=
       (gameState.controls.PitchElevatorAngle / 100) * (forwardSpeed / gameState.constants.maxSpeed) * gameState.constants.maxPitchAngle * 0.5 * deltaTime;
-    gameState.angularVelocity.x += elevatorEffect;
+
     // INTENTIONALLY NOT AFFECTING Z (ROLL) AXIS
 
-    // Apply aft thrusters (vertical control)
-    const aftThrustFactor = 0.2;
-    const aftEffect = (gameState.controls.VerticalThruster / 100) * aftThrustFactor * deltaTime;
-    gameState.angularVelocity.x += aftEffect;
-    // INTENTIONALLY NOT AFFECTING Z (ROLL) AXIS
-
-    // ADDED: Actively dampen roll to zero - this is the key fix
-    // This ensures any inadvertent roll quickly returns to neutral
-    // gameState.angularVelocity.z *= 0.7; // Strong damping factor specifically for roll
-    // gameState.rotation.z *= 0.95; // Also gradually reduce any roll that has accumulated
+    // Apply vertical thrusters (direct up/down movement)
+    const verticalThrustFactor = 1.0; // Adjust this value to control vertical thrust power
+    const verticalEffect = (gameState.controls.VerticalThruster / 100) * verticalThrustFactor * deltaTime;
+    gameState.velocity.y += verticalEffect; // Direct vertical movement instead of rotation
   }
 
   // ENHANCED: Aggressively counter any roll to maintain vertical orientation
   // This is critical for intuitive steering, especially for new users
-  const rollStabilizationRate = 0.95; // Increased from 0.7 - more aggressive damping
-  const rollResetRate = 0.8; // Increased from 0.95 - faster return to zero
+  const rollStabilizationRate = 5; // Increased from 0.7 - more aggressive damping
+  const rollResetRate = 8; // Increased from 0.95 - faster return to zero
 
   // Apply strong damping to roll velocity
   gameState.angularVelocity.z *= 1 - rollStabilizationRate * deltaTime;
@@ -253,6 +247,42 @@ function updateSubmarineState(deltaTime) {
     const yawRate = gameState.angularVelocity.y;
     const antiRollForce = -yawRate * 0.3 * deltaTime;
     gameState.angularVelocity.z += antiRollForce;
+  }
+
+  // YAW CENTERING: Stop turning when rudder is neutral (like a car steering wheel)
+  // This makes the submarine feel more natural and controllable
+  const rudderDeadZone = 5; // Small dead zone for neutral rudder
+  if (Math.abs(gameState.controls.YawRudderAngle) <= rudderDeadZone) {
+    // Rudder is neutral - apply strong yaw damping to stop turning
+    const yawCenteringStrength = 4.0; // How quickly it stops turning
+    gameState.angularVelocity.y *= Math.max(0.1, 1 - yawCenteringStrength * deltaTime);
+
+    // For very slow turning, stop it completely
+    if (Math.abs(gameState.angularVelocity.y) < 0.5) {
+      gameState.angularVelocity.y *= 0.7;
+    }
+  } else {
+    // Rudder is active - apply normal but lighter yaw damping
+    const normalYawDamping = 0.98;
+    gameState.angularVelocity.y *= normalYawDamping;
+  }
+
+  // PITCH CENTERING: Stop turning when elevator is neutral
+  // This makes the submarine feel more natural and controllable
+  const elevatorDeadZone = 5; // Small dead zone for neutral rudder
+  if (Math.abs(gameState.controls.PitchElevatorAngle) <= elevatorDeadZone) {
+    // elevator is neutral - apply strong pitch damping to stop turning
+    const pitchCenteringStrength = 4.0; // How quickly it stops turning
+    gameState.angularVelocity.x *= Math.max(0.1, 1 - pitchCenteringStrength * deltaTime);
+
+    // For very slow pitching, stop it completely
+    if (Math.abs(gameState.angularVelocity.x) < 0.5) {
+      gameState.angularVelocity.x *= 0.7;
+    }
+  } else {
+    // Elevator is active - apply normal but lighter pitch damping
+    const normalPitchDamping = 0.98;
+    gameState.angularVelocity.x *= normalPitchDamping;
   }
 
   // Apply drag to velocities
