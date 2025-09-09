@@ -34,19 +34,19 @@ function handleKeyPress(event) {
 
     // Left thruster controls
     case "a":
-      adjustLeftThruster(controlConfig.thrusterIncrement);
+      adjustPortThruster(controlConfig.thrusterIncrement);
       break;
     case "z":
-      adjustLeftThruster(-controlConfig.thrusterIncrement);
+      adjustPortThruster(-controlConfig.thrusterIncrement);
       break;
 
     // Right thruster controls
     case "s":
-      adjustRightThruster(controlConfig.thrusterIncrement);
+      adjustStarboardThruster(controlConfig.thrusterIncrement);
       break;
 
     case "x":
-      adjustRightThruster(-controlConfig.thrusterIncrement);
+      adjustStarboardThruster(-controlConfig.thrusterIncrement);
       break;
 
     // Elevator (pitch) controls
@@ -67,10 +67,10 @@ function handleKeyPress(event) {
 
     // Aft thruster controls
     case "p":
-      adjustAftThruster(controlConfig.thrusterIncrement);
+      adjustVerticalThruster(controlConfig.thrusterIncrement);
       break;
     case "l":
-      adjustAftThruster(-controlConfig.thrusterIncrement);
+      adjustVerticalThruster(-controlConfig.thrusterIncrement);
       break;
 
     // Emergency controls
@@ -111,7 +111,7 @@ function clamp(value, min, max) {
  *
  * @param {number} percent - The percentage value (-100 to 100)
  */
-function setLeftThruster(percent) {
+function setPortThruster(percent) {
   if (!gameState || !gameState.controls) return;
 
   gameState.controls.ThrottleLeft = Math.round(
@@ -126,7 +126,7 @@ function setLeftThruster(percent) {
  *
  * @param {number} percent - The percentage value (-100 to 100)
  */
-function setRightThruster(percent) {
+function setStarboardThruster(percent) {
   if (!gameState || !gameState.controls) return;
 
   gameState.controls.ThrottleRight = Math.round(
@@ -173,12 +173,12 @@ function setRudder(percent) {
  *
  * @param {number} percent - The percentage value (-100 to 100)
  */
-function setAftThruster(percent) {
+function setVerticalThruster(percent) {
   if (!gameState || !gameState.controls) return;
 
-  gameState.controls.AftThruster = Math.round(clamp(percent, -gameState.controls.MaxAftThruster, gameState.controls.MaxAftThruster));
+  gameState.controls.VerticalThruster = Math.round(clamp(percent, -gameState.controls.MaxVerticalThruster, gameState.controls.MaxVerticalThruster));
 
-  // console.log(`Aft Thruster: ${gameState.controls.AftThruster}%`);
+  // console.log(`Aft Thruster: ${gameState.controls.VerticalThruster}%`);
 }
 
 // ================ ADJUSTMENT WRAPPER FUNCTIONS ================
@@ -188,9 +188,9 @@ function setAftThruster(percent) {
  *
  * @param {number} amount - Amount to adjust by (-100 to 100)
  */
-function adjustLeftThruster(amount) {
+function adjustPortThruster(amount) {
   if (!gameState || !gameState.controls) return;
-  setLeftThruster(gameState.controls.ThrottleLeft + amount);
+  setPortThruster(gameState.controls.ThrottleLeft + amount);
 }
 
 /**
@@ -198,9 +198,9 @@ function adjustLeftThruster(amount) {
  *
  * @param {number} amount - Amount to adjust by (-100 to 100)
  */
-function adjustRightThruster(amount) {
+function adjustStarboardThruster(amount) {
   if (!gameState || !gameState.controls) return;
-  setRightThruster(gameState.controls.ThrottleRight + amount);
+  setStarboardThruster(gameState.controls.ThrottleRight + amount);
 }
 
 /**
@@ -228,9 +228,9 @@ function adjustRudder(amount) {
  *
  * @param {number} amount - Amount to adjust by (-100 to 100)
  */
-function adjustAftThruster(amount) {
+function adjustVerticalThruster(amount) {
   if (!gameState || !gameState.controls) return;
-  setAftThruster(gameState.controls.AftThruster + amount);
+  setVerticalThruster(gameState.controls.VerticalThruster + amount);
 }
 
 /**
@@ -243,7 +243,7 @@ function emergencyBlowTanks() {
   setElevator(gameState.controls.maxPitchElevatorAngle);
 
   // Set full upward aft thruster
-  setAftThruster(gameState.controls.MaxAftThruster);
+  setVerticalThruster(gameState.controls.MaxVerticalThruster);
 }
 
 /**
@@ -253,7 +253,7 @@ function emergencyAllStop() {
   console.log("EMERGENCY ALL STOP");
   gameState.controls.ThrottleLeft = 0;
   gameState.controls.ThrottleRight = 0;
-  gameState.controls.AftThruster = 0;
+  gameState.controls.VerticalThruster = 0;
   gameState.controls.PitchElevatorAngle = 0;
   gameState.controls.YawRudderAngle = 0;
 
@@ -276,18 +276,18 @@ window.addEventListener("load", setupKeyboardControls, { once: true });
 // Export control functions for external use (such as from physical controls or UI)
 window.submarineControls = {
   // Absolute control setters
-  setLeftThruster, // Sets left thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setLeftThruster(50);
-  setRightThruster, // Sets right thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setRightThruster(50);
+  setPortThruster, // Sets left thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setPortThruster(50);
+  setStarboardThruster, // Sets right thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setStarboardThruster(50);
   setElevator, // Sets elevator angle to an exact percentage value (-100 to 100) - Example: window.submarineControls.setElevator(-30);
   setRudder, // Sets rudder angle to an exact percentage value (-100 to 100) - Example: window.submarineControls.setRudder(25);
-  setAftThruster, // Sets aft thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setAftThruster(75);
+  setVerticalThruster, // Sets aft thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setVerticalThruster(75);
 
   // Relative control adjusters
-  adjustLeftThruster, // Increases/decreases left thruster by specified amount - Example: window.submarineControls.adjustLeftThruster(10);
-  adjustRightThruster, // Increases/decreases right thruster by specified amount - Example: window.submarineControls.adjustRightThruster(-5);
+  adjustPortThruster, // Increases/decreases left thruster by specified amount - Example: window.submarineControls.adjustPortThruster(10);
+  adjustStarboardThruster, // Increases/decreases right thruster by specified amount - Example: window.submarineControls.adjustStarboardThruster(-5);
   adjustElevator, // Increases/decreases elevator angle by specified amount - Example: window.submarineControls.adjustElevator(2);
   adjustRudder, // Increases/decreases rudder angle by specified amount - Example: window.submarineControls.adjustRudder(-3);
-  adjustAftThruster, // Increases/decreases aft thruster by specified amount - Example: window.submarineControls.adjustAftThruster(15);
+  adjustVerticalThruster, // Increases/decreases aft thruster by specified amount - Example: window.submarineControls.adjustVerticalThruster(15);
 
   // Special functions
   emergencyBlowTanks, // Performs emergency surfacing procedure (full upward pitch and aft thruster) - Example: window.submarineControls.emergencyBlowTanks();

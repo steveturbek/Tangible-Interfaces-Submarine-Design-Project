@@ -95,7 +95,7 @@ window.addEventListener(
       // Try to auto-connect when the game loads
       setTimeout(() => autoConnectToMicrobit(), 1000); // Slight delay to ensure everything is loaded
     } else {
-      outputDiv.textContent = "Web Serial API is not supported in this browser. Please use Chrome or Edge.";
+      outputDiv.textContent = "Web Serial API is not supported in this browser. Please use Chrome.";
       document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").setAttribute("fill", "#ff0000");
     }
   },

@@ -30,14 +30,14 @@ led.enable(false); //turn off display to use inputs 4, 10
 
 //Pitch
 let pitchPin = AnalogReadWritePin.P0;
-let pitchAnalogMin = 375;
+let pitchAnalogMin = 1012;
 // control maximum to one side
 // you must observe your sensor to get this number
 let pitchAnalogMid = 577;
 // the control at rest (may not be exactly in the middle)
 // you must observe your sensor to get this number
 
-let pitchAnalogMax = 1012;
+let pitchAnalogMax = 375;
 // control maximum to other side
 // you must observe your sensor to get this number
 
@@ -140,7 +140,9 @@ basic.forever(function () {
     VerticalEnginePowerAnalogMid,
     VerticalEnginePowerAnalogMax
   );
-  // serial.writeValue("VerticalEnginePower", pins.analogReadPin(VerticalEnginePowerPin))
+
+  if (pins.analogReadPin(VerticalEnginePowerPin) <= 1) VerticalEnginePowerOutput = "f00"; // this potentiometer has a switch, which reads analog 0 if off
+  // serial.writeLine("VerticalEngineAnalog:" + pins.analogReadPin(VerticalEnginePowerPin) + "  VerticalEnginePowerOutput:" + VerticalEnginePowerOutput);
 
   //potential 6th analog pin for ballast control
 

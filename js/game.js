@@ -21,8 +21,8 @@ const gameState_original = {
     maxYawRudderAngle: 30, // absolute number
 
     //Aft Thruster on the horizontal tail produce pitch
-    AftThruster: 0, // -100 to +100 (down to up)
-    MaxAftThruster: 100, // absolute number
+    VerticalThruster: 0, // -100 to +100 (down to up)
+    MaxVerticalThruster: 100, // absolute number
 
     // Not using roll  targetRoll: 0, // -100 to +100 (optional: left bank to right bank)
   },
@@ -161,7 +161,7 @@ function updateSubmarineState(deltaTime) {
   // Update battery based on engine usage and aft thruster
   const mainPowerDrain = (avgThrottle * deltaTime) / gameState.constants.maxBatteryTime;
   // Aft thrusters also use some power, but less than main thrusters
-  const aftPowerDrain = (Math.abs(gameState.controls.AftThruster) * 0.3 * deltaTime) / gameState.constants.maxBatteryTime;
+  const aftPowerDrain = (Math.abs(gameState.controls.VerticalThruster) * 0.3 * deltaTime) / gameState.constants.maxBatteryTime;
   const totalPowerDrain = mainPowerDrain + aftPowerDrain;
 
   gameState.status.batteryLevel = Math.max(0, gameState.status.batteryLevel - totalPowerDrain);
@@ -218,7 +218,7 @@ function updateSubmarineState(deltaTime) {
 
     // Apply aft thrusters (vertical control)
     const aftThrustFactor = 0.2;
-    const aftEffect = (gameState.controls.AftThruster / 100) * aftThrustFactor * deltaTime;
+    const aftEffect = (gameState.controls.VerticalThruster / 100) * aftThrustFactor * deltaTime;
     gameState.angularVelocity.x += aftEffect;
     // INTENTIONALLY NOT AFFECTING Z (ROLL) AXIS
 
@@ -343,13 +343,13 @@ function applyBoundaryConstraints() {
   // Y boundary (vertical: seabed and water surface)
   if (y < threeJsSeabedY) {
     // Below seabed
-    newPosition.y = threeJsSeabedY + 0.5;
+    newPosition.y = threeJsSeabedY + 10;
     resetVelocities();
     isHittingBoundary = true;
     console.log("Hit seabed - stopping submarine");
   } else if (y > threeJsWaterSurfaceY) {
     // Above water surface
-    newPosition.y = threeJsWaterSurfaceY - 0.5;
+    newPosition.y = threeJsWaterSurfaceY - 10;
     resetVelocities();
     isHittingBoundary = true;
     console.log("Hit water surface - stopping submarine");
@@ -357,7 +357,7 @@ function applyBoundaryConstraints() {
 
   // Z boundary (forward/backward)
   if (Math.abs(z) > worldBoundary) {
-    newPosition.z = Math.sign(z) * (worldBoundary - 0.5);
+    newPosition.z = Math.sign(z) * (worldBoundary - 10);
     resetVelocities();
     isHittingBoundary = true;
     console.log("Hit forward/backward boundary - stopping submarine");
@@ -416,11 +416,10 @@ function updateUI() {
     `This is a data panel for testing the game. Use TAB key to hide.` +
     `\n` +
     `\n` +
-    `It does not appear you have the hardware controls connected \n` +
     `You can drive this submarine using keys \n` +
     `\tA	Increases power to the left thruster \n` +
-    `\tZ	Decreases power to the left thruster \n` +
     `\tS	Increases power to the right thruster \n` +
+    `\tZ	Decreases power to the left thruster \n` +
     `\tX	Decreases power to the right thruster \n` +
     `\tArrow keys for steering \n` +
     `\t(There are more controls in the Read Me) \n` +
@@ -440,7 +439,7 @@ function updateUI() {
     `RightThrust: ${gameState.controls.ThrottleRight}% | ` +
     `Rudder ←→: ${gameState.controls.YawRudderAngle.toFixed(1)}% | ` +
     `Elevator ↑↓: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% | ` +
-    `AftThruster: ${gameState.controls.AftThruster}%`;
+    `VerticalThruster: ${gameState.controls.VerticalThruster}%`;
 
   // Add boundary warning if needed
   if (gameState.status.boundaryWarning) {

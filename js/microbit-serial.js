@@ -195,6 +195,10 @@ function parseMicrobitSerialLine(lineIn) {
   if (lineIn.charAt(0) != "#") return;
   var dataString = lineIn.substring(1);
 
+  // dataString = "f00,f00,f20,f20,f00|0|0";
+
+  // console.log(dataString);
+
   //reject any data with another #
   if (dataString.indexOf("#") > 0) return;
 
@@ -209,7 +213,8 @@ function parseMicrobitSerialLine(lineIn) {
   var ControlInputValuesArray = ButtonArray[0].split(",");
   if (ControlInputValuesArray.length != 5) return; // reject bad data
 
-  // console.log(dataString, ControlInputValuesArray);
+  ControlInputValuesArray[2] = ControlInputValuesArray[3];
+  // console.log(ControlInputValuesArray);
 
   //expecting a three letter string like f00, r99, +10, or -20
   //f and r are absolute measurements, forward or reverse, + or -
@@ -224,23 +229,23 @@ function parseMicrobitSerialLine(lineIn) {
   const commandArray = [
     [setElevator, adjustElevator], // [0] Pitch
     [setRudder, adjustRudder], // [1] Roll
-    [setLeftThruster, adjustLeftThruster], // [2] Port Engine
-    [setRightThruster, adjustRightThruster], // [3] Starboard Engine
-    [setAftThruster, adjustAftThruster], // [4] Vertical Engine
+    [setPortThruster, adjustPortThruster], // [2] Port Engine
+    [setStarboardThruster, adjustStarboardThruster], // [3] Starboard Engine
+    [setVerticalThruster, adjustVerticalThruster], // [4] Vertical Engine
   ];
 
-  var direction = -1; // forward or reverse
-  var SetOrAdjust = 0; //position in  commandArray[x][SetOrAdjust]
-
   for (a = 0; a < 5; a++) {
+    var direction = 1; // forward or reverse
+    var SetOrAdjust = 0; //position in  commandArray[x][SetOrAdjust]
+
     switch (ControlInputValuesArray[a].charAt(0)) {
       case "r":
-        direction = 1;
+        direction = -1;
       case "f":
         // SetOrAdjust = 0; // set
         break;
       // case "-":
-      //   direction = 1;
+      //   direction = -1;
       // case "+":
       //   SetOrAdjust = 1; // adjust
       //   break;
@@ -249,71 +254,30 @@ function parseMicrobitSerialLine(lineIn) {
     const value = parseInt(ControlInputValuesArray[a].substring(1));
 
     if (isNaN(value)) {
-      console.log("NaN");
-      return false;
+      // console.log("NaN " + ControlInputValuesArray[a].substring(1));
+      continue;
     }
     commandArray[a][SetOrAdjust](value * direction);
   }
 
-  // //Pitch
-  // if (ControlInputValuesArray[0].charAt(0) == "f") setElevator(parseInt(ControlInputValuesArray[0].substring(1)));
-  // else if (ControlInputValuesArray[0].charAt(0) == "r") setElevator(-1 * parseInt(ControlInputValuesArray[0].substring(1)));
-  // else if (ControlInputValuesArray[0].charAt(0) == "+") adjustElevator(parseInt(ControlInputValuesArray[0].substring(1)));
-  // else if (ControlInputValuesArray[0].charAt(0) == "-") adjustElevator(-1 * parseInt(ControlInputValuesArray[0].substring(1)));
-
-  // //Roll
-  // if (ControlInputValuesArray[1].charAt(0) == "f") setRudder(parseInt(ControlInputValuesArray[1].substring(1)));
-  // else if (ControlInputValuesArray[1].charAt(0) == "r") setRudder(-1 * parseInt(ControlInputValuesArray[1].substring(1)));
-  // else if (ControlInputValuesArray[1].charAt(0) == "+") adjustRudder(parseInt(ControlInputValuesArray[1].substring(1)));
-  // else if (ControlInputValuesArray[1].charAt(0) == "-") adjustRudder(-1 * parseInt(ControlInputValuesArray[1].substring(1)));
-
-  // //PortEnginePower
-  // if (ControlInputValuesArray[2].charAt(0) == "f") setLeftThruster(parseInt(ControlInputValuesArray[2].substring(1)));
-  // else if (ControlInputValuesArray[2].charAt(0) == "r") setLeftThruster(-1 * parseInt(ControlInputValuesArray[2].substring(1)));
-  // else if (ControlInputValuesArray[2].charAt(0) == "+") adjustLeftThruster(parseInt(ControlInputValuesArray[2].substring(1)));
-  // else if (ControlInputValuesArray[2].charAt(0) == "-") adjustLeftThruster(-1 * parseInt(ControlInputValuesArray[2].substring(1)));
-
-  // //StarboardEnginePower
-  // if (ControlInputValuesArray[3].charAt(0) == "f") setRightThruster(parseInt(ControlInputValuesArray[3].substring(1)));
-  // else if (ControlInputValuesArray[3].charAt(0) == "r") setRightThruster(-1 * parseInt(ControlInputValuesArray[3].substring(1)));
-  // // else if (ControlInputValuesArray[3].charAt(0) == "+") adjustRightThruster(parseInt(ControlInputValuesArray[3].substring(1)));
-  // else if (ControlInputValuesArray[3].charAt(0) == "-") adjustRightThruster(-1 * parseInt(ControlInputValuesArray[3].substring(1)));
-
-  // //VerticalEnginePower
-  // if (ControlInputValuesArray[4].charAt(0) == "f") setAftThruster(parseInt(ControlInputValuesArray[4].substring(1)));
-  // else if (ControlInputValuesArray[4].charAt(0) == "r") setAftThruster(-1 * parseInt(ControlInputValuesArray[4].substring(1)));
-  // else if (ControlInputValuesArray[4].charAt(0) == "+") adjustAftThruster(parseInt(ControlInputValuesArray[4].substring(1)));
-  // else if (ControlInputValuesArray[4].charAt(0) == "-") adjustAftThruster(-1 * parseInt(ControlInputValuesArray[4].substring(1)));
-
   /*
 // Absolute control setters
-    setLeftThruster(value) // Sets left thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setLeftThruster(50);
-    setRightThruster(value) // Sets right thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setRightThruster(50);
+    setPortThruster(value) // Sets left thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setPortThruster(50);
+    setStarboardThruster(value) // Sets right thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setStarboardThruster(50);
     setElevator(value) // Sets elevator angle to an exact percentage value (-100 to 100) - Example: window.submarineControls.setElevator(-30);
     setRudder(value) // Sets rudder angle to an exact percentage value (-100 to 100) - Example: window.submarineControls.setRudder(25);
-    setAftThruster(value) // Sets aft thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setAftThruster(75);
+    setVerticalThruster(value) // Sets aft thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setVerticalThruster(75);
   
     // Relative control adjusters
-    adjustLeftThruster(value) // Increases/decreases left thruster by specified amount - Example: window.submarineControls.adjustLeftThruster(10);
-    adjustRightThruster(value) // Increases/decreases right thruster by specified amount - Example: window.submarineControls.adjustRightThruster(-5);
+    adjustPortThruster(value) // Increases/decreases left thruster by specified amount - Example: window.submarineControls.adjustPortThruster(10);
+    adjustStarboardThruster(value) // Increases/decreases right thruster by specified amount - Example: window.submarineControls.adjustStarboardThruster(-5);
     adjustElevator(value) // Increases/decreases elevator angle by specified amount - Example: window.submarineControls.adjustElevator(2);
     adjustRudder(value) // Increases/decreases rudder angle by specified amount - Example: window.submarineControls.adjustRudder(-3);
-    adjustAftThruster(value) // Increases/decreases aft thruster by specified amount - Example: window.submarineControls.adjustAftThruster(15);
+    adjustVerticalThruster(value) // Increases/decreases aft thruster by specified amount - Example: window.submarineControls.adjustVerticalThruster(15);
   
     // Special functions
     emergencyBlowTanks() // Performs emergency surfacing procedure (full upward pitch and aft thruster) - Example: window.submarineControls.emergencyBlowTanks();
       emergencyAllStop() // stop all engines
 
  */
-
-  /* example code
-   */
-
-  // Convert to numbers and replace empty or NaN values with 0
-  // const intArray = stringArray.map((str) => {
-  //   const num = +str;
-  //   return str === "" || isNaN(num) ? 0 : num;
-  // });
-
-  // getSerialMessageFromMicrobit(intArray); //send to student code
 }
