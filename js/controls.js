@@ -114,9 +114,11 @@ function clamp(value, min, max) {
 function setLeftThruster(percent) {
   if (!gameState || !gameState.controls) return;
 
-  gameState.controls.ThrottleLeft = clamp(percent, -gameState.controls.MaxThrottle, gameState.controls.MaxThrottle);
+  gameState.controls.ThrottleLeft = Math.round(
+    clamp(percent * 0.01 * gameState.controls.MaxThrottle, -gameState.controls.MaxThrottle, gameState.controls.MaxThrottle)
+  );
 
-  console.log(`Left Thruster: ${gameState.controls.ThrottleLeft}%`);
+  // console.log(`Left Thruster: ${gameState.controls.ThrottleLeft}%`);
 }
 
 /**
@@ -127,9 +129,11 @@ function setLeftThruster(percent) {
 function setRightThruster(percent) {
   if (!gameState || !gameState.controls) return;
 
-  gameState.controls.ThrottleRight = clamp(percent, -gameState.controls.MaxThrottle, gameState.controls.MaxThrottle);
+  gameState.controls.ThrottleRight = Math.round(
+    clamp(percent * 0.01 * gameState.controls.MaxThrottle, -gameState.controls.MaxThrottle, gameState.controls.MaxThrottle)
+  );
 
-  console.log(`Right Thruster: ${gameState.controls.ThrottleRight}%`);
+  // console.log(percent, `Right Thruster: ${gameState.controls.ThrottleRight}%`);
 }
 
 /**
@@ -140,10 +144,8 @@ function setRightThruster(percent) {
 function setElevator(percent) {
   if (!gameState || !gameState.controls) return;
 
-  percent = clamp(
-    percent * 0.01 * gameState.controls.maxPitchElevatorAngle,
-    -gameState.controls.maxPitchElevatorAngle,
-    gameState.controls.maxPitchElevatorAngle
+  percent = Math.round(
+    clamp(percent * 0.01 * gameState.controls.maxPitchElevatorAngle, -gameState.controls.maxPitchElevatorAngle, gameState.controls.maxPitchElevatorAngle)
   );
   gameState.controls.PitchElevatorAngle = (gameState.controls.PitchElevatorAngle + percent) / 2;
 
@@ -159,7 +161,9 @@ function setRudder(percent) {
   if (!gameState || !gameState.controls) return;
 
   // percent *= 0.01 * gameState.controls.maxYawRudderAngle; // convert from percent to absolute
-  percent = clamp(percent * 0.01 * gameState.controls.maxYawRudderAngle, -gameState.controls.maxYawRudderAngle, gameState.controls.maxYawRudderAngle);
+  percent = Math.round(
+    clamp(percent * 0.01 * gameState.controls.maxYawRudderAngle, -gameState.controls.maxYawRudderAngle, gameState.controls.maxYawRudderAngle)
+  );
   gameState.controls.YawRudderAngle = (gameState.controls.YawRudderAngle + percent) / 2;
   // console.log(`Rudder Angle: ${percent}%`);
 }
@@ -172,9 +176,9 @@ function setRudder(percent) {
 function setAftThruster(percent) {
   if (!gameState || !gameState.controls) return;
 
-  gameState.controls.AftThruster = clamp(percent, -gameState.controls.MaxAftThruster, gameState.controls.MaxAftThruster);
+  gameState.controls.AftThruster = Math.round(clamp(percent, -gameState.controls.MaxAftThruster, gameState.controls.MaxAftThruster));
 
-  console.log(`Aft Thruster: ${gameState.controls.AftThruster}%`);
+  // console.log(`Aft Thruster: ${gameState.controls.AftThruster}%`);
 }
 
 // ================ ADJUSTMENT WRAPPER FUNCTIONS ================

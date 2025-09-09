@@ -16,6 +16,7 @@
  * All potentiometers are connected to same led wire, and use ony 2 wires, E.G. not set up with a voltage divider ground wire
  * Each return wire goes to an analog pim. A 100k resistor is added from pin to ground.
  * I added a 10k resistor to ground for each button pins
+ * NOTE pull down resistor on pin11 triggers some kind of bluetooth test mode
  *
  * For the purposes of inspiring the class, I've added a 3d printed frame with 2 additional 10k potentiometers, to control the game submarine port and starboard motors.
  * These pots use all three legs as a voltage divider.  To avoid shorting out the board, a 1k resistor is added to power leg.  ground leg goes to ground, wiper leg goes to the analog pins
@@ -65,7 +66,7 @@ let PortEnginePowerAnalogMax = 925;
 // you must observe your sensor to get this number
 ////////////
 //Starboard Engine Right Power
-// NOTE this potentiometer is wired backwardsm so Min is higher then Max.  This is corrected in RemapAnalogReadingWithCenterToSerialString
+// NOTE this potentiometer is wired backwards so Min is higher then Max.  This is corrected in RemapAnalogReadingWithCenterToSerialString
 let StarboardEnginePowerPin = AnalogReadWritePin.P10;
 let StarboardEnginePowerAnalogMin = 930;
 // control maximum to one side
@@ -94,14 +95,14 @@ let VerticalEnginePowerAnalogMax = 1011;
 let AllStopPin = DigitalPin.P5;
 pins.setPull(AllStopPin, PinPullMode.PullDown);
 
-let BlowBallastPin = DigitalPin.P11;
+let BlowBallastPin = DigitalPin.P8;
 pins.setPull(BlowBallastPin, PinPullMode.PullDown);
 
 /////////////////////////////////////////////////////////////////////////////
 // the main repeating loop
 /////////////////////////////////////////////////////////////////////////////
 basic.forever(function () {
-  basic.pause(200);
+  basic.pause(400);
 
   // serial.writeValue("Pin 0 (pitch)", pins.analogReadPin(pitchPin))
   let pitchOutput = RemapAnalogReadingWithCenterToSerialString(pins.analogReadPin(pitchPin), pitchAnalogMin, pitchAnalogMid, pitchAnalogMax);
@@ -163,15 +164,18 @@ basic.forever(function () {
   serial.writeLine(
     "#" +
       pitchOutput +
+      "," +
       rollOutput +
+      "," +
       PortEnginePowerOutput +
+      "," +
       StarboardEnginePowerOutput +
+      "," +
       VerticalEnginePowerOutput +
       "|" +
       pins.digitalReadPin(AllStopPin) +
-      "" +
-      pins.digitalReadPin(BlowBallastPin) +
-      "\n"
+      "|" +
+      pins.digitalReadPin(BlowBallastPin)
   );
 });
 
