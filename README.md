@@ -41,15 +41,13 @@ Note the game is intended to be played with custom hardware controls, but can be
 
 To make this project possible for a design student, we have a technical framework to build from. This GitHub Project builds a web app 'game' with on-screen UX instruments that can be customized. The project contains basic recipes to connect hardware controls to this game. Very little electronics or programming is expected. Examples are provided to learn from.
 
-The student will design and fabricate th items in diagram below
+The student will design and fabricate
 
 1. A cockpit design prototype (orange), either beautiful or rough, from wood or cardboard
 1. An innovative and beautiful physical control set (red/green)
 1. The controls will send signals to the Micro:bit board (center)
 1. The board will send a USB message to the student laptop (blue)
 1. The laptop drive an external monitor(s) embedded in cockpit design prototype (blue rectangle)
-
-![Goofy Hand drawn diagram of conceptual Technical Setup](assets/conceptual-diagram-of-tech.png "Diagram of conceptual Technical Setup")
 
 The four teams will each design a cockpit for a pilot who is:
 
@@ -215,11 +213,12 @@ The repository is organized as follows:
 ```
 ├── index.html          # Game page **Do not edit**
 ├── js/                 # JavaScript files **Do not edit**
-│   ├── game.js         # Core game mechanics
-│   ├── controls.js     # Input handling
-│   ├── rendering.js    # 3D scene rendering
+│   ├── game.js                 # Core game mechanics
+│   ├── controls.js             # Input handling
+│   ├── rendering.js            # 3D scene rendering
 │   ├── hardware-controls.js    # to interpret the data coming from the microbit to send to the sub controls
-│   └── instruments.js  # Cockpit instrument displays
+│   ├── instruments.js          # Cockpit instrument displays
+│   └── microbit-serial.js      # Receive and interpret messages from microbit board
 ├── artwork/            # Images, CSS, and other assets to customize the game **Edit only these files**
 ├── assets/             # Images, CSS, and other assets to customize the game **Do not edit only these files**
 └── examples/           # Example code

@@ -213,7 +213,7 @@ function parseMicrobitSerialLine(lineIn) {
   var ControlInputValuesArray = ButtonArray[0].split(",");
   if (ControlInputValuesArray.length != 5) return; // reject bad data
 
-  ControlInputValuesArray[2] = ControlInputValuesArray[3];
+  // ControlInputValuesArray[2] = ControlInputValuesArray[3]; // hack to make it drive straight
   // console.log(ControlInputValuesArray);
 
   //expecting a three letter string like f00, r99, +10, or -20

@@ -94,9 +94,11 @@ let VerticalEnginePowerAnalogMax = 1011;
 //Buttons Digital input pins 5 (button A), 8 ,11 (button b)
 let AllStopPin = DigitalPin.P5;
 pins.setPull(AllStopPin, PinPullMode.PullDown);
+// these need resistors to ground!
 
 let BlowBallastPin = DigitalPin.P8;
 pins.setPull(BlowBallastPin, PinPullMode.PullDown);
+// these need resistors to ground!
 
 /////////////////////////////////////////////////////////////////////////////
 // the main repeating loop
