@@ -18,24 +18,13 @@ Your mission:
 
 1. Research and identify target market
 1. Create brand for sub line
+1. Research and Design the vehicle exterior and interior
 1. Design the visual styling of your submersible cockpit
 1. Create on-screen digital user experience instruments that effectively communicate critical vehicle information
 1. Build physical control set (buttons, joysticks, etc.) to drive the submarine that provide an intuitive piloting experience
 1. User Start Guide as needed
 1. Test with real people
 1. Write up and present design, process, and findings
-
-**Are you ready to dive in?**
-
-## The Gameplay Experience
-
-Your submersible will navigate through an underwater maze of coral reefs. The pilot must reach an underwater base before running out of oxygen or electricity. The gameplay emphasizes careful resource management and precise navigation through challenging 3D environments.
-
-## Demo Link (in development)
-
-[Web game experience](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project)
-
-Note the game is intended to be played with custom hardware controls, but can be steered with keyboard for development. See below for tips.
 
 ## Physical Prototype
 
@@ -56,6 +45,16 @@ The four teams will each design a cockpit for a pilot who is:
 - Recumbent
 - Standing/leaning
 
+## The Gameplay Experience
+
+Your submersible will navigate through an underwater maze of coral reefs. The pilot must reach an underwater base before running out of oxygen or electricity. The gameplay emphasizes careful resource management and precise navigation through challenging 3D environments.
+
+## Demo Link (in development)
+
+[Web game experience](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project)
+
+Note the game is intended to be played with custom hardware controls, but can be steered with keyboard for development. See below for tips.
+
 ## Submarine Description
 
 The student will have the ability to design the submarine. Here are the technical design constraints. A clever team can write code to change these, but they are responsible for these customizations.
@@ -75,6 +74,32 @@ The submarine is an idealized, simplified vehicle to keep the project fun!
 - https://www.seamagine.com/small-submarines-models.html
 - https://www.thejetshark.com/
 - https://robbreport.com/motors/marine/gallery/personal-submersibles-exploration-1234848269/unknown-32/
+
+## Videos of Submarines, with a focus on their controls
+
+### Triton
+
+- [TRITON 660 AVA intro video](https://youtu.be/dR12ckJUCU8)
+- [Triton control panels shown](https://youtu.be/SAGwGN_V4nk)
+- [Triton controls shown](https://youtu.be/xcJ-XV-aP7Q)
+- [Making of deep submergence vehicle](https://youtu.be/pb5j9oeZCm0)
+- [NOVA PBS episode](https://www.pbs.org/wgbh/nova/video/building-stuff-reach-it/) - Triton section can be found between these timings: 14:50 - 27.26.
+
+### U-Boat Worx
+
+- [U Boat-Worx Controls](https://youtu.be/eqIBfny8q70)
+- [Nemo vehicle](https://youtu.be/AvE27dh70qM)
+- [Super Sub vehicle](https://www.youtube.com/watch?v=VdqN9sgdrtU)
+- [Controls demo](https://youtu.be/JPVJ8ZV5em8)
+- [Mexico Expedition C-Explorer 5 - Whale Shark Diving](https://www.youtube.com/watch?v=fpxmoK-bL9c)
+
+## (Fictional) Movies for inspiration
+
+- [Last Breath (2025)](https://www.imdb.com/title/tt14403504) - Submarine Divers in trouble
+- [The Abyss (1989)](https://www.imdb.com/title/tt0096754/) - James Cameron's sci-fi thriller about a deep-sea oil rig crew encountering mysterious underwater phenomena
+- [Das Boot (1981)](https://www.imdb.com/title/tt0082096/) - German WWII epic following a U-boat crew's harrowing Atlantic patrol
+- [The Hunt for Red October (1990)](https://www.imdb.com/title/tt0099810/) - Cold War thriller about a Soviet submarine captain's defection attempt
+- [Gravity (2013)](https://www.imdb.com/title/tt1454468) - In space, but key scene involves learning old user controls
 
 ## Submarine Technical Reference
 
