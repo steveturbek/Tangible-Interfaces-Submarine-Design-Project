@@ -181,7 +181,7 @@ function updateSubmarineState(deltaTime) {
     const netThrust = (gameState.controls.ThrottleLeft + gameState.controls.ThrottleRight) / 2;
 
     // Calculate turning effect from differential thrust
-    const diffThrust = (gameState.controls.ThrottleRight - gameState.controls.ThrottleLeft) / 2;
+    const diffThrust = (gameState.controls.ThrottleLeft - gameState.controls.ThrottleRight) / 2;
 
     // Apply thrust vectors using Three.js coordinates
     // Forward thrust: -Z direction (Three.js forward is -Z)
