@@ -301,8 +301,8 @@ function createCoralReef() {
   const fullHeight = gameState.constants.waterSurface - gameState.constants.seabedDepth;
   console.log(`Creating coral structures with height: ${fullHeight} units`);
 
-  // Create fewer but much larger formations - 15-25 massive structures
-  const coralCount = 40;
+  // Create fewer but much larger formations
+  const coralCount = 80;
   const minDistance = 150; // Much larger minimum distance between structures
 
   for (let i = 0; i < coralCount; i++) {
@@ -335,7 +335,7 @@ function createCoralReef() {
     });
   }
 
-  console.log(`Created ${coralObstacles.length} massive coral structures`);
+  // console.log(`Created ${coralObstacles.length} massive coral structures`);
 }
 
 // Check if a position is too close to existing coral
@@ -519,47 +519,19 @@ function handleCoralCollision(obstacle) {
   gameState.status.oxygenLevel = Math.max(0, gameState.status.oxygenLevel - 3);
   gameState.status.batteryLevel = Math.max(0, gameState.status.batteryLevel - 8);
 
-  // Flash the obstacle
-  flashCoralObstacle(obstacle);
-
   // Push submarine back further from these larger obstacles
   const dx = gameState.position.x - obstacle.position.x;
+  const dy = gameState.position.y - obstacle.position.y;
   const dz = gameState.position.z - obstacle.position.z;
-  const distance = Math.sqrt(dx * dx + dz * dz);
+  const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
   if (distance > 0) {
-    const pushDistance = 25; // Larger push distance
+    // Much larger push distance to ensure submarine gets completely clear
+    const pushDistance = obstacle.radius + 30; // Push beyond collision radius + extra buffer
     gameState.position.x = obstacle.position.x + (dx / distance) * pushDistance;
+    gameState.position.y = obstacle.position.y + (dy / distance) * pushDistance;
     gameState.position.z = obstacle.position.z + (dz / distance) * pushDistance;
   }
-}
-
-// Visual feedback for collision with enhanced flash effect
-function flashCoralObstacle(obstacle) {
-  if (!obstacle.mesh) return;
-
-  // Flash all materials in the coral structure
-  obstacle.mesh.traverse((child) => {
-    if (child.isMesh && child.material) {
-      // Store original color if not already stored
-      if (!child.material.originalColor) {
-        child.material.originalColor = child.material.emissive.clone();
-        child.material.originalEmissiveIntensity = child.material.emissiveIntensity;
-      }
-
-      // Flash bright white
-      child.material.emissive.setHex(0xffffff);
-      child.material.emissiveIntensity = 0.8;
-
-      // Restore original color after delay
-      setTimeout(() => {
-        if (child.material.originalColor) {
-          child.material.emissive.copy(child.material.originalColor);
-          child.material.emissiveIntensity = child.material.originalEmissiveIntensity || 0.2;
-        }
-      }, 300);
-    }
-  });
 }
 
 // Add this function to create a simple extended seabed
@@ -603,120 +575,120 @@ function createSimpleExtendedSeabed() {
   return extendedSeabed;
 }
 
-function createBoundaryWalls() {
-  // console.log("Creating boundary walls with rock textures...");
+// function createBoundaryWalls() {
+//   // console.log("Creating boundary walls with rock textures...");
 
-  const WALL_HEIGHT = 150; // Height of the walls
-  const wallsGroup = new THREE.Group();
+//   const WALL_HEIGHT = 150; // Height of the walls
+//   const wallsGroup = new THREE.Group();
 
-  const textureLoader = new THREE.TextureLoader();
+//   const textureLoader = new THREE.TextureLoader();
 
-  // Create rock material
-  const rockMaterial = new THREE.MeshStandardMaterial({
-    color: 0x777777,
-    roughness: 0.9,
-    metalness: 0.1,
-    side: THREE.DoubleSide,
-  });
+//   // Create rock material
+//   const rockMaterial = new THREE.MeshStandardMaterial({
+//     color: 0x777777,
+//     roughness: 0.9,
+//     metalness: 0.1,
+//     side: THREE.DoubleSide,
+//   });
 
-  // Try to load rock texture
-  textureLoader.load(
-    "artwork/rock_texture.jpg",
-    function (texture) {
-      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.set(5, 3); // Repeat to avoid stretching
-      rockMaterial.map = texture;
-      rockMaterial.needsUpdate = true;
-      // console.log("Rock texture loaded successfully");
-    },
-    undefined,
-    function (err) {
-      // console.log("Using fallback rock color (texture failed to load)");
-    }
-  );
+//   // Try to load rock texture
+//   textureLoader.load(
+//     "artwork/rock_texture.jpg",
+//     function (texture) {
+//       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+//       texture.repeat.set(5, 3); // Repeat to avoid stretching
+//       rockMaterial.map = texture;
+//       rockMaterial.needsUpdate = true;
+//       // console.log("Rock texture loaded successfully");
+//     },
+//     undefined,
+//     function (err) {
+//       // console.log("Using fallback rock color (texture failed to load)");
+//     }
+//   );
 
-  // Try to load rock normal map for added detail
-  textureLoader.load(
-    "artwork/rock_normal.jpg",
-    function (normalMap) {
-      normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
-      normalMap.repeat.set(5, 3);
-      rockMaterial.normalMap = normalMap;
-      rockMaterial.normalScale.set(1, 1);
-      rockMaterial.needsUpdate = true;
-      // console.log("Rock normal map loaded successfully");
-    },
-    undefined,
-    function (err) {
-      // console.log("Rock normal map failed to load");
-    }
-  );
+//   // Try to load rock normal map for added detail
+//   textureLoader.load(
+//     "artwork/rock_normal.jpg",
+//     function (normalMap) {
+//       normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
+//       normalMap.repeat.set(5, 3);
+//       rockMaterial.normalMap = normalMap;
+//       rockMaterial.normalScale.set(1, 1);
+//       rockMaterial.needsUpdate = true;
+//       // console.log("Rock normal map loaded successfully");
+//     },
+//     undefined,
+//     function (err) {
+//       // console.log("Rock normal map failed to load");
+//     }
+//   );
 
-  // Create four walls (North, South, East, West)
+//   // Create four walls (North, South, East, West)
 
-  //// North wall - at negative Z boundary (north is -Z in Three.js)
-  const northWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
-  northWall.position.set(0, gameState.constants.seabedDepth + WALL_HEIGHT / 2, -gameState.constants.worldBoundaryVisible / 2);
-  northWall.rotation.y = 0; // No rotation needed, default orientation faces -Z
-  wallsGroup.add(northWall);
+//   //// North wall - at negative Z boundary (north is -Z in Three.js)
+//   const northWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
+//   northWall.position.set(0, gameState.constants.seabedDepth + WALL_HEIGHT / 2, -gameState.constants.worldBoundaryVisible / 2);
+//   northWall.rotation.y = 0; // No rotation needed, default orientation faces -Z
+//   wallsGroup.add(northWall);
 
-  // South wall - at positive Z boundary
-  const southWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
-  southWall.position.set(0, gameState.constants.seabedDepth + WALL_HEIGHT / 2, gameState.constants.worldBoundaryVisible / 2);
-  southWall.rotation.y = Math.PI; // Rotate to face the -Z direction (inward)
-  wallsGroup.add(southWall);
+//   // South wall - at positive Z boundary
+//   const southWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
+//   southWall.position.set(0, gameState.constants.seabedDepth + WALL_HEIGHT / 2, gameState.constants.worldBoundaryVisible / 2);
+//   southWall.rotation.y = Math.PI; // Rotate to face the -Z direction (inward)
+//   wallsGroup.add(southWall);
 
-  // East wall - at positive X boundary
-  const eastWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
-  eastWall.position.set(gameState.constants.worldBoundaryVisible / 2, gameState.constants.seabedDepth + WALL_HEIGHT / 2, 0);
-  eastWall.rotation.y = -Math.PI / 2; // Rotate to face the -X direction (inward)
-  wallsGroup.add(eastWall);
+//   // East wall - at positive X boundary
+//   const eastWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
+//   eastWall.position.set(gameState.constants.worldBoundaryVisible / 2, gameState.constants.seabedDepth + WALL_HEIGHT / 2, 0);
+//   eastWall.rotation.y = -Math.PI / 2; // Rotate to face the -X direction (inward)
+//   wallsGroup.add(eastWall);
 
-  // West wall - at negative X boundary
-  const westWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
-  westWall.position.set(-gameState.constants.worldBoundaryVisible / 2, gameState.constants.seabedDepth + WALL_HEIGHT / 2, 0);
-  westWall.rotation.y = Math.PI / 2; // Rotate to face the +X direction (inward)
-  wallsGroup.add(westWall);
+//   // West wall - at negative X boundary
+//   const westWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
+//   westWall.position.set(-gameState.constants.worldBoundaryVisible / 2, gameState.constants.seabedDepth + WALL_HEIGHT / 2, 0);
+//   westWall.rotation.y = Math.PI / 2; // Rotate to face the +X direction (inward)
+//   wallsGroup.add(westWall);
 
-  // Add some variation to the walls
-  for (let wall of [northWall, southWall, eastWall, westWall]) {
-    // Add some displacement to make the walls look more natural
-    if (wall.geometry.attributes && wall.geometry.attributes.position) {
-      const positions = wall.geometry.attributes.position.array;
-      const simplex = new SimplexNoise(); // Using the same noise generator as seabed
+//   // Add some variation to the walls
+//   for (let wall of [northWall, southWall, eastWall, westWall]) {
+//     // Add some displacement to make the walls look more natural
+//     if (wall.geometry.attributes && wall.geometry.attributes.position) {
+//       const positions = wall.geometry.attributes.position.array;
+//       const simplex = new SimplexNoise(); // Using the same noise generator as seabed
 
-      for (let i = 0; i < positions.length; i += 3) {
-        const x = positions[i];
-        const y = positions[i + 1];
+//       for (let i = 0; i < positions.length; i += 3) {
+//         const x = positions[i];
+//         const y = positions[i + 1];
 
-        // Apply noise to z coordinate to create rocky surface
-        // But reduce displacement near the bottom to ensure better connection with seabed
-        const noise = simplex.noise2D(x * 0.05, y * 0.05) * 3;
+//         // Apply noise to z coordinate to create rocky surface
+//         // But reduce displacement near the bottom to ensure better connection with seabed
+//         const noise = simplex.noise2D(x * 0.05, y * 0.05) * 3;
 
-        // Check if this vertex is near the bottom of the wall
-        // WALL_HEIGHT/2 = 75, so bottom vertices are at y ≈ -75
-        if (y < -WALL_HEIGHT / 2 + 10) {
-          // For vertices near the bottom, reduce displacement for better seabed connection
-          const factor = (y + WALL_HEIGHT / 2) / 10; // 0 at bottom, 1 at 10 units up
-          positions[i + 2] = noise * factor;
-        } else {
-          positions[i + 2] = noise;
-        }
-      }
+//         // Check if this vertex is near the bottom of the wall
+//         // WALL_HEIGHT/2 = 75, so bottom vertices are at y ≈ -75
+//         if (y < -WALL_HEIGHT / 2 + 10) {
+//           // For vertices near the bottom, reduce displacement for better seabed connection
+//           const factor = (y + WALL_HEIGHT / 2) / 10; // 0 at bottom, 1 at 10 units up
+//           positions[i + 2] = noise * factor;
+//         } else {
+//           positions[i + 2] = noise;
+//         }
+//       }
 
-      wall.geometry.attributes.position.needsUpdate = true;
-      wall.geometry.computeVertexNormals();
-    }
-  }
+//       wall.geometry.attributes.position.needsUpdate = true;
+//       wall.geometry.computeVertexNormals();
+//     }
+//   }
 
-  // Add walls to scene
-  scene.add(wallsGroup);
+//   // Add walls to scene
+//   scene.add(wallsGroup);
 
-  // console.log("Boundary walls created");
+//   // console.log("Boundary walls created");
 
-  // Return for potential later reference
-  return wallsGroup;
-}
+//   // Return for potential later reference
+//   return wallsGroup;
+// }
 
 // Create target destination marker
 function createTarget() {

@@ -454,7 +454,7 @@ function updateUI() {
     `<a href="https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main?tab=readme-ov-file#tangible-interfaces-submarine-design-project" target="new" style="color:white">Read Me for details</a>` +
     `\n` +
     `This is a data panel for testing the game. Use TAB key to hide.` +
-    `\n` +
+    // `\n` +
     // `\n` +
     // `You can drive this submarine using keys \n` +
     // `\tA	Increases power to the left thruster \n` +
@@ -462,7 +462,7 @@ function updateUI() {
     // `\tZ	Decreases power to the left thruster \n` +
     // `\tX	Decreases power to the right thruster \n` +
     // `\tArrow keys for steering \n` +
-    `\t(There are more controls in the Read Me) \n` +
+    `\nThis is meant to be played with a hardware joystick, but there are keyboard controls in the Read Me) \n` +
     `\n` +
     `\n` +
     `Position(${gameState.position.x.toFixed(2)},${gameState.position.y.toFixed(2)},${gameState.position.z.toFixed(2)}) | ` +
