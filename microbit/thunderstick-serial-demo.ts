@@ -92,11 +92,11 @@ let VerticalEnginePowerAnalogMax = 1011;
 // you must observe your sensor to get this number
 
 //Buttons Digital input pins 5 (button A), 8 ,11 (button b)
-let AllStopPin = DigitalPin.P5;
+let AllStopPin = DigitalPin.P8;
 pins.setPull(AllStopPin, PinPullMode.PullDown);
 // these need resistors to ground!
 
-let BlowBallastPin = DigitalPin.P8;
+let BlowBallastPin = DigitalPin.P5;
 pins.setPull(BlowBallastPin, PinPullMode.PullDown);
 // these need resistors to ground!
 
