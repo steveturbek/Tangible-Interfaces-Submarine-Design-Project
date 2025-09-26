@@ -10,9 +10,6 @@ let clock;
 let underwaterFog;
 
 // Environment settings
-const WORLD_SIZE = gameState.constants.worldBoundary * 4; // World dimensions
-const SEABED_DEPTH = gameState.constants.seabedDepth; // Depth of the seabed
-
 const WATER_COLOR = 0x0096ff; // Bright Caribbean blue
 const DEEP_WATER_COLOR = 0x0073cf; // Deeper Caribbean blue for gradient
 const FOG_COLOR = 0x0096ff; // Match water color
@@ -176,8 +173,8 @@ function setupLighting() {
 // Replace the existing createSeabed function with this version
 function createSeabed() {
   // Create a circular plane for the seabed using CircleBufferGeometry
-  // The radius is half of WORLD_SIZE to match the diameter with the world boundary
-  const radius = WORLD_SIZE / 2;
+  // The radius is half of gameState.constants.worldBoundaryVisible to match the diameter with the world boundary
+  const radius = gameState.constants.worldBoundaryVisible / 2;
   const segments = 80; // Higher value for smoother circle
   const seabedGeometry = new THREE.CircleBufferGeometry(radius, segments);
 
@@ -212,7 +209,7 @@ function createSeabed() {
   // Create seabed mesh and position it
   seabed = new THREE.Mesh(seabedGeometry, seabedMaterial);
   seabed.rotation.x = -Math.PI / 2; // Rotate to horizontal
-  seabed.position.y = SEABED_DEPTH;
+  seabed.position.y = gameState.constants.seabedDepth;
 
   scene.add(seabed);
 
@@ -259,7 +256,7 @@ function createSeabedEdge(radius) {
 
   const edge = new THREE.Mesh(edgeGeometry, edgeMaterial);
   edge.rotation.x = -Math.PI / 2; // Rotate to horizontal
-  edge.position.y = SEABED_DEPTH - 5; // Position slightly below the seabed
+  edge.position.y = gameState.constants.seabedDepth - 5; // Position slightly below the seabed
 
   scene.add(edge);
 
@@ -288,14 +285,14 @@ function createCoralReef() {
 
   for (let i = 0; i < coralCount; i++) {
     // Random position within world bounds
-    const x = (Math.random() - 0.5) * WORLD_SIZE * 0.8;
-    const z = (Math.random() - 0.5) * WORLD_SIZE * 0.8;
+    const x = (Math.random() - 0.5) * gameState.constants.worldBoundaryVisible * 0.8;
+    const z = (Math.random() - 0.5) * gameState.constants.worldBoundaryVisible * 0.8;
 
     // Create a coral formation (group of shapes)
     const coralFormation = createCoralFormation(coralColors);
 
     // Position the coral
-    coralFormation.position.set(x, SEABED_DEPTH, z);
+    coralFormation.position.set(x, gameState.constants.seabedDepth, z);
     reefGroup.add(coralFormation);
   }
 }
@@ -388,7 +385,7 @@ function createSimpleExtendedSeabed() {
 
   // Position it at the same depth as the main seabed, but ensure it's slightly lower
   // to prevent z-fighting with the main seabed
-  extendedSeabed.position.y = SEABED_DEPTH - 0.1;
+  extendedSeabed.position.y = gameState.constants.seabedDepth - 0.1;
 
   // Rotate to horizontal
   extendedSeabed.rotation.x = -Math.PI / 2;
@@ -453,26 +450,26 @@ function createBoundaryWalls() {
   // Create four walls (North, South, East, West)
 
   //// North wall - at negative Z boundary (north is -Z in Three.js)
-  const northWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(WORLD_SIZE, WALL_HEIGHT, 16, 8), rockMaterial);
-  northWall.position.set(0, SEABED_DEPTH + WALL_HEIGHT / 2, -WORLD_SIZE / 2);
+  const northWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
+  northWall.position.set(0, gameState.constants.seabedDepth + WALL_HEIGHT / 2, -gameState.constants.worldBoundaryVisible / 2);
   northWall.rotation.y = 0; // No rotation needed, default orientation faces -Z
   wallsGroup.add(northWall);
 
   // South wall - at positive Z boundary
-  const southWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(WORLD_SIZE, WALL_HEIGHT, 16, 8), rockMaterial);
-  southWall.position.set(0, SEABED_DEPTH + WALL_HEIGHT / 2, WORLD_SIZE / 2);
+  const southWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
+  southWall.position.set(0, gameState.constants.seabedDepth + WALL_HEIGHT / 2, gameState.constants.worldBoundaryVisible / 2);
   southWall.rotation.y = Math.PI; // Rotate to face the -Z direction (inward)
   wallsGroup.add(southWall);
 
   // East wall - at positive X boundary
-  const eastWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(WORLD_SIZE, WALL_HEIGHT, 16, 8), rockMaterial);
-  eastWall.position.set(WORLD_SIZE / 2, SEABED_DEPTH + WALL_HEIGHT / 2, 0);
+  const eastWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
+  eastWall.position.set(gameState.constants.worldBoundaryVisible / 2, gameState.constants.seabedDepth + WALL_HEIGHT / 2, 0);
   eastWall.rotation.y = -Math.PI / 2; // Rotate to face the -X direction (inward)
   wallsGroup.add(eastWall);
 
   // West wall - at negative X boundary
-  const westWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(WORLD_SIZE, WALL_HEIGHT, 16, 8), rockMaterial);
-  westWall.position.set(-WORLD_SIZE / 2, SEABED_DEPTH + WALL_HEIGHT / 2, 0);
+  const westWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
+  westWall.position.set(-gameState.constants.worldBoundaryVisible / 2, gameState.constants.seabedDepth + WALL_HEIGHT / 2, 0);
   westWall.rotation.y = Math.PI / 2; // Rotate to face the +X direction (inward)
   wallsGroup.add(westWall);
 
@@ -552,7 +549,7 @@ function createTarget() {
 
 function createWaterEffects() {
   // Create water surface with improved texture and ripple effect
-  const waterGeometry = new THREE.PlaneBufferGeometry(WORLD_SIZE, WORLD_SIZE, 32, 32);
+  const waterGeometry = new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, gameState.constants.worldBoundaryVisible, 32, 32);
 
   // Create better material for water with updated properties for lighter appearance from below
   const waterMaterial = new THREE.MeshPhysicalMaterial({
@@ -619,7 +616,7 @@ function createWaterEffects() {
 // NEW: Function to add water caustics effect to the scene
 function addCausticsEffect() {
   // Create caustics texture plane for the seabed
-  const causticsGeometry = new THREE.PlaneBufferGeometry(WORLD_SIZE, WORLD_SIZE, 1, 1);
+  const causticsGeometry = new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, gameState.constants.worldBoundaryVisible, 1, 1);
 
   // Create caustics material
   const causticsMaterial = new THREE.MeshBasicMaterial({
@@ -682,7 +679,7 @@ function addCausticsEffect() {
   // Create the caustics plane
   const causticsPlane = new THREE.Mesh(causticsGeometry, causticsMaterial);
   causticsPlane.rotation.x = -Math.PI / 2; // Align with seabed
-  causticsPlane.position.y = SEABED_DEPTH + 0.1; // Slightly above seabed
+  causticsPlane.position.y = gameState.constants.seabedDepth + 0.1; // Slightly above seabed
   scene.add(causticsPlane);
 
   // Animate the caustics

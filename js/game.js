@@ -39,7 +39,7 @@ const gameState_original = {
 
   // Navigation & Environment
   navigation: {
-    targetPosition: { x: 0, y: 0, z: -1000 }, // target location
+    targetPosition: { x: 0, y: 0, z: -800 }, // target location
     distanceToTarget: 0, // 0-100% (scaled)
     headingToTarget: 0, // 0-359 degrees
     // proximityWarning: 0, // 0-100% (distance to nearest obstacle)
@@ -58,7 +58,8 @@ const gameState_original = {
     dragCoefficient: 0.05, // Water resistance factor
     mass: 1000, // Mass affects momentum
     maxDistance: 100000, // Example value, adjust based on your world size
-    worldBoundary: 1000, // Half of WORLD_SIZE (2000) from rendering.js
+    worldBoundary: 1000,
+    worldBoundaryVisible: 4000, //defines how far you can see. 4x worldBoundary seems to look good
     seabedDepth: 0, // Depth of the seabed from rendering.js
     waterSurface: 100, // Water surface level from rendering.js
   },
