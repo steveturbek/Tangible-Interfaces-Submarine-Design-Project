@@ -143,7 +143,7 @@ basic.forever(function () {
     VerticalEnginePowerAnalogMax
   );
 
-  if (pins.analogReadPin(VerticalEnginePowerPin) <= 1) VerticalEnginePowerOutput = "f00"; // this potentiometer has a switch, which reads analog 0 if off
+  if (pins.analogReadPin(VerticalEnginePowerPin) <= 100) VerticalEnginePowerOutput = "f00"; // this potentiometer has a switch, which reads analog 0 if off
   // serial.writeLine("VerticalEngineAnalog:" + pins.analogReadPin(VerticalEnginePowerPin) + "  VerticalEnginePowerOutput:" + VerticalEnginePowerOutput);
 
   //potential 6th analog pin for ballast control
