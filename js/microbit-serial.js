@@ -4,13 +4,13 @@
 // this code is generate in/microbit/thunderstick-serial-demo.microbitJavascript
 // also found at https://makecode.microbit.org/S29415-59060-61162-04364
 
-// The microbit reads in the analog ports and sends a serial messgage like #f00,r85,f99,f99,f00|0|0
+// The microbit reads in the analog ports and sends a serial message like #f00,r85,f99,f99,f00|0|0
 // # is to double check the serial message start
 //\n for message end
 
 // Analog controls have prefixes
 // f = forward or positive number
-// r = reverse or negtive number
+// r = reverse or negative number
 // + = increment by the number UNUSED NOW
 // - = decrement by the number UNUSED NOW
 

@@ -78,7 +78,7 @@ function initScene() {
   // createWaterEffects();  //there was some flashing
 
   // Add coral reef elements
-  // createCoralReef();
+  createCoralReef();
 
   // Add boundary walls with rock textures
   // createBoundaryWalls();
@@ -262,99 +262,304 @@ function createSeabedEdge(radius) {
 
   return edge;
 }
-// Create tropical coral reef elements
+
+// Enhanced Coral Reef Creation with Tempest-inspired geometry and collision detection
+// Add this to your rendering.js file, replacing the existing createCoralReef function
+
+// Global array to store collision data for obstacles
+// Global array to store collision data for obstacles
+let coralObstacles = [];
+
+// Create massive coral structures that reach from seabed to water surface
 function createCoralReef() {
+  console.log("Creating massive coral structures...");
+
+  // Clear existing obstacles array
+  coralObstacles = [];
+
   // Create a coral reef group
   const reefGroup = new THREE.Group();
   scene.add(reefGroup);
 
-  // Define colors for Caribbean coral reef
+  // Naturalistic coral colors inspired by the seabed palette
   const coralColors = [
-    0xff7f50, // Coral
-    0xffd700, // Gold
-    0x9370db, // Medium Purple
-    0x20b2aa, // Light Sea Green
-    0x00ffff, // Cyan
-    0xff69b4, // Hot Pink
-    0xffb6c1, // Light Pink
-    0x7fffd4, // Aquamarine
+    0xd4a574, // Sandy beige coral
+    0xc9956b, // Warm sand coral
+    0xe8d5b7, // Light sand coral
+    0xb8945a, // Golden sand coral
+    0xa67c52, // Dark sand coral
+    0xf2e8c9, // Pale sand coral (matching seabed)
+    0xdfc49a, // Medium sand coral
+    0xcd9b6f, // Rusty sand coral
+    0xe6d7a3, // Light golden coral
+    0xb5896b, // Brown sand coral
+    0xf0e4d0, // Very light sand coral
+    0xa08060, // Dark brown coral
   ];
 
-  // Create 50-80 coral formations
-  const coralCount = 70;
+  // Calculate the full height from seabed to water surface
+  const fullHeight = gameState.constants.waterSurface - gameState.constants.seabedDepth;
+  console.log(`Creating coral structures with height: ${fullHeight} units`);
+
+  // Create fewer but much larger formations - 15-25 massive structures
+  const coralCount = 40;
+  const minDistance = 150; // Much larger minimum distance between structures
 
   for (let i = 0; i < coralCount; i++) {
-    // Random position within world bounds
-    const x = (Math.random() - 0.5) * gameState.constants.worldBoundaryVisible * 0.8;
-    const z = (Math.random() - 0.5) * gameState.constants.worldBoundaryVisible * 0.8;
+    let position;
+    let attempts = 0;
+    const maxAttempts = 50;
 
-    // Create a coral formation (group of shapes)
-    const coralFormation = createCoralFormation(coralColors);
+    // Try to find a position that doesn't overlap with existing coral
+    do {
+      const x = (Math.random() - 0.5) * gameState.constants.worldBoundaryVisible * 0.6;
+      const z = (Math.random() - 0.5) * gameState.constants.worldBoundaryVisible * 0.6;
+      position = { x, z };
+      attempts++;
+    } while (attempts < maxAttempts && isTooCloseToExisting(position, minDistance));
 
-    // Position the coral
-    coralFormation.position.set(x, gameState.constants.seabedDepth, z);
-    reefGroup.add(coralFormation);
+    // Create a massive coral structure
+    const coralStructure = createMassiveCoralStructure(coralColors, fullHeight);
+
+    // Position the coral at seabed level
+    coralStructure.position.set(position.x, gameState.constants.seabedDepth, position.z);
+    reefGroup.add(coralStructure);
+
+    // Add to collision detection array with much larger radius
+    const collisionRadius = Math.random() * 40 + 60; // Radius between 60-100
+    coralObstacles.push({
+      position: { x: position.x, y: gameState.constants.seabedDepth + fullHeight / 2, z: position.z },
+      radius: collisionRadius,
+      mesh: coralStructure,
+      originalEmissiveIntensity: 0.2,
+    });
+  }
+
+  console.log(`Created ${coralObstacles.length} massive coral structures`);
+}
+
+// Check if a position is too close to existing coral
+function isTooCloseToExisting(newPos, minDistance) {
+  for (let obstacle of coralObstacles) {
+    const dx = newPos.x - obstacle.position.x;
+    const dz = newPos.z - obstacle.position.z;
+    const distance = Math.sqrt(dx * dx + dz * dz);
+    if (distance < minDistance) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Create a single massive coral structure reaching from seabed to surface
+function createMassiveCoralStructure(coralColors, fullHeight) {
+  const structureGroup = new THREE.Group();
+
+  // Create multiple intersecting plane systems within this structure
+  const planeSystemCount = Math.floor(Math.random() * 8) + 12; // 12-20 plane systems per structure
+
+  for (let i = 0; i < planeSystemCount; i++) {
+    const planeSystem = createIntersectingPlaneSystem(coralColors, fullHeight);
+
+    // Position each plane system within the structure bounds
+    planeSystem.position.set(
+      (Math.random() - 0.5) * 80, // Spread across 80 unit width
+      Math.random() * fullHeight * 0.3, // Vary starting height slightly
+      (Math.random() - 0.5) * 80 // Spread across 80 unit depth
+    );
+
+    // Random rotation for variety
+    planeSystem.rotation.y = Math.random() * Math.PI * 2;
+
+    structureGroup.add(planeSystem);
+  }
+
+  return structureGroup;
+}
+
+// Create a system of intersecting planes that form complex coral-like structures
+function createIntersectingPlaneSystem(coralColors, fullHeight) {
+  const systemGroup = new THREE.Group();
+
+  // Choose primary color for this system (with variations)
+  const primaryColor = coralColors[Math.floor(Math.random() * coralColors.length)];
+
+  // Create 6-12 intersecting planes per system
+  const planeCount = Math.floor(Math.random() * 7) + 6;
+
+  for (let i = 0; i < planeCount; i++) {
+    const plane = createComplexCoralPlane(primaryColor, fullHeight);
+
+    // Position planes to intersect in interesting ways
+    const angle = (i / planeCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+    const distance = Math.random() * 15; // How far from center
+
+    plane.position.set(
+      Math.cos(angle) * distance,
+      Math.random() * fullHeight * 0.2, // Slight height variation
+      Math.sin(angle) * distance
+    );
+
+    // Rotate planes to create intersections
+    plane.rotation.set(
+      (Math.random() - 0.5) * Math.PI * 0.3, // Slight pitch variation
+      angle + (Math.random() - 0.5) * 0.8, // Primary rotation with variation
+      (Math.random() - 0.5) * Math.PI * 0.3 // Slight roll variation
+    );
+
+    systemGroup.add(plane);
+  }
+
+  return systemGroup;
+}
+
+// Create individual complex coral planes
+function createComplexCoralPlane(baseColor, fullHeight) {
+  // Create large plane geometry that reaches most of the height
+  const planeHeight = fullHeight * (0.7 + Math.random() * 0.3); // 70-100% of full height
+  const planeWidth = Math.random() * 40 + 30; // Width between 30-70 units
+
+  // Create plane with high subdivision for complex shapes
+  const geometry = new THREE.PlaneBufferGeometry(planeWidth, planeHeight, 16, 32);
+
+  // Create complex organic deformation
+  const positions = geometry.attributes.position.array;
+
+  for (let i = 0; i < positions.length; i += 3) {
+    const x = positions[i];
+    const y = positions[i + 1];
+
+    // Create wave-like deformations
+    const wave1 = Math.sin(x * 0.2) * Math.cos(y * 0.15) * 8;
+    const wave2 = Math.sin(x * 0.1 + y * 0.1) * 6;
+    const wave3 = Math.sin(x * 0.05) * Math.sin(y * 0.08) * 4;
+
+    // Add noise for organic feel
+    const noise = (Math.random() - 0.5) * 3;
+
+    // Apply deformation to Z coordinate (depth)
+    positions[i + 2] = wave1 + wave2 + wave3 + noise;
+
+    // Create some holes and gaps by moving vertices
+    if (Math.random() > 0.85) {
+      // Create gaps by pulling vertices inward
+      positions[i + 2] *= 0.3;
+    }
+
+    // Create branching effects at edges
+    const edgeDistance = Math.min(Math.abs(x - planeWidth / 2), Math.abs(x + planeWidth / 2), Math.abs(y - planeHeight / 2), Math.abs(y + planeHeight / 2));
+
+    if (edgeDistance < 8 && Math.random() > 0.7) {
+      // Create branching at edges
+      positions[i + 2] += (Math.random() - 0.5) * 15;
+    }
+  }
+
+  geometry.attributes.position.needsUpdate = true;
+  geometry.computeVertexNormals();
+
+  // Create color variation based on height
+  const heightFactor = Math.random();
+  const colorVariation = new THREE.Color(baseColor);
+  colorVariation.lerp(new THREE.Color(0xffffff), heightFactor * 0.3); // Lighter at top
+
+  // Create material with natural appearance
+  const material = new THREE.MeshStandardMaterial({
+    color: colorVariation,
+    roughness: 0.8, // More rough for natural coral texture
+    metalness: 0.05, // Very low metalness for organic look
+    emissive: colorVariation,
+    emissiveIntensity: 0.1, // Reduced glow for more natural look
+    side: THREE.DoubleSide,
+    transparent: false,
+  });
+
+  const plane = new THREE.Mesh(geometry, material);
+
+  // Add some random scaling for variety
+  const scaleVariation = 0.8 + Math.random() * 0.6; // Scale between 0.8 and 1.4
+  plane.scale.set(scaleVariation, scaleVariation, 1.0);
+
+  return plane;
+}
+
+// Enhanced collision detection for larger obstacles
+function checkCoralCollisions() {
+  const submarinePos = gameState.position;
+  const submarineRadius = 12; // Slightly larger submarine collision radius
+
+  for (let obstacle of coralObstacles) {
+    const dx = submarinePos.x - obstacle.position.x;
+    const dy = submarinePos.y - obstacle.position.y;
+    const dz = submarinePos.z - obstacle.position.z;
+    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+    if (distance < submarineRadius + obstacle.radius) {
+      // Collision detected!
+      handleCoralCollision(obstacle);
+      return true;
+    }
+  }
+  return false;
+}
+
+// Handle collision with massive coral structures
+function handleCoralCollision(obstacle) {
+  console.log("Collision with massive coral structure!");
+
+  // Stop the submarine (similar to boundary collision)
+  gameState.velocity.x = 0;
+  gameState.velocity.y = 0;
+  gameState.velocity.z = 0;
+  gameState.angularVelocity.x = 0;
+  gameState.angularVelocity.y = 0;
+  gameState.angularVelocity.z = 0;
+
+  // Larger penalty for hitting these massive structures
+  gameState.status.oxygenLevel = Math.max(0, gameState.status.oxygenLevel - 3);
+  gameState.status.batteryLevel = Math.max(0, gameState.status.batteryLevel - 8);
+
+  // Flash the obstacle
+  flashCoralObstacle(obstacle);
+
+  // Push submarine back further from these larger obstacles
+  const dx = gameState.position.x - obstacle.position.x;
+  const dz = gameState.position.z - obstacle.position.z;
+  const distance = Math.sqrt(dx * dx + dz * dz);
+
+  if (distance > 0) {
+    const pushDistance = 25; // Larger push distance
+    gameState.position.x = obstacle.position.x + (dx / distance) * pushDistance;
+    gameState.position.z = obstacle.position.z + (dz / distance) * pushDistance;
   }
 }
 
-// Helper to create a single coral formation
-function createCoralFormation(coralColors) {
-  const coralGroup = new THREE.Group();
+// Visual feedback for collision with enhanced flash effect
+function flashCoralObstacle(obstacle) {
+  if (!obstacle.mesh) return;
 
-  // Number of coral elements in this formation
-  const elementCount = Math.floor(Math.random() * 5) + 2;
+  // Flash all materials in the coral structure
+  obstacle.mesh.traverse((child) => {
+    if (child.isMesh && child.material) {
+      // Store original color if not already stored
+      if (!child.material.originalColor) {
+        child.material.originalColor = child.material.emissive.clone();
+        child.material.originalEmissiveIntensity = child.material.emissiveIntensity;
+      }
 
-  for (let i = 0; i < elementCount; i++) {
-    // Choose a random coral type and color
-    const coralType = Math.floor(Math.random() * 3);
-    const coralColor = coralColors[Math.floor(Math.random() * coralColors.length)];
+      // Flash bright white
+      child.material.emissive.setHex(0xffffff);
+      child.material.emissiveIntensity = 0.8;
 
-    let coralGeometry;
-
-    // Create different coral shapes
-    switch (coralType) {
-      case 0: // Branching coral
-        coralGeometry = new THREE.CylinderBufferGeometry(0.2, 0.6, Math.random() * 5 + 2, 5, 3, true);
-        break;
-      case 1: // Brain coral
-        coralGeometry = new THREE.SphereBufferGeometry(Math.random() * 2 + 1, 8, 8);
-        break;
-      case 2: // Fan coral
-        coralGeometry = new THREE.PlaneBufferGeometry(Math.random() * 3 + 1, Math.random() * 4 + 2, 4, 4);
-        // Deform to create a wavy effect
-        if (coralGeometry.attributes.position) {
-          const positions = coralGeometry.attributes.position.array;
-          for (let j = 0; j < positions.length; j += 3) {
-            positions[j + 2] = Math.sin(positions[j] * 2) * 0.3;
-          }
-          coralGeometry.attributes.position.needsUpdate = true;
+      // Restore original color after delay
+      setTimeout(() => {
+        if (child.material.originalColor) {
+          child.material.emissive.copy(child.material.originalColor);
+          child.material.emissiveIntensity = child.material.originalEmissiveIntensity || 0.2;
         }
-        break;
+      }, 300);
     }
-
-    // Create material with glow and shimmer
-    const coralMaterial = new THREE.MeshStandardMaterial({
-      color: coralColor,
-      roughness: 0.3,
-      metalness: 0.2,
-      emissive: coralColor,
-      emissiveIntensity: 0.1, // Subtle glow
-      flatShading: true,
-    });
-
-    // Create the coral mesh
-    const coral = new THREE.Mesh(coralGeometry, coralMaterial);
-
-    // Position within the formation
-    coral.position.set(Math.random() * 2 - 1, Math.random() * 3, Math.random() * 2 - 1);
-
-    // Random rotation
-    coral.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI * 2, Math.random() * Math.PI);
-
-    coralGroup.add(coral);
-  }
-
-  return coralGroup;
+  });
 }
 
 // Add this function to create a simple extended seabed

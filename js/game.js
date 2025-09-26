@@ -91,6 +91,8 @@ function startGame() {
     console.log("Starting game");
     isGameRunning = true;
     lastFrameTime = 0; // Reset the time tracker
+    // Show the win overlay
+    document.getElementById("win-overlay").style.display = "none";
     animationFrameId = requestAnimationFrame(gameLoop);
   } else stopGame();
 }
@@ -314,6 +316,11 @@ function updateSubmarineState(deltaTime) {
 
   // Apply boundary constraints
   applyBoundaryConstraints();
+
+  // Check for coral collisions
+  if (typeof checkCoralCollisions === "function") {
+    checkCoralCollisions();
+  }
 
   // Update derived values
   updateDerivedValues();
@@ -563,6 +570,6 @@ function showWinScreen() {
   document.getElementById("final-oxygen").textContent = Math.round(gameState.status.oxygenLevel) + "%";
   document.getElementById("final-battery").textContent = Math.round(gameState.status.batteryLevel) + "%";
 
-  // Show the overlay
+  // Show the win overlay
   document.getElementById("win-overlay").style.display = "flex";
 }

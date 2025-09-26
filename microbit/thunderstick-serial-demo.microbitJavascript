@@ -10,7 +10,7 @@
 *
 *
 *
-// The microbit reads in the analog ports and sends a serial messgage like #f00,r85,f99,f99,f00|0|0
+// The microbit reads in the analog ports and sends a serial message like #f00,r85,f99,f99,f00|0|0
 
 // SERIAL OUTPUT FORMATTING
 // # is to double check the serial message start
@@ -20,7 +20,7 @@
 
 // Analog controls have prefixes
 // f = forward or positive number
-// r = reverse or negtive number
+// r = reverse or negative number
 // + = increment by the number UNUSED NOW
 // - = decrement by the number UNUSED NOW
 
@@ -51,7 +51,7 @@
 * All potentiometers are connected to same lead power wire, and use ony 2 wires, E.G. no ground wire to make a voltage divider
 * Each return wire goes to an analog pim. 
 * 
-* I made a 3d printed dongle to conenct the DB-15 cable to a breadboard with a pin headers, to connect to the Keyestudio Micro bit T-type Shield V2.0 Adapter For BBC Micro bit
+* I made a 3d printed dongle to connect the DB-15 cable to a breadboard with a pin headers, to connect to the Keyestudio Micro bit T-type Shield V2.0 Adapter For BBC Micro bit
 * No special features used, we use it in class
 * 
 * In dongle:
