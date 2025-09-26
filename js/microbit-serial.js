@@ -1,3 +1,52 @@
+// This code interprets the data coming from the microbit via USB serial cable to control the sub game
+// This is where you write the code to handle physical controls or UI clicks)
+
+// this code is generate in/microbit/thunderstick-serial-demo.microbitJavascript
+// also found at https://makecode.microbit.org/S29415-59060-61162-04364
+
+// The microbit reads in the analog ports and sends a serial messgage like #f00,r85,f99,f99,f00|0|0
+// # is to double check the serial message start
+//\n for message end
+
+// Analog controls have prefixes
+// f = forward or positive number
+// r = reverse or negtive number
+// + = increment by the number UNUSED NOW
+// - = decrement by the number UNUSED NOW
+
+// Conceptually, the numbers are proportions of the absolute measures set in the game logic, not any kind of absolute or 'real' number
+
+// [0] Pitch setElevator/adjustElevator
+// [1] Roll setRudder, adjustRudder
+// [2] Port Engine setPortThruster, adjustPortThruster
+// [3] Starboard Engine setStarboardThruster, adjustStarboardThruster
+// [4] Vertical Engine setVerticalThruster, adjustVerticalThruster
+
+// | separators
+// first binary number is emergencyAllStop() // stop all engines
+// second binary number is  emergencyBlowTanks() // currently unused
+
+/*
+// Absolute control setters
+    setPortThruster(value) // Sets left thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setPortThruster(50);
+    setStarboardThruster(value) // Sets right thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setStarboardThruster(50);
+    setElevator(value) // Sets elevator angle to an exact percentage value (-100 to 100) - Example: window.submarineControls.setElevator(-30);
+    setRudder(value) // Sets rudder angle to an exact percentage value (-100 to 100) - Example: window.submarineControls.setRudder(25);
+    setVerticalThruster(value) // Sets aft thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setVerticalThruster(75);
+  
+    // Relative control adjusters
+    adjustPortThruster(value) // Increases/decreases left thruster by specified amount - Example: window.submarineControls.adjustPortThruster(10);
+    adjustStarboardThruster(value) // Increases/decreases right thruster by specified amount - Example: window.submarineControls.adjustStarboardThruster(-5);
+    adjustElevator(value) // Increases/decreases elevator angle by specified amount - Example: window.submarineControls.adjustElevator(2);
+    adjustRudder(value) // Increases/decreases rudder angle by specified amount - Example: window.submarineControls.adjustRudder(-3);
+    adjustVerticalThruster(value) // Increases/decreases aft thruster by specified amount - Example: window.submarineControls.adjustVerticalThruster(15);
+  
+    // Special functions
+    emergencyBlowTanks() // Performs emergency surfacing procedure (full upward pitch and aft thruster) - Example: window.submarineControls.emergencyBlowTanks();
+      emergencyAllStop() // stop all engines
+
+ */
+
 // Elements
 // const connectButton = document.getElementById("connectButton");
 // const outputDiv = document.getElementById("output");
@@ -259,25 +308,4 @@ function parseMicrobitSerialLine(lineIn) {
     }
     commandArray[a][SetOrAdjust](value * direction);
   }
-
-  /*
-// Absolute control setters
-    setPortThruster(value) // Sets left thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setPortThruster(50);
-    setStarboardThruster(value) // Sets right thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setStarboardThruster(50);
-    setElevator(value) // Sets elevator angle to an exact percentage value (-100 to 100) - Example: window.submarineControls.setElevator(-30);
-    setRudder(value) // Sets rudder angle to an exact percentage value (-100 to 100) - Example: window.submarineControls.setRudder(25);
-    setVerticalThruster(value) // Sets aft thruster to an exact percentage value (-100 to 100) - Example: window.submarineControls.setVerticalThruster(75);
-  
-    // Relative control adjusters
-    adjustPortThruster(value) // Increases/decreases left thruster by specified amount - Example: window.submarineControls.adjustPortThruster(10);
-    adjustStarboardThruster(value) // Increases/decreases right thruster by specified amount - Example: window.submarineControls.adjustStarboardThruster(-5);
-    adjustElevator(value) // Increases/decreases elevator angle by specified amount - Example: window.submarineControls.adjustElevator(2);
-    adjustRudder(value) // Increases/decreases rudder angle by specified amount - Example: window.submarineControls.adjustRudder(-3);
-    adjustVerticalThruster(value) // Increases/decreases aft thruster by specified amount - Example: window.submarineControls.adjustVerticalThruster(15);
-  
-    // Special functions
-    emergencyBlowTanks() // Performs emergency surfacing procedure (full upward pitch and aft thruster) - Example: window.submarineControls.emergencyBlowTanks();
-      emergencyAllStop() // stop all engines
-
- */
 }

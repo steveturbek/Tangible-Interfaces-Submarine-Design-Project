@@ -1,32 +1,78 @@
 /**
  * Microbit Javascript demo app demonstrating reading multiple sensor inputs and sending via serial messages to Chrome Browser over USB
  * part of project https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
- *
- * Microbit can read up to 6 analog pins, some digital pins
- * MicrobitPinout is at https://tech.microbit.org/hardware/edgeconnector/
- *
+
+// This is a demo code the student can modify for their project.  They should not need to edit the main game javascript to control the sub
+
+* BACKGROUND
+* Microbit can read up to 6 analog pins, some digital pins
+* MicrobitPinout is at https://tech.microbit.org/hardware/edgeconnector/
+*
+*
+*
+// The microbit reads in the analog ports and sends a serial messgage like #f00,r85,f99,f99,f00|0|0
+
+// SERIAL OUTPUT FORMATTING
+// # is to double check the serial message start
+//\n for message end
+
+// Formatting of serial output 
+
+// Analog controls have prefixes
+// f = forward or positive number
+// r = reverse or negtive number
+// + = increment by the number UNUSED NOW
+// - = decrement by the number UNUSED NOW
+
+// Conceptually, the numbers are proportions of the absolute measures set in the game logic, not any kind of absolute or 'real' number
+
+// [0] Pitch setElevator/adjustElevator
+// [1] Roll setRudder, adjustRudder
+// [2] Port Engine setPortThruster, adjustPortThruster
+// [3] Starboard Engine setStarboardThruster, adjustStarboardThruster
+// [4] Vertical Engine setVerticalThruster, adjustVerticalThruster
+
+// | separators
+// first binary number is emergencyAllStop() // stop all engines
+// second binary number is  emergencyBlowTanks() // currently unused
+*
  * Example web page to test serial output https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/examples/microbit-web-serial-demo.html
- *
- * this demo code needs to be customized for each set of sensors, this is written for an old skool
- * Kraft Thunderstick, an inexpensive joystick for IBM-compatible PCs released in the late 1980s
- * This joystick has:
- * 2 buttons (trigger and two thumb buttons that are actually one button).
- * 2 106k potentiometers, with a physical adjustment slider for pitch, roll of the joystick
- * 1 side sliding linear variable resistor labeled B100k, with a switch in series
- * All potentiometers are connected to same led wire, and use ony 2 wires, E.G. not set up with a voltage divider ground wire
- * Each return wire goes to an analog pim. A 100k resistor is added from pin to ground.
- * I added a 10k resistor to ground for each button pins
- * NOTE pull down resistor on pin11 triggers some kind of bluetooth test mode
- *
- * For the purposes of inspiring the class, I've added a 3d printed frame with 2 additional 10k potentiometers, to control the game submarine port and starboard motors.
- * These pots use all three legs as a voltage divider.  To avoid shorting out the board, a 1k resistor is added to power leg.  ground leg goes to ground, wiper leg goes to the analog pins
- *
- */
+
+* ABOUT THIS DEMO HARDWARE
+* this demo code is written for an old skool Kraft Thunderstick, an inexpensive joystick for IBM-compatible PCs released in the late 1980s
+* 
+* This joystick has:
+ * joystick pitch, roll using 2 106k potentiometers, with a physical adjustment slider
+ * side sliding linear variable resistor labeled B100k, with an on/off switch in series.  Switch forward is on
+ * Trigger button 
+* 2 thumb buttons are actually one button
+*
+* In joystick 
+* All potentiometers are connected to same lead power wire, and use ony 2 wires, E.G. no ground wire to make a voltage divider
+* Each return wire goes to an analog pim. 
+* 
+* I made a 3d printed dongle to conenct the DB-15 cable to a breadboard with a pin headers, to connect to the Keyestudio Micro bit T-type Shield V2.0 Adapter For BBC Micro bit
+* No special features used, we use it in class
+* 
+* In dongle:
+* 100k resistor from pins 0,1,2 to ground.
+* 10k resistor from pins 5,8 to ground
+* 
+* I added a 3d printed frame with 2 additional 10k potentiometers, to control the game submarine port and starboard motors.
+* These pots use all three legs as a voltage divider.  Ground leg goes to ground, wiper leg goes to the analog pins, 1k resistor connects power to avoid shorting out the board
+* wired via old telephone cable, with 5 wires to a header pin row
+* 1 to microbit pin 10
+* 2 = power to left potentiometer
+* 3 = ground
+* 4 = power to right potentiometer 
+* 5 to microbit pin 4 
+*/
 
 let list: number[] = [];
-serial.writeLine("START Microbit\n\n");
 music.play(music.tonePlayable(262, music.beat(BeatFraction.Sixteenth)), music.PlaybackMode.UntilDone);
 led.enable(false); //turn off display to use inputs 4, 10
+serial.redirectToUSB();
+serial.writeLine("START Microbit\n\n");
 
 //Pitch
 let pitchPin = AnalogReadWritePin.P0;
