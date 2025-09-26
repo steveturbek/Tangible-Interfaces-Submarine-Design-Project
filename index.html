@@ -68,6 +68,57 @@
         text-align: left;
         max-width: 80%;
       }
+
+      .win-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .win-container {
+        background: rgba(0, 50, 100, 0.9);
+        border: 2px solid #00ffff;
+        border-radius: 10px;
+        padding: 40px;
+        text-align: center;
+        color: white;
+        font-family: monospace;
+      }
+
+      .mission-complete {
+        color: #00ff00;
+        font-size: 2.5em;
+        font-weight: bold;
+        margin-bottom: 30px;
+      }
+
+      .stats {
+        font-size: 1.2em;
+        margin: 20px 0;
+        text-align: left;
+      }
+
+      .restart-btn {
+        background: #ff6b35;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.1em;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+
+      .restart-btn:hover {
+        background: #ff8500;
+      }
     </style>
   </head>
   <body>
@@ -116,6 +167,19 @@
             max-width: 80%;
           "
         ></pre>
+      </div>
+
+      <!-- Win Overlay -->
+      <div id="win-overlay" class="win-overlay">
+        <div class="win-container">
+          <div class="mission-complete">MISSION COMPLETE!</div>
+          <div class="stats">
+            <div>⏱️ Time: <span id="final-time">0:00</span></div>
+            <div>🫁 Oxygen Remaining: <span id="final-oxygen">0%</span></div>
+            <div>🔋 Battery Remaining: <span id="final-battery">0%</span></div>
+          </div>
+          <button class="restart-btn" onclick="restartGame()">Play Again</button>
+        </div>
       </div>
 
       <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>

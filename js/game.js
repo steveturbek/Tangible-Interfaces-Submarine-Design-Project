@@ -427,6 +427,7 @@ function updateUI() {
   //are you at target?
   if (gameState.navigation.distanceToTarget < 0.1) {
     console.log("Won!");
+    showWinScreen();
     stopGame();
   }
 
@@ -447,13 +448,13 @@ function updateUI() {
     `\n` +
     `This is a data panel for testing the game. Use TAB key to hide.` +
     `\n` +
-    `\n` +
-    `You can drive this submarine using keys \n` +
-    `\tA	Increases power to the left thruster \n` +
-    `\tS	Increases power to the right thruster \n` +
-    `\tZ	Decreases power to the left thruster \n` +
-    `\tX	Decreases power to the right thruster \n` +
-    `\tArrow keys for steering \n` +
+    // `\n` +
+    // `You can drive this submarine using keys \n` +
+    // `\tA	Increases power to the left thruster \n` +
+    // `\tS	Increases power to the right thruster \n` +
+    // `\tZ	Decreases power to the left thruster \n` +
+    // `\tX	Decreases power to the right thruster \n` +
+    // `\tArrow keys for steering \n` +
     `\t(There are more controls in the Read Me) \n` +
     `\n` +
     `\n` +
@@ -550,3 +551,18 @@ function gameLoop(currentTime) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
+
+function showWinScreen() {
+  // Format time from seconds to MM:SS
+  const minutes = Math.floor(gameState.time.elapsed / 60);
+  const seconds = Math.floor(gameState.time.elapsed % 60);
+  const timeString = minutes + ":" + String(seconds).padStart(2, "0");
+
+  // Update the stats
+  document.getElementById("final-time").textContent = timeString;
+  document.getElementById("final-oxygen").textContent = Math.round(gameState.status.oxygenLevel) + "%";
+  document.getElementById("final-battery").textContent = Math.round(gameState.status.batteryLevel) + "%";
+
+  // Show the overlay
+  document.getElementById("win-overlay").style.display = "flex";
+}
