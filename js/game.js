@@ -23,7 +23,8 @@ const gameState_original = {
     //Aft Thruster on the horizontal tail produce pitch
     VerticalThruster: 0, // -100 to +100 (down to up)
     MaxVerticalThruster: 100, // absolute number
-
+    AllStopLastUsedTime: Date.now(),
+    BlowTanksLastUsedTime: Date.now(),
     // Not using roll  targetRoll: 0, // -100 to +100 (optional: left bank to right bank)
   },
 

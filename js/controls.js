@@ -237,6 +237,8 @@ function adjustVerticalThruster(amount) {
  * Emergency procedure to rapidly rise to the surface
  */
 function emergencyBlowTanks() {
+  if (Date.now() - gameState.controls.BlowTanksLastUsedTime < 5000) return; // debounce physical buttons
+
   console.log("EMERGENCY: Blowing tanks!");
 
   // Set full upward pitch
@@ -244,12 +246,15 @@ function emergencyBlowTanks() {
 
   // Set full upward aft thruster
   setVerticalThruster(gameState.controls.MaxVerticalThruster);
+  //this is not working as it is overwritten bny joystick
 }
 
 /**
  * Emergency all stop - zeros all controls
  */
 function emergencyAllStop() {
+  if (Date.now() - gameState.controls.AllStopLastUsedTime < 3000) return; // debounce physical buttons
+
   console.log("EMERGENCY ALL STOP");
   gameState.controls.ThrottleLeft = 0;
   gameState.controls.ThrottleRight = 0;
