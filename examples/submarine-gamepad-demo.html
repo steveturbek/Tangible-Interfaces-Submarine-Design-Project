@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submarine Gamepad Control Demo</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0 auto;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        h1 {
+            color: #0066cc;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .status {
+            text-align: center;
+            font-size: 18px;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .disconnected {
+            background-color: #ffeeee;
+            color: #cc0000;
+        }
+
+        .connected {
+            background-color: #eeffee;
+            color: #00cc00;
+        }
+
+        .gamepad {
+            float: left;
+            align-items: center;
+            width: 48%;
+            margin-left: 10%;
+        }
+
+        .gamepad-visual {
+            width: 400px;
+            height: 280px;
+            background-color: #333;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .d-pad {
+            position: absolute;
+            top: 100px;
+            left: 50px;
+            width: 80px;
+            height: 80px;
+        }
+
+        .d-pad-button {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: #444;
+            border-radius: 4px;
+        }
+
+        .d-pad-up { top: 0; left: 27px; }
+        .d-pad-right { top: 27px; right: 0; }
+        .d-pad-down { bottom: 0; left: 27px; }
+        .d-pad-left { top: 27px; left: 0; }
+
+        .face-buttons {
+            position: absolute;
+            top: 100px;
+            right: 50px;
+            width: 80px;
+            height: 80px;
+        }
+
+        .face-button {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: #444;
+            border-radius: 50%;
+        }
+
+        .button-y { top: 0; left: 27px; }
+        .button-b { top: 27px; right: 0; }
+        .button-a { bottom: 0; left: 27px; }
+        .button-x { top: 27px; left: 0; }
+
+        .shoulder-buttons,
+        .trigger-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 380px;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+        .shoulder-button {
+            width: 80px;
+            height: 20px;
+            background-color: #444;
+            border-radius: 4px;
+        }
+
+        .center-buttons {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+        }
+
+        .center-button {
+            width: 25px;
+            height: 25px;
+            background-color: #444;
+            border-radius: 4px;
+        }
+
+        .sticks {
+            position: absolute;
+            top: 180px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .stick {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #222;
+            position: relative;
+        }
+
+        .stick-nub {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #555;
+            border-radius: 50%;
+            top: 10px;
+            left: 10px;
+        }
+
+        .active {
+            background-color: #0066cc !important;
+            box-shadow: 0 0 10px rgba(0, 102, 204, 0.7);
+        }
+
+        .data-panel {
+            background-color: #eee;
+            padding: 15px;
+            border-radius: 8px;
+            width: 49%;
+        }
+
+        .data-row {
+            display: grid;
+            grid-template-columns: 140px 80px 1fr;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .value-bar {
+            height: 20px;
+            background-color: #0066cc;
+            border-radius: 3px;
+            min-width: 2px;
+        }
+
+        .instruction {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #ffffee;
+            border-left: 4px solid #ffcc00;
+        }
+    </style>
+</head>
+<body>
+    <h1>Submarine Gamepad Control Demo</h1>
+
+    <div id="status" class="status disconnected">
+        <div class="instruction">
+            <p>Connect your USB Gamepad to your computer and press any button to begin.</p>
+            <p><strong>Left Stick:</strong> Side Thrusters (360° tank drive) |
+               <strong>Right Stick:</strong> Rudder (X) & Elevator (Y) |
+               <strong>Y Button:</strong> Blow Tanks |
+               <strong>Triggers:</strong> ALL STOP</p>
+        </div>
+        Waiting for gamepad connection...
+    </div>
+
+    <div class="container">
+        <div class="gamepad">
+            <div class="shoulder-buttons">
+                <div id="button-lb" class="shoulder-button"></div>
+                <div id="button-rb" class="shoulder-button"></div>
+            </div>
+            <div class="trigger-buttons">
+                <div id="button-lt" class="shoulder-button"></div>
+                <div id="button-rt" class="shoulder-button"></div>
+            </div>
+
+            <div class="gamepad-visual">
+                <div class="d-pad">
+                    <div id="dpad-up" class="d-pad-button d-pad-up"></div>
+                    <div id="dpad-right" class="d-pad-button d-pad-right"></div>
+                    <div id="dpad-down" class="d-pad-button d-pad-down"></div>
+                    <div id="dpad-left" class="d-pad-button d-pad-left"></div>
+                </div>
+
+                <div class="face-buttons">
+                    <div id="button-a" class="face-button button-a"></div>
+                    <div id="button-y" class="face-button button-y"></div>
+                    <div id="button-x" class="face-button button-x"></div>
+                    <div id="button-b" class="face-button button-b"></div>
+                </div>
+
+                <div class="center-buttons">
+                    <div id="button-back" class="center-button"></div>
+                    <div id="button-start" class="center-button"></div>
+                </div>
+
+                <div class="sticks">
+                    <div class="stick" id="left-stick-container">
+                        <div class="stick-nub" id="left-stick"></div>
+                    </div>
+                    <div class="stick" id="right-stick-container">
+                        <div class="stick-nub" id="right-stick"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-panel">
+            <div id="raw-data"></div>
+        </div>
+    </div>
+
+    <script src="../js/gamepad-controller.js"></script>
+    <script>
+        const controller = new SubmarineGamepadController();
+        const statusEl = document.getElementById('status');
+        const rawDataEl = document.getElementById('raw-data');
+
+        function updateDisplay() {
+            // Update connection status
+            if (controller.isConnected()) {
+                statusEl.textContent = '✅ Submarine Controller Ready';
+                statusEl.classList.remove('disconnected');
+                statusEl.classList.add('connected');
+            } else {
+                statusEl.classList.remove('connected');
+                statusEl.classList.add('disconnected');
+            }
+
+            // Update controller state
+            controller.update();
+            const controls = controller.getControls();
+
+            // Update visual elements
+            updateVisualGamepad(controls);
+            updateDataPanel(controls);
+
+            requestAnimationFrame(updateDisplay);
+        }
+
+        function updateVisualGamepad(controls) {
+            // Update Y button
+            const yButton = document.getElementById('button-y');
+            yButton.classList.toggle('active', controls.blowTanks);
+
+            // Update triggers
+            const ltButton = document.getElementById('button-lt');
+            const rtButton = document.getElementById('button-rt');
+            ltButton.classList.toggle('active', controls.allStop);
+            rtButton.classList.toggle('active', controls.allStop);
+
+            // Update stick positions
+            const leftStick = document.getElementById('left-stick');
+            const rightStick = document.getElementById('right-stick');
+            const maxDistance = 10;
+
+            // Left stick - calculate from thruster values back to X/Y
+            const leftY = -(controls.leftThruster + controls.rightThruster) / 2;
+            const leftX = (controls.leftThruster - controls.rightThruster) / 2;
+
+            leftStick.style.transform = `translate(${leftX * maxDistance}px, ${leftY * maxDistance}px)`;
+            rightStick.style.transform = `translate(${controls.rudder * maxDistance}px, ${controls.elevator * maxDistance}px)`;
+        }
+
+        function updateDataPanel(controls) {
+            rawDataEl.innerHTML = '';
+
+            // Thruster outputs
+            addDataRow('Left Thruster', controls.leftThruster);
+            addDataRow('Right Thruster', controls.rightThruster);
+            addDataRow('Rudder', controls.rudder);
+            addDataRow('Elevator', controls.elevator);
+            addDataRow('Blow Tanks', controls.blowTanks ? 1 : 0);
+            addDataRow('ALL STOP', controls.allStop ? 1 : 0);
+        }
+
+        function addDataRow(label, value) {
+            const row = document.createElement('div');
+            row.className = 'data-row';
+
+            const labelEl = document.createElement('div');
+            labelEl.textContent = label;
+
+            const valueEl = document.createElement('div');
+            const numValue = typeof value === 'boolean' ? (value ? 1 : 0) : value;
+            valueEl.textContent = numValue.toFixed(2);
+
+            const barContainer = document.createElement('div');
+            barContainer.style.width = '100%';
+
+            const bar = document.createElement('div');
+            bar.className = 'value-bar';
+            const percentage = ((numValue + 1) / 2) * 100;
+            bar.style.width = `${percentage}%`;
+
+            barContainer.appendChild(bar);
+            row.appendChild(labelEl);
+            row.appendChild(valueEl);
+            row.appendChild(barContainer);
+            rawDataEl.appendChild(row);
+        }
+
+        // Start animation loop
+        updateDisplay();
+    </script>
+</body>
+</html>
