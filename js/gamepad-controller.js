@@ -78,7 +78,7 @@ class SubmarineGamepadController {
     const rightStickX = this.applyDeadzone(this.gamepad.axes[5] || this.gamepad.axes[2]); // Rudder
     const rightStickY = this.applyDeadzone(this.gamepad.axes[2] || this.gamepad.axes[3]); // Elevator
 
-    this.controls.rudder = rightStickX;
+    this.controls.rudder = -rightStickX; // Reversed for intuitive control
     this.controls.elevator = rightStickY;
 
     // Y button (index 0 on most gamepads, but check your mapping)
@@ -100,27 +100,43 @@ class SubmarineGamepadController {
   }
 
   calculateThrusterValues(stickX, stickY) {
-    // Convert stick position to thruster values
-    // stickX: -1 (left) to 1 (right)
-    // stickY: -1 (up/forward) to 1 (down/backward)
+    // Convert stick position to thruster values using clock metaphor
+    // stickX: -1 (left/9 o'clock) to 1 (right/3 o'clock)
+    // stickY: -1 (up/12 o'clock) to 1 (down/6 o'clock)
 
-    // Tank drive algorithm
-    // Forward: Y negative, both thrusters same
-    // Turn right: X positive, left thruster more than right
-    // Turn left: X negative, right thruster more than left
+    // Clock-based control:
+    // 12 o'clock (Y=-1): both thrusters 100% forward
+    // 3 o'clock (X=1): left 100%, right -100% (spin right)
+    // 6 o'clock (Y=1): both thrusters 100% backward
+    // 9 o'clock (X=-1): left -100%, right 100% (spin left)
 
-    let left = -stickY + stickX;
-    let right = -stickY - stickX;
+    // Calculate angle and magnitude
+    const magnitude = Math.sqrt(stickX * stickX + stickY * stickY);
 
-    // Normalize if values exceed -1 to 1 range
-    const maxMagnitude = Math.max(Math.abs(left), Math.abs(right));
-    if (maxMagnitude > 1.0) {
-      left /= maxMagnitude;
-      right /= maxMagnitude;
+    // If stick is centered, no thrust
+    if (magnitude < 0.1) {
+      this.controls.leftThruster = 0;
+      this.controls.rightThruster = 0;
+      return;
     }
 
-    this.controls.leftThruster = left;
-    this.controls.rightThruster = right;
+    // Clamp magnitude to 1.0
+    const clampedMag = Math.min(magnitude, 1.0);
+
+    // Direct mapping based on stick position
+    // Forward component (both thrusters same direction)
+    const forward = -stickY * clampedMag / magnitude;
+
+    // Turn component (differential thrust)
+    const turn = stickX * clampedMag / magnitude;
+
+    // Combine forward and turn
+    this.controls.leftThruster = forward + turn;
+    this.controls.rightThruster = forward - turn;
+
+    // Clamp to -1 to 1 range
+    this.controls.leftThruster = Math.max(-1, Math.min(1, this.controls.leftThruster));
+    this.controls.rightThruster = Math.max(-1, Math.min(1, this.controls.rightThruster));
   }
 
   applyDeadzone(value) {

@@ -146,6 +146,11 @@ window.addEventListener(
 //////////////////////////////////////////////////////////////////////////////////////////
 
 function updateSubmarineState(deltaTime) {
+  // Update gamepad controls if available
+  if (window.submarineControls && window.submarineControls.updateGamepadControls) {
+    window.submarineControls.updateGamepadControls();
+  }
+
   // Update time
   gameState.time.deltaTime = deltaTime;
   gameState.time.elapsed += deltaTime;
