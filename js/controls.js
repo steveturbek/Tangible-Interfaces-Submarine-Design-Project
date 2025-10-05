@@ -243,7 +243,7 @@ function adjustVerticalThruster(amount) {
 }
 
 /**
- * Updates submarine controls from gamepad input (only if gamepad is actively being used)
+ * Updates submarine controls from gamepad input
  * Call this every frame to process gamepad input
  */
 function updateGamepadControls() {
@@ -252,25 +252,20 @@ function updateGamepadControls() {
   gamepadController.update();
   const controls = gamepadController.getControls();
 
-  // Only apply gamepad controls if there's actual input
-  // This prevents gamepad from interfering when not in use
-  const hasInput =
-    Math.abs(controls.leftThruster) > 0.05 ||
-    Math.abs(controls.rightThruster) > 0.05 ||
-    Math.abs(controls.rudder) > 0.05 ||
-    Math.abs(controls.elevator) > 0.05 ||
-    controls.blowTanks ||
-    controls.allStop;
+  // Apply thruster values directly (bypassing the averaging in set functions)
+  // Convert -1 to 1 range to actual throttle values
+  if (gameState && gameState.controls) {
+    gameState.controls.ThrottleLeft = Math.round(controls.leftThruster * gameState.controls.MaxThrottle);
+    gameState.controls.ThrottleRight = Math.round(controls.rightThruster * gameState.controls.MaxThrottle);
 
-  if (!hasInput) return;
+    // Apply rudder and elevator with light smoothing for stability
+    const targetRudder = Math.round(controls.rudder * gameState.controls.maxYawRudderAngle);
+    const targetElevator = Math.round(controls.elevator * gameState.controls.maxPitchElevatorAngle);
 
-  // Apply thruster values (convert -1 to 1 range to -100 to 100)
-  setPortThruster(controls.leftThruster * 100);
-  setStarboardThruster(controls.rightThruster * 100);
-
-  // Apply rudder and elevator
-  setRudder(controls.rudder * 100);
-  setElevator(controls.elevator * 100);
+    // Smooth transition (70% new value, 30% old value) - less aggressive than before
+    gameState.controls.YawRudderAngle = Math.round(targetRudder * 0.7 + gameState.controls.YawRudderAngle * 0.3);
+    gameState.controls.PitchElevatorAngle = Math.round(targetElevator * 0.7 + gameState.controls.PitchElevatorAngle * 0.3);
+  }
 
   // Handle emergency controls
   if (controls.blowTanks) {

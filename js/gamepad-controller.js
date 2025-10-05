@@ -1,22 +1,21 @@
 /**
  * Submarine Gamepad Controller
  *
- * Controls:
- * - Left Analog Stick: Side thrusters (360° control)
- *   - Forward: both motors forward
- *   - Right: left motor forward, right motor backward
- *   - Left: right motor forward, left motor backward
- * - Right Analog Stick X: Rudder control
- * - Right Analog Stick Y: Elevator control
- * - Y Button: Blow tanks (surface)
- * - Triggers (LT/RT): All stop
+ * This controller reads gamepad input and converts it to submarine controls
+ * based on the mappings defined in gamepad-config.js
+ *
+ * Students can modify gamepad-config.js to create their own control schemes
+ * without touching this file!
  */
 
 class SubmarineGamepadController {
-  constructor() {
+  constructor(config = null) {
     this.gamepad = null;
     this.connected = false;
-    this.deadzone = 0.15; // Ignore small stick movements
+
+    // Load configuration (use provided config or default GamepadConfig)
+    this.config = config || (typeof GamepadConfig !== 'undefined' ? GamepadConfig : this.getDefaultConfig());
+    this.deadzone = this.config.deadzone;
 
     // Control outputs (normalized -1 to 1)
     this.controls = {
@@ -29,6 +28,19 @@ class SubmarineGamepadController {
     };
 
     this.init();
+  }
+
+  getDefaultConfig() {
+    // Fallback config if gamepad-config.js is not loaded
+    return {
+      deadzone: 0.15,
+      leftStick: { xAxis: 0, yAxis: 1, method: 'clock' },
+      rightStick: { xAxis: 5, yAxis: 2, invertX: true, invertY: false },
+      buttons: {
+        blowTanks: { buttonIndex: 0, triggerThreshold: 0.5 },
+        allStop: { buttonIndices: [6, 7], triggerThreshold: 0.3 }
+      }
+    };
   }
 
   init() {
@@ -67,27 +79,34 @@ class SubmarineGamepadController {
 
     if (!this.gamepad) return;
 
-    // Left stick axes (side thrusters)
-    const leftStickX = this.applyDeadzone(this.gamepad.axes[0]);
-    const leftStickY = this.applyDeadzone(this.gamepad.axes[1]);
+    // Read left stick based on config
+    const leftStickX = this.applyDeadzone(this.gamepad.axes[this.config.leftStick.xAxis]);
+    const leftStickY = this.applyDeadzone(this.gamepad.axes[this.config.leftStick.yAxis]);
 
-    // Calculate thruster values from stick position (tank drive)
+    // Calculate thruster values using configured method
     this.calculateThrusterValues(leftStickX, leftStickY);
 
-    // Right stick axes
-    const rightStickX = this.applyDeadzone(this.gamepad.axes[5] || this.gamepad.axes[2]); // Rudder
-    const rightStickY = this.applyDeadzone(this.gamepad.axes[2] || this.gamepad.axes[3]); // Elevator
+    // Read right stick based on config
+    const rightStickX = this.applyDeadzone(this.gamepad.axes[this.config.rightStick.xAxis]);
+    const rightStickY = this.applyDeadzone(this.gamepad.axes[this.config.rightStick.yAxis]);
 
-    this.controls.rudder = -rightStickX; // Reversed for intuitive control
-    this.controls.elevator = rightStickY;
+    // Apply inversion if configured
+    this.controls.rudder = rightStickX * (this.config.rightStick.invertX ? -1 : 1);
+    this.controls.elevator = rightStickY * (this.config.rightStick.invertY ? -1 : 1);
 
-    // Y button (index 0 on most gamepads, but check your mapping)
-    this.controls.blowTanks = this.gamepad.buttons[0]?.pressed || false;
+    // Read buttons based on config
+    const blowTanksBtn = this.config.buttons.blowTanks;
+    this.controls.blowTanks = this.gamepad.buttons[blowTanksBtn.buttonIndex]?.pressed || false;
 
-    // Triggers - LT (index 6) or RT (index 7)
-    const leftTrigger = this.gamepad.buttons[6]?.value || 0;
-    const rightTrigger = this.gamepad.buttons[7]?.value || 0;
-    this.controls.allStop = (leftTrigger > 0.3 || rightTrigger > 0.3);
+    // All stop can use multiple buttons
+    const allStopBtns = this.config.buttons.allStop;
+    const allStopIndices = Array.isArray(allStopBtns.buttonIndices)
+      ? allStopBtns.buttonIndices
+      : [allStopBtns.buttonIndices];
+
+    this.controls.allStop = allStopIndices.some(idx =>
+      (this.gamepad.buttons[idx]?.value || 0) > allStopBtns.triggerThreshold
+    );
 
     // If all stop is engaged, zero out movement controls only
     if (this.controls.allStop) {
@@ -100,43 +119,83 @@ class SubmarineGamepadController {
   }
 
   calculateThrusterValues(stickX, stickY) {
-    // Convert stick position to thruster values using clock metaphor
-    // stickX: -1 (left/9 o'clock) to 1 (right/3 o'clock)
-    // stickY: -1 (up/12 o'clock) to 1 (down/6 o'clock)
+    const method = this.config.leftStick.method || 'clock';
 
+    // Use custom function if provided
+    if (method === 'custom' && this.config.leftStick.customFunction) {
+      const result = this.config.leftStick.customFunction(stickX, stickY);
+      this.controls.leftThruster = result.left;
+      this.controls.rightThruster = result.right;
+      return;
+    }
+
+    // Clock method (current implementation)
+    if (method === 'clock') {
+      this.calculateClockMethod(stickX, stickY);
+    }
+    // Tank method (traditional)
+    else if (method === 'tank') {
+      this.calculateTankMethod(stickX, stickY);
+    }
+  }
+
+  calculateClockMethod(stickX, stickY) {
     // Clock-based control:
     // 12 o'clock (Y=-1): both thrusters 100% forward
     // 3 o'clock (X=1): left 100%, right -100% (spin right)
     // 6 o'clock (Y=1): both thrusters 100% backward
     // 9 o'clock (X=-1): left -100%, right 100% (spin left)
 
-    // Calculate angle and magnitude
     const magnitude = Math.sqrt(stickX * stickX + stickY * stickY);
 
-    // If stick is centered, no thrust
     if (magnitude < 0.1) {
       this.controls.leftThruster = 0;
       this.controls.rightThruster = 0;
       return;
     }
 
-    // Clamp magnitude to 1.0
-    const clampedMag = Math.min(magnitude, 1.0);
+    // Use magnitude for power scaling, but don't normalize direction
+    // This way full deflection in any direction = 100% on at least one thruster
+    const power = Math.min(magnitude, 1.0);
 
-    // Direct mapping based on stick position
     // Forward component (both thrusters same direction)
-    const forward = -stickY * clampedMag / magnitude;
+    const forward = -stickY;
 
     // Turn component (differential thrust)
-    const turn = stickX * clampedMag / magnitude;
+    const turn = stickX;
 
-    // Combine forward and turn
-    this.controls.leftThruster = forward + turn;
-    this.controls.rightThruster = forward - turn;
+    // Combine forward and turn, then scale by power
+    let left = (forward + turn) * power;
+    let right = (forward - turn) * power;
 
-    // Clamp to -1 to 1 range
-    this.controls.leftThruster = Math.max(-1, Math.min(1, this.controls.leftThruster));
-    this.controls.rightThruster = Math.max(-1, Math.min(1, this.controls.rightThruster));
+    // Normalize if combined values exceed -1 to 1 range
+    const maxMag = Math.max(Math.abs(left), Math.abs(right));
+    if (maxMag > 1.0) {
+      left /= maxMag;
+      right /= maxMag;
+    }
+
+    this.controls.leftThruster = left;
+    this.controls.rightThruster = right;
+  }
+
+  calculateTankMethod(stickX, stickY) {
+    // Traditional tank drive:
+    // Y controls forward/backward
+    // X controls turning (differential thrust)
+
+    let left = -stickY + stickX;
+    let right = -stickY - stickX;
+
+    // Normalize if values exceed -1 to 1 range
+    const maxMagnitude = Math.max(Math.abs(left), Math.abs(right));
+    if (maxMagnitude > 1.0) {
+      left /= maxMagnitude;
+      right /= maxMagnitude;
+    }
+
+    this.controls.leftThruster = left;
+    this.controls.rightThruster = right;
   }
 
   applyDeadzone(value) {
