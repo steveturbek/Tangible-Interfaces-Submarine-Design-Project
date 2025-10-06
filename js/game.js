@@ -87,14 +87,22 @@ Object.keys(gameState_original).forEach((key) => {
 
 // Function to start the game
 function startGame() {
+  console.log("startGame called, isGameRunning =", isGameRunning);
   if (!isGameRunning) {
     console.log("Starting game");
     isGameRunning = true;
     lastFrameTime = 0; // Reset the time tracker
-    // Show the win overlay
-    document.getElementById("win-overlay").style.display = "none";
+
+    // Hide the win overlay in whichever window it's in
+    const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
+    const winOverlay = doc.getElementById("win-overlay");
+    if (winOverlay) winOverlay.style.display = "none";
+
     animationFrameId = requestAnimationFrame(gameLoop);
-  } else stopGame();
+  } else {
+    console.log("Game already running, calling stopGame");
+    stopGame();
+  }
 }
 
 // Function to stop the game
@@ -126,19 +134,27 @@ function restartGame() {
     }
   });
 
-  document.getElementById("sub-data-text").textContent = "";
+  // Clear sub-data text in whichever window it's in
+  const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
+  const subDataText = doc.getElementById("sub-data-text");
+  if (subDataText) subDataText.textContent = "";
 
   // Restart the game loop
   setTimeout(startGame, 500);
 }
 
 // Start the game after everything else is loaded
+// But only if the welcome screen is not showing (i.e., game was already started)
 window.addEventListener(
   "load",
   function () {
-    // console.log("Window loaded, starting game in 500ms");
-    // Start the game loop after a delay to ensure all initialization is complete
-    setTimeout(startGame, 500);
+    // Check if welcome screen is hidden (game already started from button click)
+    const welcomeScreen = document.getElementById("welcome-screen");
+    if (!welcomeScreen || welcomeScreen.style.display === "none") {
+      // console.log("Window loaded, starting game in 500ms");
+      // Start the game loop after a delay to ensure all initialization is complete
+      setTimeout(startGame, 500);
+    }
   },
   { once: true }
 ); // Only attach this listener once
@@ -455,43 +471,37 @@ function updateUI() {
 
   // Update sub-data overlay text
   let overlayText =
-    `Welcome to the Tangible Interfaces Class Submarine Design Project Simulator. ` +
-    `<a href="https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main?tab=readme-ov-file#tangible-interfaces-submarine-design-project" target="new" style="color:white">Read Me for details</a>` +
+    //    `Welcome to the Tangible Interfaces Class Submarine Design Project Simulator. ` +
+    //   `<a href="https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main?tab=readme-ov-file#tangible-interfaces-submarine-design-project" target="new" style="color:white">Read Me for details</a>` +
+    //`Position(${gameState.position.x.toFixed(2)},${gameState.position.y.toFixed(2)},${gameState.position.z.toFixed(2)}) | ` +
+    `\nCompassHeading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
+    `\nSpeed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
+    `\nDepth: ${gameState.status.depth.toFixed(2)}m | ` +
+    `\nPitch: ${Math.round(gameState.rotation.x)}°` +
     `\n` +
-    `This is a data panel for testing the game. Use TAB key to hide.` +
-    // `\n` +
-    // `\n` +
-    // `You can drive this submarine using keys \n` +
-    // `\tA	Increases power to the left thruster \n` +
-    // `\tS	Increases power to the right thruster \n` +
-    // `\tZ	Decreases power to the left thruster \n` +
-    // `\tX	Decreases power to the right thruster \n` +
-    // `\tArrow keys for steering \n` +
-    `\nThis is meant to be played with a hardware joystick, but there are keyboard controls in the Read Me) \n` +
+    `\nO₂: ${gameState.status.oxygenLevel}% | ` +
+    `\nBatt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
+    `\nTarget: ${gameState.navigation.distanceToTarget.toFixed(2)}m` +
     `\n` +
-    `\n` +
-    `Position(${gameState.position.x.toFixed(2)},${gameState.position.y.toFixed(2)},${gameState.position.z.toFixed(2)}) | ` +
-    `compassHeading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
-    `Speed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
-    `Depth: ${gameState.status.depth.toFixed(2)}m | ` +
-    `Pitch: ${Math.round(gameState.rotation.x)}°` +
-    `\n` +
-    `O₂: ${gameState.status.oxygenLevel}% | ` +
-    `Batt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
-    `Target: ${gameState.navigation.distanceToTarget.toFixed(2)}m` +
-    `\n` +
-    `LeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
-    `RightThrust: ${gameState.controls.ThrottleRight}% | ` +
-    `Rudder ←→: ${gameState.controls.YawRudderAngle.toFixed(1)}% | ` +
-    `Elevator ↑↓: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% | ` +
-    `VerticalThruster: ${gameState.controls.VerticalThruster}%`;
+    `\nLeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
+    `\nRightThrust: ${gameState.controls.ThrottleRight}% | ` +
+    `\nRudder ←→: ${gameState.controls.YawRudderAngle.toFixed(1)}% | ` +
+    `\nElevator ↑↓: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% | ` +
+    `\nVerticalThruster: ${gameState.controls.VerticalThruster}%`;
 
-  // Add boundary warning if needed
-  if (gameState.status.boundaryWarning) {
-    overlayText += `\n\n⚠️ Approaching boundary!`;
+  // // Add boundary warning if needed
+  // if (gameState.status.boundaryWarning) {
+  //   overlayText += `\n\n⚠️ Approaching boundary!`;
+  // }
+
+  // Update sub-data text in whichever window it's in
+  const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
+  const subDataText = doc.getElementById("sub-data-text");
+  if (subDataText) {
+    subDataText.textContent = overlayText;
+  } else {
+    console.log("sub-data-text element not found in", window.instrumentsWindow ? "instruments window" : "main window");
   }
-
-  document.getElementById("sub-data-text").innerHTML = overlayText;
 
   // Update instruments
   updateInstruments();
@@ -570,11 +580,18 @@ function showWinScreen() {
   const seconds = Math.floor(gameState.time.elapsed % 60);
   const timeString = minutes + ":" + String(seconds).padStart(2, "0");
 
-  // Update the stats
-  document.getElementById("final-time").textContent = timeString;
-  document.getElementById("final-oxygen").textContent = Math.round(gameState.status.oxygenLevel) + "%";
-  document.getElementById("final-battery").textContent = Math.round(gameState.status.batteryLevel) + "%";
+  // Update the stats in whichever window they're in
+  const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
+
+  const finalTime = doc.getElementById("final-time");
+  const finalOxygen = doc.getElementById("final-oxygen");
+  const finalBattery = doc.getElementById("final-battery");
+  const winOverlay = doc.getElementById("win-overlay");
+
+  if (finalTime) finalTime.textContent = timeString;
+  if (finalOxygen) finalOxygen.textContent = Math.round(gameState.status.oxygenLevel) + "%";
+  if (finalBattery) finalBattery.textContent = Math.round(gameState.status.batteryLevel) + "%";
 
   // Show the win overlay
-  document.getElementById("win-overlay").style.display = "flex";
+  if (winOverlay) winOverlay.style.display = "flex";
 }

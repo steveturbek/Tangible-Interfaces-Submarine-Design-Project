@@ -178,7 +178,7 @@ function createSeabed() {
   // Create a circular plane for the seabed using CircleBufferGeometry
   // The radius is half of gameState.constants.worldBoundaryVisible to match the diameter with the world boundary
   const radius = gameState.constants.worldBoundaryVisible / 2;
-  const segments = 80; // Higher value for smoother circle
+  const segments = 40; // Moderate value for smoother circle
   const seabedGeometry = new THREE.CircleBufferGeometry(radius, segments);
 
   // Load sand texture
@@ -305,7 +305,7 @@ function createCoralReef() {
   console.log(`Creating coral structures with height: ${fullHeight} units`);
 
   // Create fewer but much larger formations
-  const coralCount = 80;
+  const coralCount = 40;
   const minDistance = 150; // Much larger minimum distance between structures
 
   for (let i = 0; i < coralCount; i++) {
@@ -363,7 +363,7 @@ function createMassiveCoralStructure(coralColors, fullHeight) {
   const structureGroup = new THREE.Group();
 
   // Create multiple intersecting plane systems within this structure
-  const planeSystemCount = Math.floor(Math.random() * 8) + 12; // 12-20 plane systems per structure
+  const planeSystemCount = Math.floor(Math.random() * 4) + 6; // 6-10 plane systems per structure
 
   for (let i = 0; i < planeSystemCount; i++) {
     const planeSystem = createIntersectingPlaneSystem(coralColors, fullHeight);
@@ -391,8 +391,8 @@ function createIntersectingPlaneSystem(coralColors, fullHeight) {
   // Choose primary color for this system (with variations)
   const primaryColor = coralColors[Math.floor(Math.random() * coralColors.length)];
 
-  // Create 6-12 intersecting planes per system
-  const planeCount = Math.floor(Math.random() * 7) + 6;
+  // Create 3-6 intersecting planes per system
+  const planeCount = Math.floor(Math.random() * 4) + 3;
 
   for (let i = 0; i < planeCount; i++) {
     const plane = createComplexCoralPlane(primaryColor, fullHeight);
@@ -426,8 +426,8 @@ function createComplexCoralPlane(baseColor, fullHeight) {
   const planeHeight = fullHeight * (0.7 + Math.random() * 0.3); // 70-100% of full height
   const planeWidth = Math.random() * 40 + 30; // Width between 30-70 units
 
-  // Create plane with high subdivision for complex shapes
-  const geometry = new THREE.PlaneBufferGeometry(planeWidth, planeHeight, 16, 32);
+  // Create plane with moderate subdivision for complex shapes
+  const geometry = new THREE.PlaneBufferGeometry(planeWidth, planeHeight, 8, 16);
 
   // Create complex organic deformation
   const positions = geometry.attributes.position.array;
@@ -1243,4 +1243,10 @@ function initRenderer() {
 }
 
 // Start the renderer when the window loads
-window.addEventListener("load", initRenderer, { once: true });
+// But only if the welcome screen is not showing (i.e., game was already started)
+window.addEventListener("load", function() {
+  const welcomeScreen = document.getElementById('welcome-screen');
+  if (!welcomeScreen || welcomeScreen.style.display === 'none') {
+    initRenderer();
+  }
+}, { once: true });

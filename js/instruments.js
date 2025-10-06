@@ -15,7 +15,14 @@ function updateInstruments_Oxygen() {
   // Create and append the oxygen gauge SVG
   // Get reference to the oxygen SVG object
 
-  const oxygenGaugeSVG = document.getElementById("oxygenGauge");
+  // Check if instruments are in a separate window
+  const doc = window.instrumentsWindow && !window.instrumentsWindow.closed
+    ? window.instrumentsWindow.document
+    : document;
+
+  const oxygenGaugeSVG = doc.getElementById("oxygenGauge");
+  if (!oxygenGaugeSVG || !oxygenGaugeSVG.contentDocument) return;
+
   const oxygenGaugeLine = oxygenGaugeSVG.contentDocument.getElementById("line");
 
   // Make sure we have a reference to the line element
@@ -76,28 +83,43 @@ function updateInstruments_currentSpeed() {
 window.addEventListener(
   "load",
   () => {
-    // Set initial state
-    if (gameState && gameState.status) updateInstruments();
+    // Wait a bit for instruments window to open
+    setTimeout(() => {
+      // Check if instruments are in a separate window
+      const doc = window.instrumentsWindow && !window.instrumentsWindow.closed
+        ? window.instrumentsWindow.document
+        : document;
 
-    document.getElementById("instruments-restart").contentDocument.getElementById("restart").addEventListener("click", restartGame);
-    document.getElementById("instruments-restart").contentDocument.getElementById("restart").style = "cursor:pointer;";
-    document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").style = "cursor:pointer;";
+      // Set initial state
+      if (gameState && gameState.status) updateInstruments();
 
-    // Check if Web Serial API is supported
-    if ("serial" in navigator) {
-      // console.log("serial is supported by browser");
-      document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").setAttribute("fill", "#ffffff");
-      document
-        .getElementById("instruments-microBitGauge")
-        .contentDocument.getElementById("circuit-board-top-layer")
-        .addEventListener("click", connectToMicrobit);
+      // Only set up restart button and microbit if instruments exist in main window
+      // (instruments.html has its own restart button)
+      if (doc === document) {
+        const restartInstrument = document.getElementById("instruments-restart");
+        const microbitInstrument = document.getElementById("instruments-microBitGauge");
 
-      // Try to auto-connect when the game loads
-      setTimeout(() => autoConnectToMicrobit(), 1000); // Slight delay to ensure everything is loaded
-    } else {
-      outputDiv.textContent = "Web Serial API is not supported in this browser. Please use Chrome.";
-      document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").setAttribute("fill", "#ff0000");
-    }
+        if (restartInstrument && restartInstrument.contentDocument) {
+          restartInstrument.contentDocument.getElementById("restart").addEventListener("click", restartGame);
+          restartInstrument.contentDocument.getElementById("restart").style = "cursor:pointer;";
+        }
+
+        if (microbitInstrument && microbitInstrument.contentDocument) {
+          microbitInstrument.contentDocument.getElementById("circuit-board-top-layer").style = "cursor:pointer;";
+
+          // Check if Web Serial API is supported
+          if ("serial" in navigator) {
+            microbitInstrument.contentDocument.getElementById("circuit-board-top-layer").setAttribute("fill", "#ffffff");
+            microbitInstrument.contentDocument.getElementById("circuit-board-top-layer").addEventListener("click", connectToMicrobit);
+
+            // Try to auto-connect when the game loads
+            setTimeout(() => autoConnectToMicrobit(), 1000);
+          } else {
+            microbitInstrument.contentDocument.getElementById("circuit-board-top-layer").setAttribute("fill", "#ff0000");
+          }
+        }
+      }
+    }, 500);
   },
   { once: true }
 );

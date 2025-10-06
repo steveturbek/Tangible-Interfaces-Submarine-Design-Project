@@ -1,12 +1,109 @@
+<!DOCTYPE html>
 <html>
   <head>
+    <title>Submarine Navigation Game</title>
     <style>
+      /* Welcome screen styles */
+      .welcome-screen {
+        margin: 0;
+        padding: 0;
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(135deg, #0096ff 0%, #0073cf 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: white;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 10000;
+      }
+
+      .welcome-container {
+        max-width: 800px;
+        padding: 40px;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        font-size: 3em;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .subtitle {
+        font-size: 1.2em;
+        margin-bottom: 30px;
+        opacity: 0.9;
+      }
+
+      .description {
+        font-size: 1em;
+        line-height: 1.6;
+        margin-bottom: 30px;
+        text-align: left;
+      }
+
+      .start-button {
+        background: #ff6b35;
+        color: white;
+        border: none;
+        padding: 20px 60px;
+        font-size: 1.5em;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        transition: all 0.3s ease;
+      }
+
+      .start-button:hover {
+        background: #ff8500;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+      }
+
+      .github-link {
+        margin-top: 30px;
+        font-size: 0.9em;
+      }
+
+      .github-link a {
+        color: #00ffff;
+        text-decoration: none;
+      }
+
+      .github-link a:hover {
+        text-decoration: underline;
+      }
+
+      .instructions {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+      }
+
+      .instructions h3 {
+        margin-top: 0;
+      }
+
+      .instructions ul {
+        text-align: left;
+        line-height: 1.8;
+      }
+
+      /* Game view styles */
       body {
         padding: 0;
         margin: 0;
         overflow: hidden;
         position: relative;
-
         width: 100vw;
         height: 100vh;
         display: flex;
@@ -16,187 +113,119 @@
       }
 
       #container {
-        aspect-ratio: 16 / 9; /* Set your desired ratio (e.g., 16:9) */
+        aspect-ratio: 16 / 9;
         max-width: 100%;
         max-height: 100%;
         width: auto;
         height: auto;
       }
 
-      /* Style for the underwater scene canvas */
       #outside-scene {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         z-index: 1;
-        aspect-ratio: 16 / 9; /* Set your desired ratio (e.g., 16:9) */
-      }
-
-      /* Style for the cockpit overlay SVG */
-      .cockpit-screen {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        aspect-ratio: 16 / 9; /* Set your desired ratio (e.g., 16:9) */
-        z-index: 10; /* Higher z-index to appear in front */
-        pointer-events: none; /* Allow clicks to pass through to canvas */
-      }
-
-      /* Debug overlay styles */
-      #sub-data-overlay {
-        position: absolute;
-        top: 10px;
-        left: 0;
-        width: 100%;
-        z-index: 30;
-        display: none; /* Hidden by default, shown when toggled */
-        text-align: center;
-        /* pointer-events: none; Allow clicks to pass through */
-      }
-
-      #sub-data-text {
-        display: inline-block;
-        margin: 0 auto;
-        padding: 5px 10px;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: #00ff00; /* Terminal green color */
-        font-family: monospace;
-        font-size: 12px;
-        border-radius: 5px;
-        text-align: left;
-        max-width: 80%;
-      }
-
-      .win-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.8);
-        z-index: 1000;
-        display: none;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .win-container {
-        background: rgba(0, 50, 100, 0.9);
-        border: 2px solid #00ffff;
-        border-radius: 10px;
-        padding: 40px;
-        text-align: center;
-        color: white;
-        font-family: monospace;
-      }
-
-      .mission-complete {
-        color: #00ff00;
-        font-size: 2.5em;
-        font-weight: bold;
-        margin-bottom: 30px;
-      }
-
-      .stats {
-        font-size: 1.2em;
-        margin: 20px 0;
-        text-align: left;
-      }
-
-      .restart-btn {
-        background: #ff6b35;
-        color: white;
-        border: none;
-        padding: 15px 30px;
-        font-size: 1.1em;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 20px;
-      }
-
-      .restart-btn:hover {
-        background: #ff8500;
+        aspect-ratio: 16 / 9;
       }
     </style>
   </head>
   <body>
-    <div id="container">
-      <canvas id="outside-scene"></canvas>
-      <!-- <img class="cockpit-screen" src="artwork/cockpit-window.png" />
-      <object class="cockpit-screen" type="image/svg+xml" data="artwork/cockpit-background-border.svg"></object> -->
+    <!-- Welcome Screen (shown first) -->
+    <div id="welcome-screen" class="welcome-screen">
+      <div class="welcome-container">
+        <h1>🌊 Submarine Navigation Game 🚢</h1>
+        <p class="subtitle">A Tangible Interfaces Learning Project</p>
 
-      <object
-        class="instruments"
-        id="oxygenGauge"
-        type="image/svg+xml"
-        data="artwork/instruments-oxygen.svg"
-        style="position: absolute; top: 0; left: 0; z-index: 20; width: 200px"
-      ></object>
-      <object
-        class="instruments"
-        id="instruments-microBitGauge"
-        type="image/svg+xml"
-        data="artwork/instruments-circuit-board.svg"
-        style="position: absolute; top: 20; right: 50; z-index: 20; width: 1%; pointer-events: auto"
-        title="This connects to the hardware controls to steer the submarine.  Read README for more details."
-      ></object>
-      <object
-        class="instruments"
-        id="instruments-restart"
-        type="image/svg+xml"
-        data="artwork/instruments-restart.svg"
-        style="position: absolute; top: 15; right: 170; z-index: 20; width: 30; pointer-events: auto; cursor: pointer"
-      ></object>
+        <div class="description">
+          <p>
+            Welcome to the Submarine Navigation Game! This interactive project teaches HTML, CSS, and hardware integration through building submarine control
+            instruments.
+          </p>
+        </div>
 
-      <!-- sub-data overlay div -->
-      <div id="sub-data-overlay" style="position: absolute; top: 10px; left: 0; width: 100%; z-index: 30; display: block; text-align: center">
-        <pre
-          id="sub-data-text"
-          style="
-            display: inline-block;
-            margin: 0 auto;
-            padding: 5px 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: #00ff00;
-            font-family: monospace;
-            font-size: 12px;
-            border-radius: 5px;
-            text-align: left;
-            max-width: 80%;
-          "
-        ></pre>
-      </div>
+        <div class="instructions">
+          <h3>How to Play:</h3>
+          <ul>
+            <li>🎮 Use keyboard controls or connect a gamepad</li>
+            <li>🎯 Navigate to the orange target sphere</li>
+            <li>⚠️ Avoid coral obstacles and stay within boundaries</li>
+            <li>💨 Manage your oxygen and battery levels</li>
+            <li>🔧 For students: Edit <code>instruments.html</code> to customize your dashboard!</li>
+          </ul>
+        </div>
 
-      <!-- Win Overlay -->
-      <div id="win-overlay" class="win-overlay">
-        <div class="win-container">
-          <div class="mission-complete">MISSION COMPLETE!</div>
-          <div class="stats">
-            <div>⏱️ Time: <span id="final-time">0:00</span></div>
-            <div>🫁 Oxygen Remaining: <span id="final-oxygen">0%</span></div>
-            <div>🔋 Battery Remaining: <span id="final-battery">0%</span></div>
-          </div>
-          <button class="restart-btn" onclick="restartGame()">Play Again</button>
+        <button class="start-button" onclick="startMission()">Start Mission</button>
+
+        <div class="github-link">
+          Project Repository:
+          <a href="https://github.com/yourusername/submarine-game" target="_blank"> GitHub Repository </a>
         </div>
       </div>
-
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
-
-      <script src="js/gamepad-config.js"></script>
-      <script src="js/gamepad-controller.js"></script>
-      <script src="js/game.js"></script>
-      <!-- core game logic, no need to edit if you are the student-->
-      <script src="js/controls.js"></script>
-      <!-- core game logic, no need to edit if you are the student-->
-      <script src="js/rendering.js"></script>
-      <!-- core game logic, no need to edit if you are the student-->
-      <script src="js/microbit-serial.js"></script>
-      <!-- core game logic, no need to edit if you are the student-->
-
-      <script src="js/instruments.js"></script>
     </div>
+
+    <!-- Game Container (hidden initially) -->
+    <div id="container" style="display: none">
+      <canvas id="outside-scene"></canvas>
+    </div>
+
+    <!-- Scripts loaded but not executed until game starts -->
+    <script src="js/three.min.js"></script>
+    <script src="js/simplex-noise.min.js"></script>
+
+    <script src="js/gamepad-config.js"></script>
+    <script src="js/gamepad-controller.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/controls.js"></script>
+    <script src="js/rendering.js"></script>
+    <script src="js/microbit-serial.js"></script>
+    <script src="js/instruments.js"></script>
+
+    <script>
+      // Make instrumentsWindow globally accessible so game.js can access it
+      window.instrumentsWindow = null;
+      let gameStarted = false;
+
+      function startMission() {
+        if (gameStarted) return;
+        gameStarted = true;
+
+        // Open instruments window without top bar
+        window.instrumentsWindow = window.open(
+          "instruments.html",
+          "Submarine Instruments",
+          "width=600,height=800,resizable=yes,scrollbars=no,toolbar=no,menubar=no,location=no,status=no"
+        );
+
+        if (!window.instrumentsWindow) {
+          alert("Please allow popups to view the instruments panel. Check your browser settings and try again.");
+          gameStarted = false;
+          return;
+        }
+
+        // Hide welcome screen
+        document.getElementById("welcome-screen").style.display = "none";
+
+        // Show game container
+        document.getElementById("container").style.display = "block";
+
+        // Wait for instruments window to fully load before starting game
+        if (window.instrumentsWindow) {
+          window.instrumentsWindow.addEventListener('load', function() {
+            console.log("Instruments window loaded, starting game...");
+
+            setTimeout(() => {
+              if (typeof initRenderer === "function") {
+                initRenderer();
+              }
+              // Also start the game loop from game.js
+              if (typeof startGame === "function") {
+                startGame();
+              }
+            }, 100);
+          });
+        }
+      }
+    </script>
   </body>
 </html>

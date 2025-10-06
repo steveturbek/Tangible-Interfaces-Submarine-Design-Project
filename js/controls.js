@@ -17,7 +17,7 @@ function setupKeyboardControls() {
   // Initialize gamepad controller if available
   if (typeof SubmarineGamepadController !== 'undefined') {
     gamepadController = new SubmarineGamepadController();
-    console.log("Gamepad controller initialized");
+    // Note: Actual gamepad connection will be logged when a gamepad is detected
   }
 
   // console.log("Press the TAB key to show/hide Sub data overlay.");
@@ -32,15 +32,6 @@ function handleKeyPress(event) {
 
   // Process the key press based on which key was pressed
   switch (event.key.toLowerCase()) {
-    // sub-data-overlay
-    case "tab":
-      if (document.getElementById("sub-data-overlay").style.display == "block") {
-        document.getElementById("sub-data-overlay").style.display = "none";
-      } else {
-        document.getElementById("sub-data-overlay").style.display = "block";
-      }
-      break;
-
     // Left thruster controls
     case "a":
       adjustPortThruster(controlConfig.thrusterIncrement);
