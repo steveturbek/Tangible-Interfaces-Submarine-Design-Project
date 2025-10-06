@@ -80,6 +80,9 @@ function initScene() {
   // Add coral reef elements
   createCoralReef();
 
+  // Add visible water surface boundary
+  createWaterSurfaceBoundary();
+
   // Add boundary walls with rock textures
   // createBoundaryWalls();
 
@@ -318,8 +321,12 @@ function createCoralReef() {
       attempts++;
     } while (attempts < maxAttempts && isTooCloseToExisting(position, minDistance));
 
+    // All coral structures extend above the water surface to make it obvious
+    const heightMultiplier = 1.2 + Math.random() * 0.3; // 120-150% height
+    const coralHeight = fullHeight * heightMultiplier;
+
     // Create a massive coral structure
-    const coralStructure = createMassiveCoralStructure(coralColors, fullHeight);
+    const coralStructure = createMassiveCoralStructure(coralColors, coralHeight);
 
     // Position the coral at seabed level
     coralStructure.position.set(position.x, gameState.constants.seabedDepth, position.z);
@@ -722,6 +729,50 @@ function createTarget() {
   targetSphere.add(beam);
 }
 
+// Create a visible water surface boundary - a semi-transparent plane
+function createWaterSurfaceBoundary() {
+  const surfaceGeometry = new THREE.PlaneGeometry(
+    gameState.constants.worldBoundaryVisible,
+    gameState.constants.worldBoundaryVisible,
+    50, // width segments for ripple effect
+    50  // height segments
+  );
+
+  // Create a grid material that's highly visible
+  const surfaceMaterial = new THREE.MeshBasicMaterial({
+    color: 0x00ffff, // Bright cyan
+    transparent: true,
+    opacity: 0.4,
+    side: THREE.DoubleSide,
+    wireframe: false,
+    fog: false, // Don't apply fog
+  });
+
+  // Add a second layer with grid lines for extra visibility
+  const gridMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffffff, // White grid lines
+    wireframe: true,
+    transparent: true,
+    opacity: 0.6,
+    fog: false,
+  });
+
+  const surfacePlane = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
+  const gridPlane = new THREE.Mesh(surfaceGeometry, gridMaterial);
+
+  // Rotate to be horizontal and position at water surface
+  surfacePlane.rotation.x = -Math.PI / 2;
+  gridPlane.rotation.x = -Math.PI / 2;
+
+  surfacePlane.position.y = gameState.constants.waterSurface;
+  gridPlane.position.y = gameState.constants.waterSurface + 0.1; // Slightly above to avoid z-fighting
+
+  scene.add(surfacePlane);
+  scene.add(gridPlane);
+
+  console.log(`Created water surface boundary at Y=${gameState.constants.waterSurface}`);
+}
+
 // Create underwater effects (caustics, particles, water surface) with improved water texture
 
 function createWaterEffects() {
@@ -729,18 +780,21 @@ function createWaterEffects() {
   const waterGeometry = new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, gameState.constants.worldBoundaryVisible, 32, 32);
 
   // Create better material for water with updated properties for lighter appearance from below
+  // Make it much more visible with brighter color and higher opacity
   const waterMaterial = new THREE.MeshPhysicalMaterial({
-    color: WATER_COLOR,
+    color: 0x00d4ff, // Bright cyan/turquoise - very visible
     transparent: true,
-    opacity: 0.6,
+    opacity: 0.85, // Much more opaque to be clearly visible
     roughness: 0.1,
     metalness: 0.0,
     clearcoat: 0.8,
     clearcoatRoughness: 0.1,
     side: THREE.DoubleSide,
     envMapIntensity: 2.0,
-    transmission: 0.5,
-    reflectivity: 0.3,
+    transmission: 0.3, // Reduced transmission for more solid appearance
+    reflectivity: 0.5, // Increased reflectivity
+    emissive: 0x0088aa, // Add slight glow to make it stand out
+    emissiveIntensity: 0.3,
   });
 
   // Load water texture and normal map

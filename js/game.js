@@ -61,7 +61,7 @@ const gameState_original = {
     worldBoundary: 1000,
     worldBoundaryVisible: 4000, //defines how far you can see. 4x worldBoundary seems to look good
     seabedDepth: 0, // Depth of the seabed from rendering.js
-    waterSurface: 100, // Water surface level from rendering.js
+    waterSurface: 200, // Water surface level from rendering.js (doubled from 100 to 200)
   },
 
   // Game time tracking
