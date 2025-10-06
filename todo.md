@@ -1,6 +1,4 @@
 # TODO for project
 
-- Pop Out Dashboard to separate page
-- make win check vertical also
-- make 3d walls? ceiling?
-- grab target? some other challenge?
+- make win check target use vertical height -or grab target / some other challenge?
+- set up instrument svg templates for student redesigns

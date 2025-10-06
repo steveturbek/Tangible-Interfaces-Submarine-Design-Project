@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Submarine Navigation Game</title>
+    <title>Tangible Interfaces Submarine Navigation Game</title>
     <style>
       /* Welcome screen styles */
       .welcome-screen {
@@ -134,36 +134,26 @@
     <!-- Welcome Screen (shown first) -->
     <div id="welcome-screen" class="welcome-screen">
       <div class="welcome-container">
-        <h1>🌊 Submarine Navigation Game 🚢</h1>
-        <p class="subtitle">A Tangible Interfaces Learning Project</p>
+        <h1>Tangible Interfaces Submarine Simulation</h1>
 
         <div class="description">
           <p>
-            Welcome to the Submarine Navigation Game! This interactive project teaches HTML, CSS, and hardware integration through building submarine control
-            instruments.
+            The Tangible Interfaces Submarine Simulation project teaches HTML, CSS, and hardware integration through building submarine control instruments.
           </p>
-        </div>
 
-        <div class="instructions">
           <h3>How to Play:</h3>
           <ul>
-            <li>🎮 Use keyboard controls or connect a gamepad</li>
-            <li>🎯 Navigate to the orange target sphere</li>
-            <li>⚠️ Avoid coral obstacles and stay within boundaries</li>
-            <li>💨 Manage your oxygen and battery levels</li>
-            <li>🔧 For students: Edit <code>instruments.html</code> to customize your dashboard!</li>
+            <li>Goal: Find and Navigate to the orange sphere</li>
+            <li>Avoid coral obstacles and stay within boundaries</li>
+            <li>Manage your oxygen and battery levels</li>
+            <li>For students: Edit <code>instruments.html</code> to customize your dashboard.</li>
+            <li><a href="https://github.com/yourusername/submarine-game" target="_blank"> GitHub Project Repository </a></li>
           </ul>
         </div>
 
         <button class="start-button" onclick="startMission()">Start Mission</button>
-
-        <div class="github-link">
-          Project Repository:
-          <a href="https://github.com/yourusername/submarine-game" target="_blank"> GitHub Repository </a>
-        </div>
       </div>
     </div>
-
     <!-- Game Container (hidden initially) -->
     <div id="container" style="display: none">
       <canvas id="outside-scene"></canvas>
@@ -211,7 +201,7 @@
 
         // Wait for instruments window to fully load before starting game
         if (window.instrumentsWindow) {
-          window.instrumentsWindow.addEventListener('load', function() {
+          window.instrumentsWindow.addEventListener("load", function () {
             console.log("Instruments window loaded, starting game...");
 
             setTimeout(() => {
