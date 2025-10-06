@@ -479,14 +479,14 @@ function updateUI() {
     `\nDepth: ${gameState.status.depth.toFixed(2)}m | ` +
     `\nPitch: ${Math.round(gameState.rotation.x)}°` +
     `\n` +
-    `\nO₂: ${gameState.status.oxygenLevel}% | ` +
-    `\nBatt: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
+    `\nOxygen: ${gameState.status.oxygenLevel}% | ` +
+    `\nBattery: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
     `\nTarget: ${gameState.navigation.distanceToTarget.toFixed(2)}m` +
     `\n` +
     `\nLeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
     `\nRightThrust: ${gameState.controls.ThrottleRight}% | ` +
-    `\nRudder ←→: ${gameState.controls.YawRudderAngle.toFixed(1)}% | ` +
-    `\nElevator ↑↓: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% | ` +
+    `\nRudder: ${gameState.controls.YawRudderAngle.toFixed(1)}% | ` +
+    `\nElevator: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% | ` +
     `\nVerticalThruster: ${gameState.controls.VerticalThruster}%`;
 
   // // Add boundary warning if needed

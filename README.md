@@ -4,7 +4,7 @@
 
 Welcome to the Submarine Design Project for [Steve Turbek's "Tangible Interfaces" Industrial Design class](https://turbek.com/articles/tangible-interfaces-class.html) at Pratt Institute! This collaborative challenge sits at the intersection of industrial design, user experience, and physical computing. Throughout this project, you'll work in teams to create an immersive submarine piloting experience that combines digital interfaces with physical controls.
 
-![Illustration of a Submarine Cockpit](assets/submarine-illus.png "Illustration of a Submarine Cockpit")
+![Illustration of a Submarine Cockpit](artwork/submarine-illus.png "Illustration of a Submarine Cockpit")
 
 ## The Design Challenge
 
@@ -223,30 +223,84 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 1. Connect your Micro:bit v2 via USB
 1. Open your GitHub Pages game URL in Chrome
 
+### Local Development Setup
+
+**IMPORTANT:** When developing locally, you **must** use a local web server due to browser security restrictions. Opening HTML files directly (via `file://`) will prevent the instruments from working.
+
+**Option 1: Python (Recommended for macOS)**
+
+```bash
+# Navigate to the project directory
+cd /path/to/Tangible-Interfaces-Submarine-Design-Project
+
+# Start the server (Python 3 comes pre-installed on macOS)
+python3 -m http.server 8080
+
+# Open in Chrome
+# http://localhost:8080
+```
+
+**Option 2: VS Code Live Server Extension**
+
+1. Install the "Live Server" extension in VS Code
+2. Right-click `index.html` and select "Open with Live Server"
+
+**Option 3: Node.js**
+
+```bash
+# Install http-server globally (if you have Node.js)
+npm install -g http-server
+
+# Run the server
+http-server -p 8080
+```
+
 ### Development Workflow
 
 (in your fork)
 
-1. Modify the SVG elements in the HTML/CSS for cockpit design
+1. **Start local server** (see above)
+1. Modify the SVG instrument files in `instruments/` folder
 1. Test your implementation using keyboard controls
 1. Integrate Micro:bit controls using the provided examples
+1. Push changes to GitHub to update your GitHub Pages site
 
 ## GitHub Project Structure
 
 The repository is organized as follows:
 
 ```
+├── instruments/        # SVG instruments with embedded scripts **Design Me, Program Me!**
+│   ├── instruments-oxygen.svg     # Oxygen gauge **Design Me, Program Me!**
+│   └── instruments-battery.svg    # Battery gauge **Design Me, Program Me!**
 ├── index.html          # Game page **Do not edit**
 ├── js/                 # JavaScript files **Do not edit**
 │   ├── game.js                 # Core game mechanics
 │   ├── controls.js             # Input handling
 │   ├── rendering.js            # 3D scene rendering
-│   ├── hardware-controls.js    # to interpret the data coming from the microbit to send to the sub controls
+│   ├── hardware-controls.js    # to interpret the sub controls from the microbit
 │   ├── instruments.js          # Cockpit instrument displays
 │   └── microbit-serial.js      # Receive and interpret messages from microbit board
-├── artwork/            # Images, CSS, and other assets to customize the game **Edit only these files**
-├── assets/             # Images, CSS, and other assets to customize the game **Do not edit only these files**
+├── artwork/            # Other visual assets **Do not edit**
 └── examples/           # Example code
+```
+
+### Customizing Instruments
+
+Each instrument SVG file (in `instruments/`) contains:
+
+- Visual elements (paths, lines, text)
+- Embedded `<script>` tag with `updateInstrument(percentage)` function
+- All display logic self-contained in one file
+
+**Students can:**
+
+- Edit a single SVG file to change how an instrument looks and behaves
+- Use AI to modify the instrument without navigating multiple files
+- See immediate results when testing with the local server
+
+**Example:** To change how the oxygen gauge displays, edit `instruments/instruments-oxygen.svg`
+
 ```
 
 ### Submarine Control Guide - Left Hand Keyboard Layout
@@ -282,3 +336,4 @@ Note the game is intended to be played with custom hardware controls, but can be
 2. **Watch your depth**
 3. **Turn gradually**
 4. **Monitor your systems**:
+```

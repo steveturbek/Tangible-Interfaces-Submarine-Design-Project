@@ -10,47 +10,51 @@ gameState.navigation.compassHeading
 gameState.navigation.currentSpeed
  */
 
-function updateInstruments_Oxygen() {
-  const oxygenLevel = gameState.status.oxygenLevel;
-  // Create and append the oxygen gauge SVG
-  // Get reference to the oxygen SVG object
-
+// ========================================
+// HELPER FUNCTION - Gets SVG content document
+// ========================================
+function getSVGContentDocument(svgElementId) {
   // Check if instruments are in a separate window
   const doc = window.instrumentsWindow && !window.instrumentsWindow.closed
     ? window.instrumentsWindow.document
     : document;
 
-  const oxygenGaugeSVG = doc.getElementById("oxygenGauge");
-  if (!oxygenGaugeSVG || !oxygenGaugeSVG.contentDocument) return;
+  const svgObject = doc.getElementById(svgElementId);
+  if (!svgObject || !svgObject.contentDocument) return null;
 
-  const oxygenGaugeLine = oxygenGaugeSVG.contentDocument.getElementById("line");
+  return svgObject.contentDocument;
+}
 
-  // Make sure we have a reference to the line element
-  if (!oxygenGaugeLine) return;
+// ========================================
+// SIMPLIFIED UPDATE FUNCTIONS
+// Each function gets a value and calls the SVG's internal updateInstrument() function
+// ========================================
 
-  // Normalize oxygen level between 0 and 100
-  const normalizedLevel = Math.max(0, Math.min(100, oxygenLevel));
+function updateInstruments_Oxygen() {
+  const oxygenLevel = gameState.status.oxygenLevel;
 
-  //THIS part animates the gauge
+  // Get the SVG's content document
+  const svgDoc = getSVGContentDocument("oxygenGauge");
+  if (!svgDoc) return;
 
-  // Calculate rotation angle:
-  // 0% oxygen = -180 degrees (pointing left)
-  // 50% oxygen = -90 degrees (pointing up)
-  // 100% oxygen = 0 degrees (pointing right)
-  const angle = -180 + normalizedLevel * 1.8;
-
-  // Apply the rotation transform to the line
-  // The transform origin is at the left end of the line (where x1 value is)
-  const x1 = parseFloat(oxygenGaugeLine.getAttribute("x1"));
-  const y1 = parseFloat(oxygenGaugeLine.getAttribute("y1"));
-
-  // Set the transform attribute to rotate around the start point of the line
-  oxygenGaugeLine.setAttribute("transform", `rotate(${angle}, ${x1}, ${y1})`);
+  // Call the SVG's internal update function
+  if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
+    svgDoc.defaultView.updateInstrument(oxygenLevel);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_Battery() {
-  const BatteryLevel = gameState.status.batteryLevel;
+  const batteryLevel = gameState.status.batteryLevel;
+
+  // Get the SVG's content document
+  const svgDoc = getSVGContentDocument("batteryGauge");
+  if (!svgDoc) return;
+
+  // Call the SVG's internal update function
+  if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
+    svgDoc.defaultView.updateInstrument(batteryLevel);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
