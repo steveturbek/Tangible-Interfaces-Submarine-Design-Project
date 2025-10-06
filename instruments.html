@@ -28,7 +28,7 @@
       /* Individual instrument panels */
       .instrument-panel {
         background: rgba(255, 255, 255, 0.1);
-        border: 2px solid #00ffff;
+        /* border: 2px solid #00ffff; */
         border-radius: 10px;
         padding: 15px;
         display: flex;
@@ -93,7 +93,7 @@
 
       /* Restart button styling */
       .restart-btn {
-        background: #ff6b35;
+        background: #000;
         color: white;
         border: none;
         padding: 15px 30px;
@@ -136,7 +136,7 @@
       /* Panel titles */
       .panel-title {
         font-size: 0.9em;
-        color: #00ffff;
+        /* color: #00ffff; */
         margin-bottom: 10px;
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -147,14 +147,13 @@
     <div class="instruments-grid">
       <!-- Oxygen Gauge Panel -->
       <div id="oxygen-panel" class="instrument-panel">
-        <div class="panel-title">Oxygen Level</div>
+        <!-- <div class="panel-title">Oxygen Level</div> -->
         <object class="instrument-object" id="oxygenGauge" type="image/svg+xml" data="artwork/instruments-oxygen.svg"></object>
       </div>
-
-      <!-- Data Display Panel -->
-      <div id="data-panel" class="instrument-panel">
-        <div class="panel-title">Submarine Data</div>
-        <div id="sub-data-text">Initializing...</div>
+      <!-- Battery Gauge Panel -->
+      <div id="battery-panel" class="instrument-panel">
+        <!-- <div class="panel-title">Battery Level</div> -->
+        <object class="instrument-object" id="batteryGauge" type="image/svg+xml" data="artwork/instruments-battery.svg"></object>
       </div>
 
       <!-- MicroBit Connection Panel -->
@@ -173,6 +172,12 @@
       <div id="restart-panel" class="instrument-panel">
         <div class="panel-title">Game Controls</div>
         <button class="restart-btn" onclick="restartGame()">Restart Mission</button>
+      </div>
+
+      <!-- Data Display Panel -->
+      <div id="data-panel" class="instrument-panel">
+        <div class="panel-title">Submarine Data</div>
+        <div id="sub-data-text"></div>
       </div>
 
       <!-- Win Overlay Panel -->
