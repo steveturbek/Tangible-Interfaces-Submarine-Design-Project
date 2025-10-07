@@ -34,12 +34,12 @@ const gameState_original = {
     batteryLevel: 100, // 0-100%
     // hullIntegrity: 100, // 0-100% (optional: damage model)
     depth: 0, // 0 to maxDepth (positive number for UI clarity)
-    boundaryWarning: false, // Flag to indicate proximity to boundaries
+    boundaryWarning: true, // Flag to indicate proximity to boundaries
   },
 
   // Navigation & Environment
   navigation: {
-    targetPosition: { x: 0, y: 0, z: -800 }, // target location
+    targetPosition: { x: 0, y: 0, z: -1200 }, // target location
     distanceToTarget: 0, // 0-100% (scaled)
     headingToTarget: 0, // 0-359 degrees
     // proximityWarning: 0, // 0-100% (distance to nearest obstacle)
@@ -58,10 +58,10 @@ const gameState_original = {
     dragCoefficient: 0.05, // Water resistance factor
     mass: 1000, // Mass affects momentum
     maxDistance: 100000, // Example value, adjust based on your world size
-    worldBoundary: 1000,
+    worldBoundary: 2000,
     worldBoundaryVisible: 4000, //defines how far you can see. 4x worldBoundary seems to look good
     seabedDepth: 0, // Depth of the seabed from rendering.js
-    waterSurface: 200, // Water surface level from rendering.js (doubled from 100 to 200)
+    waterSurface: 400, // Water surface level from rendering.js (doubled from 100 to 200)
   },
 
   // Game time tracking
