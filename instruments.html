@@ -3,95 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <title>Submarine Instruments</title>
-    <style>
-      /* ========================================
-         STUDENT EDIT ZONE - Customize this!
-         ======================================== */
-
-      body {
-        margin: 0;
-        padding: 0px;
-        font-family: "Arial", sans-serif;
-        background-color: #1a1a2e;
-        color: white;
-      }
-
-      /* Grid layout for instruments - easy to customize! */
-      .instruments-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr); /* Four columns */
-        grid-template-rows: 0.25fr, repeat(3, 1fr); /* Four rows */
-        gap: 5px; /* Space between grid items */
-        height: 100vh;
-        padding: 0px;
-      }
-
-      /* All grid items get centered with background */
-      .instruments-grid > * {
-        background: rgba(255, 255, 255, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      /* All SVG instruments */
-      object[type="image/svg+xml"] {
-        width: 100%;
-        height: 100%;
-        pointer-events: auto;
-      }
-
-      /* Data display - right side, spans 2 rows */
-      #sub-data-text {
-        /* grid-column: 4;
-        grid-row: 1 / 3; */
-        color: #00ff00;
-        font-size: 12px;
-        padding: 10px;
-        text-align: left;
-        overflow-y: auto;
-      }
-
-      /*  you can specify which grid spot
-      #instruments-microBitGauge {
-        grid-column: 4;
-        grid-row: 3;
-      }
-        */
-
-      /* Restart button - right side, row 4 */
-      #restart-btn {
-        background: #000;
-        color: white;
-        border: none;
-        padding: 15px 30px;
-        font-size: 1.1em;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-
-      #restart-btn:hover {
-        background: #ff8500;
-        transform: scale(1.05);
-      }
-    </style>
   </head>
   <body>
+    <div style="width: 95%; height: 40px; text-align: middle; padding: 10px; display: flex; justify-content: space-between">
+      <button id="restart-btn" onclick="restartGame()" style="">Restart Mission</button>
+      <object
+        id="instruments-microBitGauge"
+        type="image/svg+xml"
+        data="instruments/instruments-circuit-board.svg"
+        title="Connect hardware controls to steer the submarine"
+        style="width: 50px"
+      ></object>
+    </div>
     <div class="instruments-grid">
-      <div style="grid-column: span 4">
-        <div style="width: 100%; height: 40px; text-align: middle; padding: 10px; display: flex; justify-content: space-between">
-          <button id="restart-btn" onclick="restartGame()" style="">Restart Mission</button>
-          <object
-            id="instruments-microBitGauge"
-            type="image/svg+xml"
-            data="instruments/instruments-circuit-board.svg"
-            title="Connect hardware controls to steer the submarine"
-            style="width: 50px"
-          ></object>
-        </div>
-      </div>
-
       <object id="oxygenGauge" type="image/svg+xml" data="instruments/instruments-oxygen.svg"></object>
       <object id="batteryGauge" type="image/svg+xml" data="instruments/instruments-battery.svg"></object>
       <object id="compassGauge" type="image/svg+xml" data="instruments/instruments-compass.svg" style="grid-column: span 2; /* Takes up 2 columns */"></object>
@@ -113,4 +37,78 @@
 
     <script src="js/instruments-window.js"></script>
   </body>
+
+  <style>
+    /* ========================================
+         STUDENT EDIT ZONE - Customize this!
+         ======================================== */
+
+    body {
+      margin: 0;
+      padding: 0px;
+      font-family: "Arial", sans-serif;
+      background-color: #1a1a2e;
+      color: white;
+    }
+
+    /* Grid layout for instruments - easy to customize! */
+    .instruments-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* Four columns */
+      grid-template-rows: auto, 1fr, 1fr, 1fr; /* Four rows */
+      gap: 5px; /* Space between grid items */
+      height: 91vh;
+      padding: 0px;
+    }
+
+    /* All grid items get centered with background */
+    .instruments-grid > * {
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* All SVG instruments */
+    object[type="image/svg+xml"] {
+      width: 100%;
+      height: 100%;
+      pointer-events: auto;
+    }
+
+    /* Data display - right side, spans 2 rows */
+    #sub-data-text {
+      /* grid-column: 4;
+        grid-row: 1 / 3; */
+      color: #00ff00;
+      font-size: 12px;
+      padding: 10px;
+      text-align: left;
+      overflow-y: auto;
+    }
+
+    /*  you can specify which grid spot
+      #instruments-microBitGauge {
+        grid-column: 4;
+        grid-row: 3;
+      }
+        */
+
+    /* Restart button - right side, row 4 */
+    #restart-btn {
+      background: #000;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1em;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #restart-btn:hover {
+      background: #ff8500;
+      transform: scale(1.05);
+    }
+  </style>
 </html>
