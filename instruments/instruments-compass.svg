@@ -21,11 +21,11 @@
 
   <!-- Compass circle -->
   <circle id="circle" class="compass-circle" cx="256" cy="128" r="80"/>
-
+  <polygon class="compass-needle" points="256,60 250,120 262,120"/>
   <!-- Rotating group containing needle and N marker -->
   <g id="compass-rotating" transform="rotate(0, 256, 128)">
     <!-- North needle (pointing up when heading is 0) -->
-    <polygon class="compass-needle" points="256,60 250,120 262,120"/>
+    
 
     <!-- N letter at top -->
     <text class="compass-n" x="255" y="55" text-anchor="middle">N</text>
@@ -62,7 +62,7 @@
 
       // Rotate the compass so N points north
       // Negative rotation because we want N to point in the opposite direction of travel
-      compassRotating.setAttribute('transform', `rotate(${-normalizedHeading}, 256, 128)`);
+      compassRotating.setAttribute('transform', `rotate(${normalizedHeading}, 256, 128)`);
     };
 
     //console.log('Compass gauge script loaded');
