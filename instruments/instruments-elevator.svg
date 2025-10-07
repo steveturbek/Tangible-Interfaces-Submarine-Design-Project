@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 512 256">
+  <defs>
+    <style>
+      .elevator-track {
+        fill: none;
+        stroke-width: 10px;
+        stroke: #666;
+        stroke-linecap: round;
+      }
+      .elevator-indicator {
+        fill: none;
+        stroke-width: 1px;
+        stroke: #fff;
+      }
+    </style>
+  </defs>
+
+  <line id="track" class="elevator-track" x1="50" y1="128" x2="462" y2="128"/>
+  <line id="indicator" class="elevator-indicator" x1="256" y1="100" x2="256" y2="156"/>
+
+  <text x="10" y="40" style="font-family: Arial; font-size: 50px; font-weight: bold; fill: white;">Elevator</text>
+  <text x="20" y="180" style="font-family: Arial; font-size: 20px; fill: white;">-100%</text>
+  <text x="230" y="180" style="font-family: Arial; font-size: 20px; fill: white;">0%</text>
+  <text x="410" y="180" style="font-family: Arial; font-size: 20px; fill: white;">+100%</text>
+
+  <script type="text/javascript">
+    window.updateInstrument = function(percentage) {
+      const indicator = document.getElementById('indicator');
+      if (!indicator) return;
+
+      const normalizedElevator = Math.max(-100, Math.min(100, percentage));
+      const xPosition = 256 + (normalizedElevator / 100) * 206;
+
+      indicator.setAttribute('x1', xPosition);
+      indicator.setAttribute('x2', xPosition);
+    };
+  </script>
+</svg>

@@ -60,21 +60,123 @@ function updateInstruments_Battery() {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_depth() {
   const depth = gameState.status.depth;
+
+  // Get the SVG's content document
+  const svgDoc = getSVGContentDocument("depthGauge");
+  if (!svgDoc) return;
+
+  // Call the SVG's internal update function
+  if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
+    svgDoc.defaultView.updateInstrument(depth);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_distanceToTarget() {
   const distanceToTarget = gameState.navigation.distanceToTarget;
+
+  const svgDoc = getSVGContentDocument("targetGauge");
+  if (!svgDoc) return;
+
+  if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
+    svgDoc.defaultView.updateInstrument(distanceToTarget);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_compassHeading() {
   const compassHeading = gameState.navigation.compassHeading;
+
+  const svgDoc = getSVGContentDocument("compassGauge");
+  if (!svgDoc) return;
+
+  if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
+    svgDoc.defaultView.updateInstrument(compassHeading);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_currentSpeed() {
   const currentSpeed = gameState.navigation.currentSpeed;
+
+  const svgDoc = getSVGContentDocument("speedGauge");
+  if (!svgDoc) return;
+
+  if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
+    svgDoc.defaultView.updateInstrument(currentSpeed);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+function updateInstruments_pitch() {
+  const pitch = gameState.rotation.x;
+
+  const svgDoc = getSVGContentDocument("pitchGauge");
+  if (!svgDoc) return;
+
+  if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
+    svgDoc.defaultView.updateInstrument(pitch);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+function updateInstruments_leftThrust() {
+  const leftThrust = gameState.controls.ThrottleLeft;
+
+  const svgDoc = getSVGContentDocument("leftThrustGauge");
+  if (!svgDoc) return;
+
+  if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
+    svgDoc.defaultView.updateInstrument(leftThrust);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+function updateInstruments_rightThrust() {
+  const rightThrust = gameState.controls.ThrottleRight;
+
+  const svgDoc = getSVGContentDocument("rightThrustGauge");
+  if (!svgDoc) return;
+
+  if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
+    svgDoc.defaultView.updateInstrument(rightThrust);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+function updateInstruments_rudder() {
+  const rudder = gameState.controls.YawRudderAngle;
+
+  const svgDoc = getSVGContentDocument("rudderGauge");
+  if (!svgDoc) return;
+
+  if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
+    svgDoc.defaultView.updateInstrument(rudder);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+function updateInstruments_elevator() {
+  const elevator = gameState.controls.PitchElevatorAngle;
+
+  const svgDoc = getSVGContentDocument("elevatorGauge");
+  if (!svgDoc) return;
+
+  if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
+    svgDoc.defaultView.updateInstrument(elevator);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+function updateInstruments_verticalThruster() {
+  const verticalThruster = gameState.controls.VerticalThruster;
+
+  const svgDoc = getSVGContentDocument("verticalThrusterGauge");
+  if (!svgDoc) return;
+
+  if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
+    svgDoc.defaultView.updateInstrument(verticalThruster);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,7 +240,12 @@ function updateInstruments() {
     updateInstruments_distanceToTarget();
     updateInstruments_compassHeading();
     updateInstruments_currentSpeed();
-    // Add more instrument updates here as needed
+    updateInstruments_pitch();
+    updateInstruments_leftThrust();
+    updateInstruments_rightThrust();
+    updateInstruments_rudder();
+    updateInstruments_elevator();
+    updateInstruments_verticalThruster();
   }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////

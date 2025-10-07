@@ -87,7 +87,7 @@ Object.keys(gameState_original).forEach((key) => {
 
 // Function to start the game
 function startGame() {
-  console.log("startGame called, isGameRunning =", isGameRunning);
+  // console.log("startGame called, isGameRunning =", isGameRunning);
   if (!isGameRunning) {
     console.log("Starting game");
     isGameRunning = true;
@@ -474,19 +474,19 @@ function updateUI() {
     //    `Welcome to the Tangible Interfaces Class Submarine Design Project Simulator. ` +
     //   `<a href="https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main?tab=readme-ov-file#tangible-interfaces-submarine-design-project" target="new" style="color:white">Read Me for details</a>` +
     //`Position(${gameState.position.x.toFixed(2)},${gameState.position.y.toFixed(2)},${gameState.position.z.toFixed(2)}) | ` +
-    `\nCompassHeading: ${Math.round(gameState.navigation.compassHeading)}° | ` +
-    `\nSpeed: ${Math.round(gameState.navigation.currentSpeed)}% | ` +
-    `\nDepth: ${gameState.status.depth.toFixed(2)}m | ` +
+    `\nCompass: ${Math.round(gameState.navigation.compassHeading)}° ` +
+    `\nSpeed: ${Math.round(gameState.navigation.currentSpeed)}% ` +
+    `\nDepth: ${gameState.status.depth.toFixed(2)}m ` +
     `\nPitch: ${Math.round(gameState.rotation.x)}°` +
     `\n` +
-    `\nOxygen: ${gameState.status.oxygenLevel}% | ` +
-    `\nBattery: ${gameState.status.batteryLevel.toFixed(1)}% | ` +
+    `\nOxygen: ${gameState.status.oxygenLevel}% ` +
+    `\nBattery: ${gameState.status.batteryLevel.toFixed(1)}% ` +
     `\nTarget: ${gameState.navigation.distanceToTarget.toFixed(2)}m` +
     `\n` +
-    `\nLeftThrust: ${gameState.controls.ThrottleLeft}% | ` +
-    `\nRightThrust: ${gameState.controls.ThrottleRight}% | ` +
-    `\nRudder: ${gameState.controls.YawRudderAngle.toFixed(1)}% | ` +
-    `\nElevator: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% | ` +
+    `\nLeftThrust: ${gameState.controls.ThrottleLeft}% ` +
+    `\nRightThrust: ${gameState.controls.ThrottleRight}% ` +
+    `\nRudder: ${gameState.controls.YawRudderAngle.toFixed(1)}% ` +
+    `\nElevator: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% ` +
     `\nVerticalThruster: ${gameState.controls.VerticalThruster}%`;
 
   // // Add boundary warning if needed
@@ -580,18 +580,16 @@ function showWinScreen() {
   const seconds = Math.floor(gameState.time.elapsed % 60);
   const timeString = minutes + ":" + String(seconds).padStart(2, "0");
 
-  // Update the stats in whichever window they're in
-  const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
-
-  const finalTime = doc.getElementById("final-time");
-  const finalOxygen = doc.getElementById("final-oxygen");
-  const finalBattery = doc.getElementById("final-battery");
-  const winOverlay = doc.getElementById("win-overlay");
+  // Show win overlay in the main window (where the canvas is)
+  const finalTime = document.getElementById("final-time");
+  const finalOxygen = document.getElementById("final-oxygen");
+  const finalBattery = document.getElementById("final-battery");
+  const winOverlay = document.getElementById("win-overlay");
 
   if (finalTime) finalTime.textContent = timeString;
   if (finalOxygen) finalOxygen.textContent = Math.round(gameState.status.oxygenLevel) + "%";
   if (finalBattery) finalBattery.textContent = Math.round(gameState.status.batteryLevel) + "%";
 
-  // Show the win overlay
+  // Show the win overlay in main window
   if (winOverlay) winOverlay.style.display = "flex";
 }

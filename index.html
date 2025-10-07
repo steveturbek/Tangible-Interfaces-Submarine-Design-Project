@@ -103,6 +103,66 @@
         line-height: 1.8;
       }
 
+      /* Win overlay styles */
+      #win-overlay {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .win-container {
+        max-width: 800px;
+        padding: 40px;
+        text-align: center;
+        background: rgba(0, 50, 100, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        color: white;
+      }
+
+      .mission-complete {
+        color: #00ff00;
+        font-size: 3em;
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .stats {
+        font-size: 1.5em;
+        margin: 30px 0;
+        line-height: 2;
+      }
+
+      .stats div {
+        margin: 10px 0;
+      }
+
+      .play-again-button {
+        background: #ff6b35;
+        color: white;
+        border: none;
+        padding: 20px 60px;
+        font-size: 1.5em;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        transition: all 0.3s ease;
+        margin-top: 20px;
+      }
+
+      .play-again-button:hover {
+        background: #ff8500;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+      }
+
       /* Game view styles */
       body {
         padding: 0;
@@ -159,6 +219,20 @@
         <button class="start-button" onclick="startMission()">Start Mission</button>
       </div>
     </div>
+
+    <!-- Win Overlay (shown when mission complete) -->
+    <div id="win-overlay">
+      <div class="win-container">
+        <div class="mission-complete">🎉 MISSION COMPLETE! 🎉</div>
+        <div class="stats">
+          <div>⏱️ Time: <span id="final-time">0:00</span></div>
+          <div>🫁 Oxygen Remaining: <span id="final-oxygen">0%</span></div>
+          <div>🔋 Battery Remaining: <span id="final-battery">0%</span></div>
+        </div>
+        <button class="play-again-button" onclick="restartGame()">Play Again</button>
+      </div>
+    </div>
+
     <!-- Game Container (visible under welcome screen) -->
     <div id="container">
       <canvas id="outside-scene"></canvas>
@@ -183,18 +257,18 @@
 
       // Initialize renderer on page load to show scene under welcome screen
       window.addEventListener("load", function () {
-        console.log("Page loaded, initializing renderer...");
+        // console.log("Page loaded, initializing renderer...");
 
         const canvas = document.getElementById("outside-scene");
         const container = document.getElementById("container");
-        console.log("Container dimensions:", container.clientWidth, "x", container.clientHeight);
-        console.log("Canvas dimensions:", canvas.width, "x", canvas.height);
+        // console.log("Container dimensions:", container.clientWidth, "x", container.clientHeight);
+        // console.log("Canvas dimensions:", canvas.width, "x", canvas.height);
 
         if (typeof initRenderer === "function") {
           try {
             initRenderer();
-            console.log("Renderer initialized successfully");
-            console.log("Canvas dimensions after init:", canvas.width, "x", canvas.height);
+            // console.log("Renderer initialized successfully");
+            // console.log("Canvas dimensions after init:", canvas.width, "x", canvas.height);
 
             // Start a simple animation loop to render the scene
             function previewLoop() {
@@ -208,7 +282,7 @@
               }
             }
             previewLoop();
-            console.log("Preview loop started");
+            // console.log("Preview loop started");
           } catch (error) {
             console.error("Error initializing renderer:", error);
           }
@@ -240,7 +314,7 @@
         // Wait for instruments window to fully load before starting game
         if (window.instrumentsWindow) {
           window.instrumentsWindow.addEventListener("load", function () {
-            console.log("Instruments window loaded, starting game...");
+            // console.log("Instruments window loaded, starting game...");
 
             setTimeout(() => {
               // Start the game loop from game.js (renderer already initialized)

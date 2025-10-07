@@ -54,6 +54,6 @@
       line.setAttribute('transform', `rotate(${angle}, ${x1}, ${y1})`);
     };
 
-    console.log('Oxygen gauge script loaded');
+    //console.log('Oxygen gauge script loaded');
   </script>
 </svg>

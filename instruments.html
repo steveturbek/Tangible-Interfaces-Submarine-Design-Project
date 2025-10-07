@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Submarine Instruments</title>
     <style>
       /* ========================================
@@ -10,7 +10,7 @@
 
       body {
         margin: 0;
-        padding: 10px;
+        padding: 0px;
         font-family: "Arial", sans-serif;
         background-color: #1a1a2e;
         color: white;
@@ -19,78 +19,48 @@
       /* Grid layout for instruments - easy to customize! */
       .instruments-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Two columns */
-        grid-template-rows: auto auto auto auto; /* Four rows */
-        gap: 15px; /* Space between grid items */
+        grid-template-columns: repeat(4, 1fr); /* Four columns */
+        grid-template-rows: 0.25fr, repeat(3, 1fr); /* Four rows */
+        gap: 5px; /* Space between grid items */
         height: 100vh;
+        padding: 0px;
       }
 
-      /* Individual instrument panels */
-      .instrument-panel {
+      /* All grid items get centered with background */
+      .instruments-grid > * {
         background: rgba(255, 255, 255, 0.1);
-        /* border: 2px solid #00ffff; */
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
       }
 
-      /* Oxygen gauge - top left */
-      #oxygen-panel {
-        grid-column: 1;
-        grid-row: 1;
-      }
-
-      /* Data display - top right */
-      #data-panel {
-        grid-column: 2;
-        grid-row: 1 / 3; /* Spans 2 rows */
-        overflow-y: auto;
-      }
-
-      /* MicroBit connection - middle left */
-      #microbit-panel {
-        grid-column: 1;
-        grid-row: 2;
-      }
-
-      /* Restart button - bottom left */
-      #restart-panel {
-        grid-column: 1;
-        grid-row: 3;
-      }
-
-      /* Win overlay - spans bottom */
-      #win-panel {
-        grid-column: 1 / 3; /* Spans both columns */
-        grid-row: 4;
-        min-height: 200px;
-      }
-
-      /* Instrument object styling */
-      .instrument-object {
+      /* All SVG instruments */
+      object[type="image/svg+xml"] {
         width: 100%;
-        max-width: 200px;
-        height: auto;
+        height: 100%;
         pointer-events: auto;
       }
 
-      /* Data display styling */
+      /* Data display - right side, spans 2 rows */
       #sub-data-text {
-        /* background-color: rgba(0, 0, 0, 0.7); */
+        /* grid-column: 4;
+        grid-row: 1 / 3; */
         color: #00ff00;
-        font-family: monospace;
         font-size: 12px;
         padding: 10px;
-        border-radius: 5px;
-        white-space: pre;
         text-align: left;
-        width: 100%;
-        box-sizing: border-box;
+        overflow-y: auto;
       }
 
-      /* Restart button styling */
-      .restart-btn {
+      /*  you can specify which grid spot
+      #instruments-microBitGauge {
+        grid-column: 4;
+        grid-row: 3;
+      }
+        */
+
+      /* Restart button - right side, row 4 */
+      #restart-btn {
         background: #000;
         color: white;
         border: none;
@@ -101,95 +71,44 @@
         transition: all 0.3s ease;
       }
 
-      .restart-btn:hover {
+      #restart-btn:hover {
         background: #ff8500;
         transform: scale(1.05);
-      }
-
-      /* Win overlay styling */
-      .win-overlay {
-        display: none; /* Hidden by default */
-        background: rgba(0, 50, 100, 0.95);
-        border-radius: 10px;
-        padding: 20px;
-        text-align: center;
-      }
-
-      .mission-complete {
-        color: #00ff00;
-        font-size: 2em;
-        font-weight: bold;
-        margin-bottom: 20px;
-      }
-
-      .stats {
-        font-size: 1em;
-        margin: 15px 0;
-      }
-
-      .stats div {
-        margin: 8px 0;
-      }
-
-      /* Panel titles */
-      .panel-title {
-        font-size: 0.9em;
-        /* color: #00ffff; */
-        margin-bottom: 10px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
       }
     </style>
   </head>
   <body>
     <div class="instruments-grid">
-      <!-- Oxygen Gauge Panel -->
-      <div id="oxygen-panel" class="instrument-panel">
-        <!-- <div class="panel-title">Oxygen Level</div> -->
-        <object class="instrument-object" id="oxygenGauge" type="image/svg+xml" data="instruments/instruments-oxygen.svg"></object>
-      </div>
-      <!-- Battery Gauge Panel -->
-      <div id="battery-panel" class="instrument-panel">
-        <!-- <div class="panel-title">Battery Level</div> -->
-        <object class="instrument-object" id="batteryGauge" type="image/svg+xml" data="instruments/instruments-battery.svg"></object>
-      </div>
-
-      <!-- MicroBit Connection Panel -->
-      <div id="microbit-panel" class="instrument-panel">
-        <div class="panel-title">Hardware Controls</div>
-        <object
-          class="instrument-object"
-          id="instruments-microBitGauge"
-          type="image/svg+xml"
-          data="artwork/instruments-circuit-board.svg"
-          title="Connect hardware controls to steer the submarine"
-        ></object>
-      </div>
-
-      <!-- Restart Panel -->
-      <div id="restart-panel" class="instrument-panel">
-        <div class="panel-title">Game Controls</div>
-        <button class="restart-btn" onclick="restartGame()">Restart Mission</button>
-      </div>
-
-      <!-- Data Display Panel -->
-      <div id="data-panel" class="instrument-panel">
-        <div class="panel-title">Submarine Data</div>
-        <div id="sub-data-text"></div>
-      </div>
-
-      <!-- Win Overlay Panel -->
-      <div id="win-panel" class="instrument-panel">
-        <div id="win-overlay" class="win-overlay">
-          <div class="mission-complete">🎉 MISSION COMPLETE! 🎉</div>
-          <div class="stats">
-            <div>⏱️ Time: <span id="final-time">0:00</span></div>
-            <div>🫁 Oxygen Remaining: <span id="final-oxygen">0%</span></div>
-            <div>🔋 Battery Remaining: <span id="final-battery">0%</span></div>
-          </div>
-          <button class="restart-btn" onclick="restartGame()">Play Again</button>
+      <div style="grid-column: span 4">
+        <div style="width: 100%; height: 40px; text-align: middle; padding: 10px; display: flex; justify-content: space-between">
+          <button id="restart-btn" onclick="restartGame()" style="">Restart Mission</button>
+          <object
+            id="instruments-microBitGauge"
+            type="image/svg+xml"
+            data="instruments/instruments-circuit-board.svg"
+            title="Connect hardware controls to steer the submarine"
+            style="width: 50px"
+          ></object>
         </div>
       </div>
+
+      <object id="oxygenGauge" type="image/svg+xml" data="instruments/instruments-oxygen.svg"></object>
+      <object id="batteryGauge" type="image/svg+xml" data="instruments/instruments-battery.svg"></object>
+      <object id="compassGauge" type="image/svg+xml" data="instruments/instruments-compass.svg" style="grid-column: span 2; /* Takes up 2 columns */"></object>
+
+      <object id="depthGauge" type="image/svg+xml" data="instruments/instruments-depth.svg"></object>
+      <object id="speedGauge" type="image/svg+xml" data="instruments/instruments-speed.svg"></object>
+      <object id="pitchGauge" type="image/svg+xml" data="instruments/instruments-pitch.svg"></object>
+
+      <object id="leftThrustGauge" type="image/svg+xml" data="instruments/instruments-left-thrust.svg"></object>
+      <object id="rightThrustGauge" type="image/svg+xml" data="instruments/instruments-right-thrust.svg"></object>
+      <object id="targetGauge" type="image/svg+xml" data="instruments/instruments-target.svg"></object>
+
+      <object id="rudderGauge" type="image/svg+xml" data="instruments/instruments-rudder.svg"></object>
+      <object id="elevatorGauge" type="image/svg+xml" data="instruments/instruments-elevator.svg"></object>
+      <object id="verticalThrusterGauge" type="image/svg+xml" data="instruments/instruments-vertical-thruster.svg"></object>
+
+      <div id="sub-data-text" style="grid-column: span 3"></div>
     </div>
 
     <script src="js/instruments-window.js"></script>

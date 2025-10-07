@@ -275,7 +275,7 @@ let coralObstacles = [];
 
 // Create massive coral structures that reach from seabed to water surface
 function createCoralReef() {
-  console.log("Creating massive coral structures...");
+  // console.log("Creating massive coral structures...");
 
   // Clear existing obstacles array
   coralObstacles = [];
@@ -302,7 +302,7 @@ function createCoralReef() {
 
   // Calculate the full height from seabed to water surface
   const fullHeight = gameState.constants.waterSurface - gameState.constants.seabedDepth;
-  console.log(`Creating coral structures with height: ${fullHeight} units`);
+  // console.log(`Creating coral structures with height: ${fullHeight} units`);
 
   // Create fewer but much larger formations
   const coralCount = 40;
@@ -735,7 +735,7 @@ function createWaterSurfaceBoundary() {
     gameState.constants.worldBoundaryVisible,
     gameState.constants.worldBoundaryVisible,
     50, // width segments for ripple effect
-    50  // height segments
+    50 // height segments
   );
 
   // Create a grid material that's highly visible
@@ -770,7 +770,7 @@ function createWaterSurfaceBoundary() {
   scene.add(surfacePlane);
   scene.add(gridPlane);
 
-  console.log(`Created water surface boundary at Y=${gameState.constants.waterSurface}`);
+  // console.log(`Created water surface boundary at Y=${gameState.constants.waterSurface}`);
 }
 
 // Create underwater effects (caustics, particles, water surface) with improved water texture
