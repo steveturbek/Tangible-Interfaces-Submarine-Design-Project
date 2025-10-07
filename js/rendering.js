@@ -1242,11 +1242,4 @@ function initRenderer() {
   renderUnderwaterScene();
 }
 
-// Start the renderer when the window loads
-// But only if the welcome screen is not showing (i.e., game was already started)
-window.addEventListener("load", function() {
-  const welcomeScreen = document.getElementById('welcome-screen');
-  if (!welcomeScreen || welcomeScreen.style.display === 'none') {
-    initRenderer();
-  }
-}, { once: true });
+// Renderer initialization is now handled in index.html

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Tangible Interfaces Submarine Navigation Game</title>
     <style>
       /* Welcome screen styles */
@@ -9,7 +9,7 @@
         margin: 0;
         padding: 0;
         font-family: "Arial", sans-serif;
-        background: linear-gradient(135deg, #0096ff 0%, #0073cf 100%);
+        background: transparent;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -27,7 +27,7 @@
         max-width: 800px;
         padding: 40px;
         text-align: center;
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(0, 0, 0, 0.6);
         border-radius: 20px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       }
@@ -61,6 +61,10 @@
         cursor: pointer;
         box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
         transition: all 0.3s ease;
+      }
+
+      .description a {
+        color: white;
       }
 
       .start-button:hover {
@@ -114,20 +118,18 @@
       }
 
       #container {
-        aspect-ratio: 16 / 9;
-        max-width: 100%;
-        max-height: 100%;
-        width: auto;
-        height: auto;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1;
       }
 
       #outside-scene {
-        position: absolute;
-        top: 0;
-        left: 0;
         width: 100%;
-        z-index: 1;
-        aspect-ratio: 16 / 9;
+        height: 100%;
+        display: block;
       }
     </style>
   </head>
@@ -147,16 +149,18 @@
             <li>Goal: Find and Navigate to the orange sphere</li>
             <li>Avoid coral obstacles and stay within boundaries</li>
             <li>Manage your oxygen and battery levels</li>
-            <li>For students: Edit <code>instruments.html</code> to customize your dashboard.</li>
-            <li><a href="https://github.com/yourusername/submarine-game" target="_blank"> GitHub Project Repository </a></li>
+            <li>
+              For students: Edit <code>instruments.html</code> to customize your dashboard. More details at
+              <a href="https://github.com/yourusername/submarine-game" target="_blank"> Project Pages </a>
+            </li>
           </ul>
         </div>
 
         <button class="start-button" onclick="startMission()">Start Mission</button>
       </div>
     </div>
-    <!-- Game Container (hidden initially) -->
-    <div id="container" style="display: none">
+    <!-- Game Container (visible under welcome screen) -->
+    <div id="container">
       <canvas id="outside-scene"></canvas>
     </div>
 
@@ -176,6 +180,42 @@
       // Make instrumentsWindow globally accessible so game.js can access it
       window.instrumentsWindow = null;
       let gameStarted = false;
+
+      // Initialize renderer on page load to show scene under welcome screen
+      window.addEventListener("load", function () {
+        console.log("Page loaded, initializing renderer...");
+
+        const canvas = document.getElementById("outside-scene");
+        const container = document.getElementById("container");
+        console.log("Container dimensions:", container.clientWidth, "x", container.clientHeight);
+        console.log("Canvas dimensions:", canvas.width, "x", canvas.height);
+
+        if (typeof initRenderer === "function") {
+          try {
+            initRenderer();
+            console.log("Renderer initialized successfully");
+            console.log("Canvas dimensions after init:", canvas.width, "x", canvas.height);
+
+            // Start a simple animation loop to render the scene
+            function previewLoop() {
+              if (!gameStarted && typeof renderUnderwaterScene === "function") {
+                try {
+                  renderUnderwaterScene();
+                  requestAnimationFrame(previewLoop);
+                } catch (error) {
+                  console.error("Error in preview loop:", error);
+                }
+              }
+            }
+            previewLoop();
+            console.log("Preview loop started");
+          } catch (error) {
+            console.error("Error initializing renderer:", error);
+          }
+        } else {
+          console.error("initRenderer function not found");
+        }
+      });
 
       function startMission() {
         if (gameStarted) return;
@@ -197,19 +237,13 @@
         // Hide welcome screen
         document.getElementById("welcome-screen").style.display = "none";
 
-        // Show game container
-        document.getElementById("container").style.display = "block";
-
         // Wait for instruments window to fully load before starting game
         if (window.instrumentsWindow) {
           window.instrumentsWindow.addEventListener("load", function () {
             console.log("Instruments window loaded, starting game...");
 
             setTimeout(() => {
-              if (typeof initRenderer === "function") {
-                initRenderer();
-              }
-              // Also start the game loop from game.js
+              // Start the game loop from game.js (renderer already initialized)
               if (typeof startGame === "function") {
                 startGame();
               }

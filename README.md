@@ -225,7 +225,7 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 
 ### Local Development Setup
 
-**IMPORTANT:** When developing locally, you **must** use a local web server due to browser security restrictions. Opening HTML files directly (via `file://`) will prevent the instruments from working.
+**IMPORTANT:** When developing locally, you must use a local web server due to browser security restrictions. Opening HTML files directly (via `file://`) will prevent the instruments from working.
 
 **Option 1: Python (Recommended for macOS)**
 
