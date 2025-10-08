@@ -259,6 +259,13 @@
       window.instrumentsWindow = null;
       let gameStarted = false;
 
+      // Close instruments window when main page reloads or closes
+      window.addEventListener("beforeunload", function () {
+        if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
+          window.instrumentsWindow.close();
+        }
+      });
+
       // Initialize renderer on page load to show scene under welcome screen
       window.addEventListener("load", function () {
         // console.log("Page loaded, initializing renderer...");
@@ -298,20 +305,17 @@
       function startMission() {
         if (gameStarted) return;
 
-        // Check if instruments window reference still exists and is valid
+        // Close any existing instruments window before starting
         if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
           try {
-            // Try to access the window - if this succeeds, it's still open
-            if (window.instrumentsWindow.document) {
-              alert("Please close the existing Submarine Instruments window and try again.");
-              window.instrumentsWindow.focus();
-              return;
-            }
+            window.instrumentsWindow.close();
           } catch (e) {
-            // Window exists but can't access it - clear the reference
-            window.instrumentsWindow = null;
+            console.log("Could not close old window:", e);
           }
         }
+
+        // Clear the reference to ensure we get a fresh window
+        window.instrumentsWindow = null;
 
         gameStarted = true;
 
