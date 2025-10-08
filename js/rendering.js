@@ -15,7 +15,7 @@ const WATER_COLOR = 0x0096ff; // Bright Caribbean blue
 const DEEP_WATER_COLOR = 0x0073cf; // Deeper Caribbean blue for gradient
 const FOG_COLOR = 0x0096ff; // Match water color
 
-const TARGET_COLOR = 0xff5500; // Bright orange target (more visible in blue water)
+const TARGET_COLOR = 0xffffff; // White glowing diamond target
 const TARGET_SIZE = 5; // Target sphere size
 const FOG_NEAR = 50; //10; // Start fog effect at 10 units
 const FOG_FAR = 500; // 100; Max visibility distance
@@ -709,26 +709,32 @@ function createSimpleExtendedSeabed() {
 //   return wallsGroup;
 // }
 
-// Create target destination marker
+// Create target destination marker - glowing faceted diamond
 function createTarget() {
-  const targetGeometry = new THREE.SphereBufferGeometry(TARGET_SIZE, 16, 16);
+  // Create a faceted diamond using octahedron geometry (simple 8-sided diamond)
+  const targetGeometry = new THREE.OctahedronBufferGeometry(TARGET_SIZE, 0);
+
+  // Create a glowing material for the diamond
   const targetMaterial = new THREE.MeshStandardMaterial({
     color: TARGET_COLOR,
     emissive: TARGET_COLOR,
-    emissiveIntensity: 0.7,
+    emissiveIntensity: 1.2,
     transparent: true,
-    opacity: 0.8,
+    opacity: 0.9,
+    metalness: 0.3,
+    roughness: 0.2,
+    flatShading: true, // Keeps the faceted look
   });
 
   targetSphere = new THREE.Mesh(targetGeometry, targetMaterial);
   scene.add(targetSphere);
 
-  // Add a pulsing effect to make it more visible
-  const pulseLight = new THREE.PointLight(TARGET_COLOR, 2, 30);
+  // Add a stronger pulsing glow effect
+  const pulseLight = new THREE.PointLight(TARGET_COLOR, 3, 40);
   targetSphere.add(pulseLight);
 
   // Add indicator beam from surface
-  const beamGeometry = new THREE.CylinderBufferGeometry(0.5, 0.5, 200, 8, 1, true);
+  const beamGeometry = new THREE.CylinderBufferGeometry(0.5, 0.5, 50, 8, 1, true);
   const beamMaterial = new THREE.MeshBasicMaterial({
     color: 0xffffaa,
     transparent: true,
@@ -770,7 +776,7 @@ function createWaterSurfaceBoundary() {
   const startZ = gameState_original.position.z;
   const holeRadius = 75;
 
-  console.log(`Creating escape hole at start position: X=${startX}, Z=${startZ}, radius=${holeRadius}`);
+  // console.log(`Creating escape hole at start position: X=${startX}, Z=${startZ}, radius=${holeRadius}`);
 
   // Create a ring-shaped ceiling (donut) instead of a full plane
   const outerRadius = gameState.constants.worldBoundaryVisible / 2;
@@ -817,10 +823,11 @@ function createWaterSurfaceBoundary() {
 
   const ceilingPlane = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
 
-  // Rotate to horizontal and position at water surface
+  // Rotate to horizontal and position slightly above water surface to prevent viewing above it
   // The ring is centered at 0,0 so we need to offset it to center on startX, startZ
+  const ceilingHeight = gameState.constants.waterSurface + 10; // 10 units above surface
   ceilingPlane.rotation.x = -Math.PI / 2;
-  ceilingPlane.position.set(startX, gameState.constants.waterSurface, startZ);
+  ceilingPlane.position.set(startX, ceilingHeight, startZ);
 
   caveCeilingGroup.add(ceilingPlane);
 
@@ -831,14 +838,14 @@ function createWaterSurfaceBoundary() {
     const distance = holeRadius * 1.5 + Math.random() * (outerRadius - holeRadius * 1.5);
     const x = startX + Math.cos(angle) * distance;
     const z = startZ + Math.sin(angle) * distance;
-    formation.position.set(x, gameState.constants.waterSurface, z);
+    formation.position.set(x, ceilingHeight, z);
     caveCeilingGroup.add(formation);
   }
 
   scene.add(caveCeilingGroup);
 
-  console.log(`Created cave ceiling with escape hole at Y=${gameState.constants.waterSurface}`);
-  console.log(`Start position: X=${startX}, Y=${gameState_original.position.y}, Z=${startZ}`);
+  // console.log(`Created cave ceiling with escape hole at Y=${gameState.constants.waterSurface}`);
+  // console.log(`Start position: X=${startX}, Y=${gameState_original.position.y}, Z=${startZ}`);
 }
 
 // Create additional cave ceiling formations (like stalactites)
@@ -884,16 +891,8 @@ function createCaveCeilingFormation(caveColors) {
 
     // Position and rotate for variety
     const angle = (i / planeCount) * Math.PI * 2;
-    plane.position.set(
-      Math.cos(angle) * 5,
-      Math.random() * -3,
-      Math.sin(angle) * 5
-    );
-    plane.rotation.set(
-      Math.PI / 2 + (Math.random() - 0.5) * 0.5,
-      angle,
-      (Math.random() - 0.5) * 0.5
-    );
+    plane.position.set(Math.cos(angle) * 5, Math.random() * -3, Math.sin(angle) * 5);
+    plane.rotation.set(Math.PI / 2 + (Math.random() - 0.5) * 0.5, angle, (Math.random() - 0.5) * 0.5);
 
     formationGroup.add(plane);
   }
@@ -1293,10 +1292,14 @@ function updateScene() {
   // Update target position
   targetSphere.position.set(gameState.navigation.targetPosition.x, gameState.navigation.targetPosition.y, gameState.navigation.targetPosition.z);
 
-  // Make target pulse for visibility
+  // Make target pulse for visibility and rotate to show facets
   const time = clock.getElapsedTime();
   const pulseFactor = Math.sin(time * 2) * 0.1 + 0.9;
   targetSphere.scale.set(pulseFactor, pulseFactor, pulseFactor);
+
+  // Gentle rotation to catch light on the faceted diamond
+  targetSphere.rotation.y = time * 0.5;
+  targetSphere.rotation.x = Math.sin(time * 0.3) * 0.3;
 
   // Create light shaft effect from surface
   if (targetSphere.children.length > 1) {

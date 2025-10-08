@@ -2,7 +2,7 @@
 const gameState_original = {
   // Position & Orientation (using Three.js coordinate system)
   position: { x: 0, y: 390, z: 0 }, // x: right/left, y: up/down, z: forward/backward
-  rotation: { x: 0, y: Math.random() * 360, z: 0 }, // x: pitch, y: yaw, z: roll
+  rotation: { x: 0, y: 0, z: 0 }, // x: pitch, y: yaw, z: roll //Math.random() * 360
   velocity: { x: 0, y: 0, z: 0 }, // velocity vector in Three.js coordinates
   angularVelocity: { x: 0, y: 0, z: 0 }, // rotation speed in Three.js coordinates
 
@@ -39,7 +39,7 @@ const gameState_original = {
 
   // Navigation & Environment
   navigation: {
-    targetPosition: { x: 0, y: 0, z: -1200 }, // target location
+    targetPosition: { x: 0, y: 10, z: -100 }, // target location (30 units above seabed)
     distanceToTarget: 0, // 0-100% (scaled)
     headingToTarget: 0, // 0-359 degrees
     // proximityWarning: 0, // 0-100% (distance to nearest obstacle)
@@ -534,7 +534,7 @@ function updateDerivedValues() {
 
   // Scale distance to 0-100 range for the gauge
   // World units are large (~1200 max), so scale to 0-100 for display
-  gameState.navigation.distanceToTarget = Math.min(100, (distance / 15));
+  gameState.navigation.distanceToTarget = Math.min(100, distance / 15);
 
   // Calculate compass heading (in XZ plane)
   gameState.navigation.headingToTarget = ((Math.atan2(dx, -dz) * 180) / Math.PI + 360) % 360;
