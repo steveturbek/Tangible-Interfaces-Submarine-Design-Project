@@ -163,6 +163,48 @@
         box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
       }
 
+      /* Game Over overlay styles */
+      #gameover-overlay {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
+        animation: fadeToBlack 2s ease-in;
+      }
+
+      @keyframes fadeToBlack {
+        from {
+          background: rgba(0, 0, 0, 0);
+        }
+        to {
+          background: rgba(0, 0, 0, 0.95);
+        }
+      }
+
+      .gameover-container {
+        max-width: 800px;
+        padding: 40px;
+        text-align: center;
+        background: rgba(100, 0, 0, 0.8);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        color: white;
+      }
+
+      .mission-failed {
+        color: #ff4444;
+        font-size: 3em;
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
       /* Game view styles */
       body {
         padding: 0;
@@ -234,6 +276,18 @@
           <div>🔋 Battery Remaining: <span id="final-battery">0%</span></div>
         </div>
         <button class="play-again-button" onclick="restartGame()">Play Again</button>
+      </div>
+    </div>
+
+    <!-- Game Over Overlay (shown when oxygen depleted) -->
+    <div id="gameover-overlay">
+      <div class="gameover-container">
+        <div class="mission-failed">💀 OUT OF OXYGEN 💀</div>
+        <div class="stats">
+          <div style="font-size: 1.3em; margin: 20px 0;">You ran out of oxygen!</div>
+          <div>⏱️ Survived: <span id="gameover-time">0:00</span></div>
+        </div>
+        <button class="play-again-button" onclick="restartGame()">Dive Again</button>
       </div>
     </div>
 

@@ -32,6 +32,7 @@ const gameState_original = {
   status: {
     oxygenLevel: 100, // 0-100%
     batteryLevel: 100, // 0-100%
+    lastBatteryWarning: 100, // Track last battery warning threshold
     // hullIntegrity: 100, // 0-100% (optional: damage model)
     depth: 0, // 0 to maxDepth (positive number for UI clarity)
     boundaryWarning: true, // Flag to indicate proximity to boundaries
@@ -52,7 +53,7 @@ const gameState_original = {
   // Game Constants (configure as needed)
   constants: {
     maxOxygenTime: 300, // 5 minutes in seconds
-    maxBatteryTime: 150, // 2.5 minutes at full throttle
+    maxBatteryTime: 300, // 2.5 minutes at full throttle
     maxDepth: 100, // Maximum dive depth
     maxSpeed: 10, // Units per second at 100% throttle
     maxPitchAngle: 25, // Maximum physical pitch in degrees
@@ -128,9 +129,12 @@ function restartGame() {
   // Stop the current game loop
   stopGame();
 
-  // Hide win overlay immediately
+  // Hide win and game over overlays immediately
   const winOverlay = document.getElementById("win-overlay");
   if (winOverlay) winOverlay.style.display = "none";
+
+  const gameoverOverlay = document.getElementById("gameover-overlay");
+  if (gameoverOverlay) gameoverOverlay.style.display = "none";
 
   // Reset game state to original values (deep copy)
   // This properly copies all nested objects
@@ -198,6 +202,17 @@ function updateSubmarineState(deltaTime) {
   const totalPowerDrain = mainPowerDrain + aftPowerDrain;
 
   gameState.status.batteryLevel = Math.max(0, gameState.status.batteryLevel - totalPowerDrain);
+
+  // Battery warnings at every 10% threshold
+  const currentThreshold = Math.floor(gameState.status.batteryLevel / 10) * 10;
+  if (currentThreshold < gameState.status.lastBatteryWarning && gameState.status.batteryLevel > 0) {
+    gameState.status.lastBatteryWarning = currentThreshold;
+    if (currentThreshold === 0) {
+      appendInstrumentConsoleMessage("BATTERY DEPLETED! Thrusters offline!");
+    } else {
+      appendInstrumentConsoleMessage(`Battery at ${currentThreshold}%`);
+    }
+  }
 
   // Calculate forward thrust vector based on submarine orientation
   // Get orientation angles in radians (for Three.js coordinates)
@@ -489,7 +504,8 @@ function updateUI() {
 
   // oxygen level
   if (gameState.status.oxygenLevel <= 0) {
-    appendInstrumentConsoleMessage("CRITICAL: Oxygen depleted! You ded.");
+    appendInstrumentConsoleMessage("CRITICAL: Oxygen depleted!");
+    showGameOverScreen();
     stopGame();
     return;
   }
@@ -633,4 +649,20 @@ function showWinScreen() {
 
   // Show the win overlay in main window
   if (winOverlay) winOverlay.style.display = "flex";
+}
+
+function showGameOverScreen() {
+  // Format time from seconds to MM:SS
+  const minutes = Math.floor(gameState.time.elapsed / 60);
+  const seconds = Math.floor(gameState.time.elapsed % 60);
+  const timeString = minutes + ":" + String(seconds).padStart(2, "0");
+
+  // Show game over overlay in the main window
+  const gameoverTime = document.getElementById("gameover-time");
+  const gameoverOverlay = document.getElementById("gameover-overlay");
+
+  if (gameoverTime) gameoverTime.textContent = timeString;
+
+  // Show the game over overlay with fade-to-black animation
+  if (gameoverOverlay) gameoverOverlay.style.display = "flex";
 }
