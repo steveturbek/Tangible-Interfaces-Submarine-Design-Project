@@ -260,7 +260,8 @@ http-server -p 8080
 
 1. Modify the SVG instrument files in `instruments/` folder
 1. Test your implementation using keyboard controls or USB gamepad
-1. Integrate Micro:bit controls using the provided examples
+1. Build physical controls using sensors from class kit
+1. Program Micro:bit to interpret the sensors, use the provided example file `microbit/thunderstick-serial-demo.microbitJavascript`
 1. Upload to Google drive to collaborate with your partners
 1. At the end, upload the project to github as a 'fork' (help will be provided)
 

@@ -742,68 +742,163 @@ function createTarget() {
 }
 
 function createStartMarker() {
-  const startGeometry = new THREE.SphereBufferGeometry(TARGET_SIZE, 16, 16);
-  const startMaterial = new THREE.MeshStandardMaterial({
-    color: 0x00ff00,
-    emissive: 0x00ff00,
-    emissiveIntensity: 0.7,
-    transparent: true,
-    opacity: 0.8,
-  });
+  // Start marker disabled - the escape hole in the ceiling marks the start/exit
+  // Keeping function for compatibility but not rendering anything
 
-  startSphere = new THREE.Mesh(startGeometry, startMaterial);
-  // startSphere.position.set(0, 90, 0); // Starting position from gameState_original
-  startSphere.position.set(gameState_original.position.x, gameState_original.position.y, gameState_original.position.z); // Starting position from where sub starts
-
+  // Create invisible placeholder
+  startSphere = new THREE.Object3D();
+  startSphere.position.set(gameState_original.position.x, gameState_original.position.y, gameState_original.position.z);
   scene.add(startSphere);
-
-  // Add a green pulsing light
-  const pulseLight = new THREE.PointLight(0x00ff00, 2, 30);
-  startSphere.add(pulseLight);
 }
 
-// Create a visible water surface boundary - a semi-transparent plane
+// Create a textured cave ceiling at the water surface with a hole
 function createWaterSurfaceBoundary() {
-  const surfaceGeometry = new THREE.PlaneGeometry(
-    gameState.constants.worldBoundaryVisible,
-    gameState.constants.worldBoundaryVisible,
-    50, // width segments for ripple effect
-    50 // height segments
-  );
+  // Cave ceiling colors matching the coral palette
+  const caveColors = [
+    0xd4a574, // Sandy beige
+    0xc9956b, // Warm sand
+    0xe8d5b7, // Light sand
+    0xb8945a, // Golden sand
+    0xa67c52, // Dark sand
+    0xf2e8c9, // Pale sand
+  ];
 
-  // Create a grid material that's highly visible
-  const surfaceMaterial = new THREE.MeshBasicMaterial({
-    color: 0x00ffff, // Bright cyan
-    transparent: true,
-    opacity: 0.4,
+  const caveCeilingGroup = new THREE.Group();
+
+  // Get start position for creating the escape hole
+  const startX = gameState_original.position.x;
+  const startZ = gameState_original.position.z;
+  const holeRadius = 75;
+
+  console.log(`Creating escape hole at start position: X=${startX}, Z=${startZ}, radius=${holeRadius}`);
+
+  // Create a ring-shaped ceiling (donut) instead of a full plane
+  const outerRadius = gameState.constants.worldBoundaryVisible / 2;
+  const innerRadius = holeRadius;
+
+  // Create the ring geometry for the main ceiling
+  const ceilingGeometry = new THREE.RingGeometry(innerRadius, outerRadius, 64, 20);
+
+  // Deform the geometry to create cave texture
+  const positions = ceilingGeometry.attributes.position.array;
+  const simplex = new SimplexNoise();
+
+  for (let i = 0; i < positions.length; i += 3) {
+    const x = positions[i];
+    const y = positions[i + 1];
+
+    // Create multiple layers of noise for complex cave texture
+    const largeNoise = simplex.noise2D(x * 0.005, y * 0.005) * 15;
+    const mediumNoise = simplex.noise2D(x * 0.02, y * 0.02) * 6;
+    const smallNoise = simplex.noise2D(x * 0.08, y * 0.08) * 2;
+
+    // Create stalactite-like formations randomly
+    const stalactiteNoise = Math.random() > 0.95 ? Math.random() * -8 : 0;
+
+    // Apply deformation downward (negative Z for a ceiling)
+    positions[i + 2] = -(largeNoise + mediumNoise + smallNoise + stalactiteNoise);
+  }
+
+  ceilingGeometry.attributes.position.needsUpdate = true;
+  ceilingGeometry.computeVertexNormals();
+
+  // Choose a base cave color
+  const baseColor = caveColors[Math.floor(Math.random() * caveColors.length)];
+
+  // Create material matching coral style
+  const ceilingMaterial = new THREE.MeshStandardMaterial({
+    color: baseColor,
+    roughness: 0.9,
+    metalness: 0.05,
     side: THREE.DoubleSide,
-    wireframe: false,
-    fog: false, // Don't apply fog
+    emissive: baseColor,
+    emissiveIntensity: 0.15,
   });
 
-  // Add a second layer with grid lines for extra visibility
-  const gridMaterial = new THREE.MeshBasicMaterial({
-    color: 0xffffff, // White grid lines
-    wireframe: true,
-    transparent: true,
-    opacity: 0.6,
-    fog: false,
-  });
+  const ceilingPlane = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
 
-  const surfacePlane = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
-  const gridPlane = new THREE.Mesh(surfaceGeometry, gridMaterial);
+  // Rotate to horizontal and position at water surface
+  // The ring is centered at 0,0 so we need to offset it to center on startX, startZ
+  ceilingPlane.rotation.x = -Math.PI / 2;
+  ceilingPlane.position.set(startX, gameState.constants.waterSurface, startZ);
 
-  // Rotate to be horizontal and position at water surface
-  surfacePlane.rotation.x = -Math.PI / 2;
-  gridPlane.rotation.x = -Math.PI / 2;
+  caveCeilingGroup.add(ceilingPlane);
 
-  surfacePlane.position.y = gameState.constants.waterSurface;
-  gridPlane.position.y = gameState.constants.waterSurface + 0.1; // Slightly above to avoid z-fighting
+  // Add additional rocky formations around the hole (but not IN the hole)
+  for (let i = 0; i < 15; i++) {
+    const formation = createCaveCeilingFormation(caveColors);
+    const angle = Math.random() * Math.PI * 2;
+    const distance = holeRadius * 1.5 + Math.random() * (outerRadius - holeRadius * 1.5);
+    const x = startX + Math.cos(angle) * distance;
+    const z = startZ + Math.sin(angle) * distance;
+    formation.position.set(x, gameState.constants.waterSurface, z);
+    caveCeilingGroup.add(formation);
+  }
 
-  scene.add(surfacePlane);
-  // scene.add(gridPlane);
+  scene.add(caveCeilingGroup);
 
-  // console.log(`Created water surface boundary at Y=${gameState.constants.waterSurface}`);
+  console.log(`Created cave ceiling with escape hole at Y=${gameState.constants.waterSurface}`);
+  console.log(`Start position: X=${startX}, Y=${gameState_original.position.y}, Z=${startZ}`);
+}
+
+// Create additional cave ceiling formations (like stalactites)
+function createCaveCeilingFormation(caveColors) {
+  const formationGroup = new THREE.Group();
+
+  // Create 2-4 overlapping planes for complex shapes
+  const planeCount = Math.floor(Math.random() * 3) + 2;
+
+  for (let i = 0; i < planeCount; i++) {
+    const width = Math.random() * 30 + 20;
+    const height = Math.random() * 30 + 20;
+
+    const geometry = new THREE.PlaneGeometry(width, height, 12, 12);
+
+    // Deform the geometry
+    const positions = geometry.attributes.position.array;
+    for (let j = 0; j < positions.length; j += 3) {
+      const x = positions[j];
+      const y = positions[j + 1];
+
+      // Create irregular rocky shapes
+      const noise1 = Math.sin(x * 0.3) * Math.cos(y * 0.3) * 5;
+      const noise2 = Math.sin(x * 0.1) * Math.sin(y * 0.1) * 3;
+
+      positions[j + 2] = -(noise1 + noise2 + Math.random() * 2);
+    }
+
+    geometry.attributes.position.needsUpdate = true;
+    geometry.computeVertexNormals();
+
+    const color = caveColors[Math.floor(Math.random() * caveColors.length)];
+    const material = new THREE.MeshStandardMaterial({
+      color: color,
+      roughness: 0.9,
+      metalness: 0.05,
+      side: THREE.DoubleSide,
+      emissive: color,
+      emissiveIntensity: 0.1,
+    });
+
+    const plane = new THREE.Mesh(geometry, material);
+
+    // Position and rotate for variety
+    const angle = (i / planeCount) * Math.PI * 2;
+    plane.position.set(
+      Math.cos(angle) * 5,
+      Math.random() * -3,
+      Math.sin(angle) * 5
+    );
+    plane.rotation.set(
+      Math.PI / 2 + (Math.random() - 0.5) * 0.5,
+      angle,
+      (Math.random() - 0.5) * 0.5
+    );
+
+    formationGroup.add(plane);
+  }
+
+  return formationGroup;
 }
 
 // Create underwater effects (caustics, particles, water surface) with improved water texture
