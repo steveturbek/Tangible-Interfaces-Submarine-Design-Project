@@ -1,7 +1,7 @@
 // Submarine Game State Structure
 const gameState_original = {
   // Position & Orientation (using Three.js coordinate system)
-  position: { x: 0, y: 390, z: 0 }, // x: right/left, y: up/down, z: forward/backward
+  position: { x: 0, y: 10, z: 0 }, // x: right/left, y: up/down, z: forward/backward
   rotation: { x: 0, y: 0, z: 0 }, // x: pitch, y: yaw, z: roll //Math.random() * 360
   velocity: { x: 0, y: 0, z: 0 }, // velocity vector in Three.js coordinates
   angularVelocity: { x: 0, y: 0, z: 0 }, // rotation speed in Three.js coordinates
@@ -39,12 +39,13 @@ const gameState_original = {
 
   // Navigation & Environment
   navigation: {
-    targetPosition: { x: 0, y: 10, z: -100 }, // target location (30 units above seabed)
+    targetPosition: { x: 0, y: 10, z: -10 }, // target location (30 units above seabed)
     distanceToTarget: 0, // 0-100% (scaled)
     headingToTarget: 0, // 0-359 degrees
     // proximityWarning: 0, // 0-100% (distance to nearest obstacle)
     currentSpeed: 0, // 0-100% (scalar speed value)
     compassHeading: 0, // 0-359 degrees
+    targetGrabbed: false, // Has the target been grabbed?
   },
 
   // Game Constants (configure as needed)
@@ -61,7 +62,7 @@ const gameState_original = {
     worldBoundary: 2000,
     worldBoundaryVisible: 4000, //defines how far you can see. 4x worldBoundary seems to look good
     seabedDepth: 0, // Depth of the seabed from rendering.js
-    waterSurface: 400, // Water surface level from rendering.js (doubled from 100 to 200)
+    waterSurface: 40, // Water surface level from rendering.js (doubled from 100 to 200)
   },
 
   // Game time tracking
@@ -72,6 +73,8 @@ const gameState_original = {
     logTimeCounterLengthMS: 0.5, //500 milliseconds
   },
 };
+
+gameState_original.position.y = gameState_original.constants.waterSurface - 10;
 
 const gameState = [];
 
@@ -467,9 +470,13 @@ function applyBoundaryConstraints() {
 
 function updateUI() {
   // console.log(gameState.navigation.distanceToTarget);
-  //are you at target?
-  if (gameState.navigation.distanceToTarget < 0.1) {
-    appendInstrumentConsoleMessage("Won!");
+
+  // Win condition: Must have grabbed target AND returned above the surface
+  // Player must breach the water surface to win (go above it, not just near it)
+  const atSurface = gameState.position.y >= gameState.constants.waterSurface - 10; // Must be within 30 units below surface (easier to reach)
+
+  if (gameState.navigation.targetGrabbed && atSurface) {
+    appendInstrumentConsoleMessage("🏆 MISSION COMPLETE! You found the target and returned to surface!");
     showWinScreen();
     stopGame();
   }

@@ -526,6 +526,16 @@ function checkCoralCollisions() {
 function handleCoralCollision(obstacle) {
   appendInstrumentConsoleMessage("Collision with massive coral structure!");
 
+  // Drop the target if it was grabbed!
+  if (gameState.navigation.targetGrabbed) {
+    gameState.navigation.targetGrabbed = false;
+    // Drop it at current submarine position
+    gameState.navigation.targetPosition.x = gameState.position.x;
+    gameState.navigation.targetPosition.y = gameState.position.y;
+    gameState.navigation.targetPosition.z = gameState.position.z;
+    appendInstrumentConsoleMessage("💎 You dropped the target! Go grab it again!");
+  }
+
   // Stop the submarine (similar to boundary collision)
   gameState.velocity.x = 0;
   gameState.velocity.y = 0;
@@ -1289,8 +1299,23 @@ function onWindowResize() {
 
 // Update scene elements based on game state
 function updateScene() {
-  // Update target position
-  targetSphere.position.set(gameState.navigation.targetPosition.x, gameState.navigation.targetPosition.y, gameState.navigation.targetPosition.z);
+  // Update target position - if grabbed, follow camera, otherwise stay at fixed position
+  if (gameState.navigation.targetGrabbed) {
+    // Position target in front of camera when grabbed
+    const grabDistance = 8; // Distance in front of camera
+    const targetPos = new THREE.Vector3(0, 0, -grabDistance);
+    targetPos.applyQuaternion(camera.quaternion);
+    targetPos.add(camera.position);
+
+    targetSphere.position.copy(targetPos);
+    // Also update the gameState position so distance calculations work
+    gameState.navigation.targetPosition.x = targetPos.x;
+    gameState.navigation.targetPosition.y = targetPos.y;
+    gameState.navigation.targetPosition.z = targetPos.z;
+  } else {
+    // Normal fixed position
+    targetSphere.position.set(gameState.navigation.targetPosition.x, gameState.navigation.targetPosition.y, gameState.navigation.targetPosition.z);
+  }
 
   // Make target pulse for visibility and rotate to show facets
   const time = clock.getElapsedTime();

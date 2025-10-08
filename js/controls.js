@@ -285,7 +285,60 @@ function emergencyBlowTanks() {
 }
 
 function grabTarget() {
-  // attempt to grab target
+  // Check if target is already grabbed
+  if (gameState.navigation.targetGrabbed) {
+    console.log("Target already grabbed!");
+    return;
+  }
+
+  // Calculate vector from submarine to target
+  const dx = gameState.navigation.targetPosition.x - gameState.position.x;
+  const dy = gameState.navigation.targetPosition.y - gameState.position.y;
+  const dz = gameState.navigation.targetPosition.z - gameState.position.z;
+
+  // Calculate distance to target
+  const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+  // Check if within 10 units
+  if (distance > 10) {
+    console.log(`Target too far away: ${distance.toFixed(2)} units`);
+    return;
+  }
+
+  // Get submarine's forward direction vector
+  // In Three.js, camera looks down -Z axis in local space
+  const pitch = THREE.MathUtils.degToRad(gameState.rotation.x);
+  const yaw = THREE.MathUtils.degToRad(gameState.rotation.y);
+
+  // Create forward vector (looking down -Z axis)
+  const forwardX = -Math.sin(yaw) * Math.cos(pitch);
+  const forwardY = Math.sin(pitch);
+  const forwardZ = -Math.cos(yaw) * Math.cos(pitch);
+
+  // Normalize the direction to target
+  const targetDirX = dx / distance;
+  const targetDirY = dy / distance;
+  const targetDirZ = dz / distance;
+
+  // Calculate dot product to get angle
+  const dotProduct = forwardX * targetDirX + forwardY * targetDirY + forwardZ * targetDirZ;
+  const angleInRadians = Math.acos(Math.max(-1, Math.min(1, dotProduct)));
+  const angleInDegrees = angleInRadians * (180 / Math.PI);
+
+  // Check if within ±10 degrees
+  if (angleInDegrees > 10) {
+    console.log(`Target not in front: ${angleInDegrees.toFixed(1)} degrees off`);
+    return;
+  }
+
+  // Success! Grab the target
+  console.log("TARGET GRABBED!");
+  gameState.navigation.targetGrabbed = true;
+
+  // Show message to user
+  if (typeof appendInstrumentConsoleMessage === "function") {
+    appendInstrumentConsoleMessage("🎯 TARGET GRABBED! Return to surface to win!");
+  }
 }
 
 /**
@@ -336,6 +389,7 @@ window.submarineControls = {
   // Special functions
   emergencyBlowTanks, // Performs emergency surfacing procedure (full upward pitch and aft thruster) - Example: window.submarineControls.emergencyBlowTanks();
   emergencyAllStop, // Performs emergency stop procedure  - Example: window.submarineControls.emergencyAllStop();
+  grabTarget, // Attempts to grab the target if within range - Example: window.submarineControls.grabTarget();
 
   // Gamepad update function (call this in the game loop)
   updateGamepadControls, // Updates controls from gamepad if connected and in use - Example: window.submarineControls.updateGamepadControls();
