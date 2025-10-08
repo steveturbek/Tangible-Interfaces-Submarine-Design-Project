@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Welcome to the Submarine Design Project for [Steve Turbek's "Tangible Interfaces" Industrial Design class](https://turbek.com/articles/tangible-interfaces-class.html) at Pratt Institute! This collaborative challenge sits at the intersection of industrial design, user experience, and physical computing. Throughout this project, you'll work in teams to create an immersive submarine piloting experience that combines digital interfaces with physical controls.
+This Submarine Design Project is part of [Steve Turbek's "Tangible Interfaces" Industrial Design class](https://turbek.com/articles/tangible-interfaces-class.html) at Pratt Institute. This collaborative challenge sits at the intersection of industrial design, user experience, and physical computing. Throughout this project, you'll work in teams to create an immersive submarine piloting experience that combines digital interfaces with physical controls.
 
 ![Illustration of a Submarine Cockpit](artwork/submarine-illus.png "Illustration of a Submarine Cockpit")
 
@@ -16,11 +16,10 @@ You'll work in teams of three to cover all the tasks. At the end of the project,
 
 Your mission:
 
-1. Research and identify target market
-1. Create brand for sub line
-1. Research and Design the vehicle exterior and interior
-1. Design the visual styling of your submersible cockpit
-1. Create on-screen digital user experience instruments that effectively communicate critical vehicle information
+1. Research and identify a target market
+1. Create the brand for your sub
+1. Research and design the vehicle exterior and interior
+1. Design the visual styling of your submersible user experience for the instruments that effectively communicate critical vehicle information
 1. Build physical control set (buttons, joysticks, etc.) to drive the submarine that provide an intuitive piloting experience
 1. Write and Design a User Start Guide (Printed, PDF, or interactive)
 1. Test with real people
@@ -211,12 +210,11 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 - **Browser**: Chrome (latest version)
 - **Hardware**: Micro:bit v2 for physical controls configuration, connected to Mac with USB
 - **UX design**: Figma, illustrator, AI tools for coding
-- **Programming**: Basic JavaScript and CSS (examples provided)
-
-### Installation
+- **Programming**: Basic HTML and CSS (examples provided)
 
 <!--
-### Local Development Setup
+### Installation
+<!--### Local Development Setup
 
 **IMPORTANT:** When developing locally, you must use a local web server due to browser security restrictions. Opening HTML files directly (via `file://`) will prevent the instruments from working.
 
@@ -264,6 +262,14 @@ http-server -p 8080
 1. Test your implementation using keyboard controls or USB gamepad
 1. Integrate Micro:bit controls using the provided examples
 1. Upload to Google drive to collaborate with your partners
+1. At the end, upload the project to github as a 'fork' (help will be provided)
+
+**Students should:**
+
+- use HTML and CSS to design the instruments window
+- Design the instrument files using Figma or Illustrator
+- Use AI to modify the instrument logic, for example changing line chart to a dial chart
+- **If instruments are not updating, do 'hard reload' ( Cmd + Shift + R on a Mac) **
 
 ## Project Structure
 
@@ -271,7 +277,7 @@ The repository is organized as follows:
 
 ```
 ***Design Me, Program Me!***
-├── instruments/        # SVG instruments with embedded scripts
+├── instruments/
 │   ├── instruments-oxygen.svg     # Oxygen gauge
 │   ├── instruments-battery.svg    # Battery gauge
 │   └── etc...
@@ -288,22 +294,6 @@ The repository is organized as follows:
 ├── artwork/            # Other visual assets
 └── examples/           # Example code
 ```
-
-### Customizing Instruments
-
-Each instrument SVG file (in `instruments/`) contains:
-
-- Visual elements (paths, lines, text)
-- Embedded `<script>` tag with `updateInstrument(percentage)` function
-- All display logic self-contained in one file
-
-**Students should:**
-
-- Edit a single SVG file to change how an instrument looks and behaves
-- Use AI to modify the instrument logic, for example changing line chart to a dial chart
-- See immediate results when testing with the local server
-- For example, To change how the oxygen gauge displays, edit `instruments/instruments-oxygen.svg`
-- **If instruments are not updating, do 'hard reload' ( Cmd + Shift + R on a Mac) **
 
 ### Submarine Control via Keyboard
 
