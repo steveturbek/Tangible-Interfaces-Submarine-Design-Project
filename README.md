@@ -8,7 +8,7 @@ Welcome to the Submarine Design Project for [Steve Turbek's "Tangible Interfaces
 
 ## The Design Challenge
 
-You are a design team tasked by "AquaNova Submarine" with creating the next generation of personal submersibles. Your submersible needs to navigate complex underwater environments while providing an intuitive interface for pilots of varying experience levels.
+You are a design team tasked by "AquaNova Submarine" with creating the next generation of personal submersibles. Your submersible needs to navigate complex underwater environments while providing an intuitive interface for beginner pilots.
 
 Success in this project will require balancing aesthetic appeal with functional clarity. Your instruments must be visually consistent with your cockpit design while providing clear information. Your physical controls must feel natural while providing the precision needed for delicate maneuvers.
 
@@ -22,7 +22,7 @@ Your mission:
 1. Design the visual styling of your submersible cockpit
 1. Create on-screen digital user experience instruments that effectively communicate critical vehicle information
 1. Build physical control set (buttons, joysticks, etc.) to drive the submarine that provide an intuitive piloting experience
-1. User Start Guide as needed
+1. Write and Design a User Start Guide (Printed, PDF, or interactive)
 1. Test with real people
 1. Write up and present design, process, and findings
 
@@ -32,28 +32,18 @@ To make this project possible for a design student, we have a technical framewor
 
 The student will design and fabricate
 
-1. A cockpit design prototype (orange), either beautiful or rough, from wood or cardboard
-1. An innovative and beautiful physical control set (red/green)
-1. The controls will send signals to the Micro:bit board (center)
-1. The board will send a USB message to the student laptop (blue)
+1. A cockpit design prototype, either beautiful or rough, from wood or cardboard
+1. An innovative and beautiful physical control set
+1. The controls will send signals to the Micro:bit board
+1. The board will send a USB message to the student laptop
 1. The laptop drive an external monitor(s) embedded in cockpit design prototype (blue rectangle)
 
-The four teams will each design a cockpit for a pilot who is:
+The four teams will each design a cockpit for a pilot who could be:
 
 - Seated upright
 - Prone (like a swimmer)
 - Recumbent
 - Standing/leaning
-
-## The Gameplay Experience
-
-Your submersible will navigate through an underwater maze of coral reefs. The pilot must reach an underwater base before running out of oxygen or electricity. The gameplay emphasizes careful resource management and precise navigation through challenging 3D environments.
-
-## Demo Link (in development)
-
-[Web game experience](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project)
-
-Note the game is intended to be played with custom hardware controls, but can be steered with keyboard for development. See below for tips.
 
 ## Submarine Description
 
@@ -62,9 +52,9 @@ The student will have the ability to design the submarine. Here are the technica
 - Left (Port) and Right(Starboard) [Underwater thrusters](https://en.wikipedia.org/wiki/Underwater_thruster) : These face forward and are centered front to back and top to bottom. They operate like tank treads, if both drive forward, the vehicle goes forward; both back: back; one front the other back, vehicle turns. One operating, the other not, the vehicle goes at half speed and turns in the opposite direction.
 - [Rudder](https://en.wikipedia.org/wiki/Rudder): turns vehicle left and right, proportional to vehicle speed
 - [Elevators](<https://en.wikipedia.org/wiki/Elevator_(aeronautics)>): points vehicle up and down, proportional to vehicle speed
-- Aft thrusters; Small thrusters that point vehicle up and down; very slow, but works when not in motion
+- Vertical thrusters; Small thrusters that point vehicle up and down; very slow, but works when not in motion
 
-The submarine is an idealized, simplified vehicle to keep the project fun!
+The submarine simulation is an idealized vehicle to keep the project fun!
 
 ## Submarines for Inspiration
 
@@ -73,7 +63,8 @@ The submarine is an idealized, simplified vehicle to keep the project fun!
 - https://en.wikipedia.org/wiki/DeepFlight_Super_Falcon
 - https://www.seamagine.com/small-submarines-models.html
 - https://www.thejetshark.com/
-- https://robbreport.com/motors/marine/gallery/personal-submersibles-exploration-1234848269/unknown-32/
+- https://robbreport.com/motors/marine/gallery/personal-submersibles-exploration-1234848269/
+- [User instructions to flush a toilet underwater](https://firehead.net/2009/08/submarine-toilet-flushing-instructions/). Funny only [if it is not you](https://en.wikipedia.org/wiki/German_submarine_U-1206#Fate)!
 
 ## Videos of Submarines, with a focus on their controls
 
@@ -163,11 +154,26 @@ These criteria balance the practical requirements (can users actually pilot the 
 - Documentation of design decisions and problem-solving approaches
 - Brand development and its consistent application across all designs
 
+### 6. Innovation and Delight
+
+- We want the control experience to be THE major selling point of this sub - what innovative and cool experience can you design?
+
 ## Game Overview
 
-### Current State
+## The Gameplay Experience
 
-The game is functional, can be navigated with keyboard keys or with a microbit. See Github Issues for ideas.
+Your submersible will navigate through an underwater maze of coral reefs. The pilot must reach an underwater base before running out of oxygen or electricity. The gameplay emphasizes careful resource management and precise navigation through challenging 3D environments.
+
+[Submarine Simulator](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project)
+
+Note the game is intended to be played with custom hardware controls, but can be steered with USB gamepad for development or keyboard (See below for tips).
+
+### 💡 Tips for New Pilots
+
+1. **Start slow**: Begin with small adjustments to get a feel for the submarine's response.
+2. **Watch your depth**
+3. **Turn gradually**
+4. **Monitor your systems**:
 
 ### Game Mechanics
 
@@ -201,33 +207,20 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 
 ### Technical Requirements
 
+- **Computer**: Mac Laptop (others may work as well)
 - **Browser**: Chrome (latest version)
-- **Hardware**: Micro:bit v2 for physical controls configuration
-- **UX design**: Photoshop, illustrator, AI tools for coding
+- **Hardware**: Micro:bit v2 for physical controls configuration, connected to Mac with USB
+- **UX design**: Figma, illustrator, AI tools for coding
 - **Programming**: Basic JavaScript and CSS (examples provided)
-- **Publishing**: GitHub Pages for hosting (provided)
-
-### Prerequisites
-
-- A GitHub account
-- Chrome browser
-- Micro:bit v2 with USB cable
-- Basic text editor or IDE
-- various electronics parts
 
 ### Installation
 
-1. Fork this repository
-1. Enable GitHub Pages in your repository settings
-1. Download for local development (not required, but faster)
-1. Connect your Micro:bit v2 via USB
-1. Open your GitHub Pages game URL in Chrome
-
+<!--
 ### Local Development Setup
 
 **IMPORTANT:** When developing locally, you must use a local web server due to browser security restrictions. Opening HTML files directly (via `file://`) will prevent the instruments from working.
 
-**Option 1: Python (Recommended for macOS)**
+**Option 1: Python (Recommended for macOS, should not need installation)**
 
 ```bash
 # Navigate to the project directory
@@ -239,6 +232,7 @@ python3 -m http.server 8080
 # Open in Chrome
 # http://localhost:8080
 ```
+
 
 **Option 2: VS Code Live Server Extension**
 
@@ -253,35 +247,45 @@ npm install -g http-server
 
 # Run the server
 http-server -p 8080
-```
+``` -->
+
+### Set up
+
+1. [Download this repo zip](https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/archive/refs/heads/main.zip)
+1. Unzip, move folder to your Documents folder (~/Documents)
+1. Open Terminal.app
+1. Go to the project directory, type `cd ~/Documents/Tangible-Interfaces-Submarine-Design-Project`
+1. Start web server just on your computer, type `python3 -m http.server 8080` (you may occasionally need to re-do this,like after a computer restart). To stop the web server `lsof -ti:8080 | xargs kill`
+1. Open Chrome, go to `http://localhost:8080/`
 
 ### Development Workflow
 
-(in your fork)
-
-1. **Start local server** (see above)
 1. Modify the SVG instrument files in `instruments/` folder
-1. Test your implementation using keyboard controls
+1. Test your implementation using keyboard controls or USB gamepad
 1. Integrate Micro:bit controls using the provided examples
-1. Push changes to GitHub to update your GitHub Pages site
+1. Upload to Google drive to collaborate with your partners
 
-## GitHub Project Structure
+## Project Structure
 
 The repository is organized as follows:
 
 ```
-├── instruments/        # SVG instruments with embedded scripts **Design Me, Program Me!**
-│   ├── instruments-oxygen.svg     # Oxygen gauge **Design Me, Program Me!**
-│   └── instruments-battery.svg    # Battery gauge **Design Me, Program Me!**
-├── index.html          # Game page **Do not edit**
-├── js/                 # JavaScript files **Do not edit**
+***Design Me, Program Me!***
+├── instruments/        # SVG instruments with embedded scripts
+│   ├── instruments-oxygen.svg     # Oxygen gauge
+│   ├── instruments-battery.svg    # Battery gauge
+│   └── etc...
+
+***These should not need to be edited***
+├── index.html          # Game page
+├── js/                 # JavaScript files
 │   ├── game.js                 # Core game mechanics
 │   ├── controls.js             # Input handling
 │   ├── rendering.js            # 3D scene rendering
 │   ├── hardware-controls.js    # to interpret the sub controls from the microbit
 │   ├── instruments.js          # Cockpit instrument displays
 │   └── microbit-serial.js      # Receive and interpret messages from microbit board
-├── artwork/            # Other visual assets **Do not edit**
+├── artwork/            # Other visual assets
 └── examples/           # Example code
 ```
 
@@ -293,47 +297,32 @@ Each instrument SVG file (in `instruments/`) contains:
 - Embedded `<script>` tag with `updateInstrument(percentage)` function
 - All display logic self-contained in one file
 
-**Students can:**
+**Students should:**
 
 - Edit a single SVG file to change how an instrument looks and behaves
-- Use AI to modify the instrument without navigating multiple files
+- Use AI to modify the instrument logic, for example changing line chart to a dial chart
 - See immediate results when testing with the local server
+- For example, To change how the oxygen gauge displays, edit `instruments/instruments-oxygen.svg`
+- **If instruments are not updating, do 'hard reload' ( Cmd + Shift + R on a Mac) **
 
-**Example:** To change how the oxygen gauge displays, edit `instruments/instruments-oxygen.svg`
+### Submarine Control via Keyboard
+
+Note the game is intended to be played with custom hardware controls, but can be clumsily steered with keyboard for development.
 
 ```
-
-### Submarine Control Guide - Left Hand Keyboard Layout
-
-Note the game is intended to be played with custom hardware controls, but can be steered with keyboard for development.
-
-### ⌨️ 🕹️ Key Controls
-
-| Key   | Function                | Effect                                   |
-| ----- | ----------------------- | ---------------------------------------- |
-| `↑`   | Elevator Up             | Pitches the submarine downward (descend) |
-| `↓`   | Elevator Down           | Pitches the submarine upward (ascend)    |
-| `←`   | Rudder Left             | Turns the submarine to the left          |
-| `→`   | Rudder Right            | Turns the submarine to the right         |
-| `a`   | Left Thruster Increase  | Increases power to the left thruster     |
-| `z`   | Left Thruster Decrease  | Decreases power to the left thruster     |
-| `s`   | Right Thruster Increase | Increases power to the right thruster    |
-| `x`   | Right Thruster Decrease | Decreases power to the right thruster    |
-| `TAB` | Sub-Data-Overlay Toggle | Toggles the submarine data overlay       |
-| `ESC` | Emergency Brake         | Slows it down                            |
-
-### 📊 Less Common Controls
-
-| Key | Function              | Effect                                                                          |
-| --- | --------------------- | ------------------------------------------------------------------------------- |
-| `P` | Aft Thruster Increase | Increases power to the aft (rear) thruster which slowly points vehicle upward   |
-| `L` | Aft Thruster Decrease | Decreases power to the aft (rear) thruster which slowly points vehicle downward |
-| `B` | Emergency Surface     | Activates emergency surfacing procedure                                         |
-
-### 💡 Tips for New Pilots
-
-1. **Start slow**: Begin with small adjustments to get a feel for the submarine's response.
-2. **Watch your depth**
-3. **Turn gradually**
-4. **Monitor your systems**:
+| Key   | Function                   | Effect                                   |
+| ----- | -----------------------    | ---------------------------------------- |
+| `↑`   | Elevator Up                | Pitches the submarine downward (descend) |
+| `↓`   | Elevator Down              | Pitches the submarine upward (ascend)    |
+| `←`   | Rudder Left                | Turns the submarine to the left          |
+| `→`   | Rudder Right               | Turns the submarine to the right         |
+| `a`   | Left Thruster Increase     | Increases power to the left thruster     |
+| `z`   | Left Thruster Decrease     | Decreases power to the left thruster     |
+| `s`   | Right Thruster Increase    | Increases power to the right thruster    |
+| `x`   | Right Thruster Decrease    | Decreases power to the right thruster    |
+| `TAB` | Sub-Data-Overlay Toggle    | Toggles the submarine data overlay       |
+| `ESC` | Emergency Brake            | Slows it down                            |
+| `P`   | Vertical Thruster Increase | Increases power to the Vertical thruster |
+| `L`   | Vertical Thruster Decrease | Decreases power to the Vertical thruster |
+| `B`   | Emergency Surface          | Activates emergency surfacing procedure  |
 ```
