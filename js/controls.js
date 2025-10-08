@@ -342,7 +342,7 @@ function grabTarget() {
 
   // Show message to user
   if (typeof appendInstrumentConsoleMessage === "function") {
-    appendInstrumentConsoleMessage("🎯 TARGET GRABBED! Return to surface to win!");
+    appendInstrumentConsoleMessage("Target Grabbed. Return to surface to win!");
   }
 }
 
