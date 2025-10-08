@@ -1,8 +1,8 @@
 // Submarine Game State Structure
 const gameState_original = {
   // Position & Orientation (using Three.js coordinate system)
-  position: { x: 0, y: 90, z: 0 }, // x: right/left, y: up/down, z: forward/backward
-  rotation: { x: 0, y: 0, z: 0 }, // x: pitch, y: yaw, z: roll
+  position: { x: 0, y: 390, z: 0 }, // x: right/left, y: up/down, z: forward/backward
+  rotation: { x: 0, y: Math.random() * 360, z: 0 }, // x: pitch, y: yaw, z: roll
   velocity: { x: 0, y: 0, z: 0 }, // velocity vector in Three.js coordinates
   angularVelocity: { x: 0, y: 0, z: 0 }, // rotation speed in Three.js coordinates
 
@@ -123,6 +123,10 @@ function restartGame() {
 
   // Stop the current game loop
   stopGame();
+
+  // Hide win overlay immediately
+  const winOverlay = document.getElementById("win-overlay");
+  if (winOverlay) winOverlay.style.display = "none";
 
   // Reset game state to original values (deep copy)
   // This properly copies all nested objects

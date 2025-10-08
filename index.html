@@ -293,9 +293,27 @@
 
       function startMission() {
         if (gameStarted) return;
+
+        // Check if instruments window reference still exists and is valid
+        if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
+          try {
+            // Try to access the window - if this succeeds, it's still open
+            if (window.instrumentsWindow.document) {
+              alert("Please close the existing Submarine Instruments window and try again.");
+              window.instrumentsWindow.focus();
+              return;
+            }
+          } catch (e) {
+            // Window exists but can't access it - clear the reference
+            window.instrumentsWindow = null;
+          }
+        }
+
         gameStarted = true;
 
         // Open instruments window without top bar
+        // Using the named window approach - if a window with this name already exists,
+        // it will reuse it (but we can't detect it beforehand due to browser security)
         window.instrumentsWindow = window.open(
           "instruments.html",
           "Submarine Instruments",
@@ -313,8 +331,11 @@
 
         // Wait for instruments window to fully load before starting game
         if (window.instrumentsWindow) {
+          let loadFired = false;
+
           window.instrumentsWindow.addEventListener("load", function () {
             // console.log("Instruments window loaded, starting game...");
+            loadFired = true;
 
             setTimeout(() => {
               // Start the game loop from game.js (renderer already initialized)
@@ -323,6 +344,16 @@
               }
             }, 100);
           });
+
+          // Also check after a delay if load event didn't fire
+          // This happens when the window was already open
+          setTimeout(() => {
+            if (!loadFired) {
+              alert("An old Submarine Instruments window was detected. Please close it and click Start Mission again.");
+              gameStarted = false;
+              document.getElementById("welcome-screen").style.display = "flex";
+            }
+          }, 1000);
         }
       }
     </script>

@@ -3,6 +3,7 @@
 // Scene variables
 let scene, camera, renderer;
 let targetSphere;
+let startSphere;
 let seabed;
 let water;
 let directionalLight, ambientLight;
@@ -73,6 +74,9 @@ function initScene() {
 
   // Create target sphere
   createTarget();
+
+  // Create start position marker
+  createStartMarker();
 
   // Add water effects - caustics, particles, etc.
   // createWaterEffects();  //there was some flashing
@@ -729,6 +733,27 @@ function createTarget() {
   targetSphere.add(beam);
 }
 
+function createStartMarker() {
+  const startGeometry = new THREE.SphereBufferGeometry(TARGET_SIZE, 16, 16);
+  const startMaterial = new THREE.MeshStandardMaterial({
+    color: 0x00ff00,
+    emissive: 0x00ff00,
+    emissiveIntensity: 0.7,
+    transparent: true,
+    opacity: 0.8,
+  });
+
+  startSphere = new THREE.Mesh(startGeometry, startMaterial);
+  // startSphere.position.set(0, 90, 0); // Starting position from gameState_original
+  startSphere.position.set(gameState_original.position.x, gameState_original.position.y, gameState_original.position.z); // Starting position from where sub starts
+
+  scene.add(startSphere);
+
+  // Add a green pulsing light
+  const pulseLight = new THREE.PointLight(0x00ff00, 2, 30);
+  startSphere.add(pulseLight);
+}
+
 // Create a visible water surface boundary - a semi-transparent plane
 function createWaterSurfaceBoundary() {
   const surfaceGeometry = new THREE.PlaneGeometry(
@@ -768,7 +793,7 @@ function createWaterSurfaceBoundary() {
   gridPlane.position.y = gameState.constants.waterSurface + 0.1; // Slightly above to avoid z-fighting
 
   scene.add(surfacePlane);
-  scene.add(gridPlane);
+  // scene.add(gridPlane);
 
   // console.log(`Created water surface boundary at Y=${gameState.constants.waterSurface}`);
 }
