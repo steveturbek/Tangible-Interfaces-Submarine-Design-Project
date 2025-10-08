@@ -15,7 +15,7 @@ function setupKeyboardControls() {
   document.addEventListener("keydown", handleKeyPress);
 
   // Initialize gamepad controller if available
-  if (typeof SubmarineGamepadController !== 'undefined') {
+  if (typeof SubmarineGamepadController !== "undefined") {
     gamepadController = new SubmarineGamepadController();
     // Note: Actual gamepad connection will be logged when a gamepad is detected
   }
@@ -269,7 +269,7 @@ function updateGamepadControls() {
 }
 
 /**
- * Emergency procedure to rapidly rise to the surface
+ * Emergency procedure to rapidly rise to the surface NOT CURRENTLY USED
  */
 function emergencyBlowTanks() {
   if (Date.now() - gameState.controls.BlowTanksLastUsedTime < 5000) return; // debounce physical buttons
@@ -281,7 +281,11 @@ function emergencyBlowTanks() {
 
   // Set full upward aft thruster
   setVerticalThruster(gameState.controls.MaxVerticalThruster);
-  //this is not working as it is overwritten bny joystick
+  //this is not working as it is overwritten by joystick
+}
+
+function grabTarget() {
+  // attempt to grab target
 }
 
 /**

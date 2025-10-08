@@ -247,7 +247,7 @@ function parseMicrobitSerialLine(lineIn) {
   if (ButtonArray.length != 3) return; // reject bad data
 
   if (ButtonArray[1] == 1) emergencyAllStop();
-  // if (ButtonArray[2] == 1) emergencyBlowTanks();
+  if (ButtonArray[2] == 1) grabTarget();
 
   //controls include motors, steering,
   var ControlInputValuesArray = ButtonArray[0].split(",");

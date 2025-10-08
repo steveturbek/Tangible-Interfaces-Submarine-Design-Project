@@ -524,7 +524,7 @@ function checkCoralCollisions() {
 
 // Handle collision with massive coral structures
 function handleCoralCollision(obstacle) {
-  console.log("Collision with massive coral structure!");
+  appendInstrumentConsoleMessage("Collision with massive coral structure!");
 
   // Stop the submarine (similar to boundary collision)
   gameState.velocity.x = 0;

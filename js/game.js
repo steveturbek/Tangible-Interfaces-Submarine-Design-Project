@@ -411,7 +411,7 @@ function applyBoundaryConstraints() {
     newPosition.x = Math.sign(x) * (worldBoundary - 0.5);
     resetVelocities();
     isHittingBoundary = true;
-    console.log("Hit side boundary - stopping submarine");
+    appendInstrumentConsoleMessage("Hit side boundary - stopping submarine");
   }
 
   // Y boundary (vertical: seabed and water surface)
@@ -420,7 +420,7 @@ function applyBoundaryConstraints() {
     newPosition.y = threeJsSeabedY + 10;
     resetVelocities();
     isHittingBoundary = true;
-    console.log("Hit seabed - stopping submarine");
+    appendInstrumentConsoleMessage("Hit seabed - stopping submarine");
 
     // Auto-level the submarine to prevent driving back into floor
     gameState.rotation.x = 0; // Level pitch
@@ -430,7 +430,7 @@ function applyBoundaryConstraints() {
     newPosition.y = threeJsWaterSurfaceY - 10;
     resetVelocities();
     isHittingBoundary = true;
-    console.log("Hit water surface - stopping submarine");
+    appendInstrumentConsoleMessage("Hit Cave ceiling  - stopping submarine");
 
     // Auto-level the submarine to prevent driving back into ceiling
     gameState.rotation.x = 0; // Level pitch
@@ -442,7 +442,7 @@ function applyBoundaryConstraints() {
     newPosition.z = Math.sign(z) * (worldBoundary - 10);
     resetVelocities();
     isHittingBoundary = true;
-    console.log("Hit forward/backward boundary - stopping submarine");
+    appendInstrumentConsoleMessage("Hit forward/backward boundary - stopping submarine");
   }
 
   // Update position with corrected values
@@ -469,14 +469,14 @@ function updateUI() {
   // console.log(gameState.navigation.distanceToTarget);
   //are you at target?
   if (gameState.navigation.distanceToTarget < 0.1) {
-    console.log("Won!");
+    appendInstrumentConsoleMessage("Won!");
     showWinScreen();
     stopGame();
   }
 
   // oxygen level
   if (gameState.status.oxygenLevel <= 0) {
-    console.log("CRITICAL: Oxygen depleted! You ded.");
+    appendInstrumentConsoleMessage("CRITICAL: Oxygen depleted! You ded.");
     stopGame();
     return;
   }
@@ -485,24 +485,24 @@ function updateUI() {
   // const formatPos = (val) => val.toFixed(2);
 
   // Update sub-data overlay text
-  let overlayText =
-    //    `Welcome to the Tangible Interfaces Class Submarine Design Project Simulator. ` +
-    //   `<a href="https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main?tab=readme-ov-file#tangible-interfaces-submarine-design-project" target="new" style="color:white">Read Me for details</a>` +
-    //`Position(${gameState.position.x.toFixed(2)},${gameState.position.y.toFixed(2)},${gameState.position.z.toFixed(2)}) | ` +
-    `\nCompass: ${Math.round(gameState.navigation.compassHeading)}° ` +
-    `\nSpeed: ${Math.round(gameState.navigation.currentSpeed)}% ` +
-    `\nDepth: ${gameState.status.depth.toFixed(2)}m ` +
-    `\nPitch: ${Math.round(gameState.rotation.x)}°` +
-    `\n` +
-    `\nOxygen: ${gameState.status.oxygenLevel}% ` +
-    `\nBattery: ${gameState.status.batteryLevel.toFixed(1)}% ` +
-    `\nTarget: ${gameState.navigation.distanceToTarget.toFixed(2)}m` +
-    `\n` +
-    `\nLeftThrust: ${gameState.controls.ThrottleLeft}% ` +
-    `\nRightThrust: ${gameState.controls.ThrottleRight}% ` +
-    `\nRudder: ${gameState.controls.YawRudderAngle.toFixed(1)}% ` +
-    `\nElevator: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% ` +
-    `\nVerticalThruster: ${gameState.controls.VerticalThruster}%`;
+  // let overlayText =
+  //   //    `Welcome to the Tangible Interfaces Class Submarine Design Project Simulator. ` +
+  //   //   `<a href="https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main?tab=readme-ov-file#tangible-interfaces-submarine-design-project" target="new" style="color:white">Read Me for details</a>` +
+  //   //`Position(${gameState.position.x.toFixed(2)},${gameState.position.y.toFixed(2)},${gameState.position.z.toFixed(2)}) | ` +
+  //   `\nCompass: ${Math.round(gameState.navigation.compassHeading)}° ` +
+  //   `\nSpeed: ${Math.round(gameState.navigation.currentSpeed)}% ` +
+  //   `\nDepth: ${gameState.status.depth.toFixed(2)}m ` +
+  //   `\nPitch: ${Math.round(gameState.rotation.x)}°` +
+  //   `\n` +
+  //   `\nOxygen: ${gameState.status.oxygenLevel}% ` +
+  //   `\nBattery: ${gameState.status.batteryLevel.toFixed(1)}% ` +
+  //   `\nTarget: ${gameState.navigation.distanceToTarget.toFixed(2)}m` +
+  //   `\n` +
+  //   `\nLeftThrust: ${gameState.controls.ThrottleLeft}% ` +
+  //   `\nRightThrust: ${gameState.controls.ThrottleRight}% ` +
+  //   `\nRudder: ${gameState.controls.YawRudderAngle.toFixed(1)}% ` +
+  //   `\nElevator: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% ` +
+  //   `\nVerticalThruster: ${gameState.controls.VerticalThruster}%`;
 
   // // Add boundary warning if needed
   // if (gameState.status.boundaryWarning) {
@@ -510,16 +510,28 @@ function updateUI() {
   // }
 
   // Update sub-data text in whichever window it's in
-  const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
-  const subDataText = doc.getElementById("sub-data-text");
-  if (subDataText) {
-    subDataText.textContent = overlayText;
-  } else {
-    console.log("sub-data-text element not found in", window.instrumentsWindow ? "instruments window" : "main window");
-  }
+  // const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
+  // const subDataText = doc.getElementById("sub-data-text");
+  // if (subDataText) {
+  //   subDataText.textContent = overlayText;
+  // } else {
+  //   console.log("sub-data-text element not found in", window.instrumentsWindow ? "instruments window" : "main window");
+  // }
 
   // Update instruments
   updateInstruments();
+}
+
+function appendInstrumentConsoleMessage(message) {
+  //add a line to sub-data-text
+
+  const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
+  const subDataText = doc.getElementById("sub-data-text");
+  if (subDataText) {
+    subDataText.textContent += "\n" + message + "\n";
+  } else {
+    console.log("sub-data-text element not found in", window.instrumentsWindow ? "instruments window" : "main window");
+  }
 }
 
 // Calculate values derived from core state
