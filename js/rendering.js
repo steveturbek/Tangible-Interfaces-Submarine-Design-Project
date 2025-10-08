@@ -529,11 +529,8 @@ function handleCoralCollision(obstacle) {
   // Drop the target if it was grabbed!
   if (gameState.navigation.targetGrabbed) {
     gameState.navigation.targetGrabbed = false;
-    // Drop it at current submarine position
-    gameState.navigation.targetPosition.x = gameState.position.x;
-    gameState.navigation.targetPosition.y = gameState.position.y;
-    gameState.navigation.targetPosition.z = gameState.position.z;
-    appendInstrumentConsoleMessage("💎 You dropped the target! Go grab it again!");
+    gameState.navigation.targetFallVelocity = -20; // Start falling
+    appendInstrumentConsoleMessage("💎 You dropped the target! It's falling!");
   }
 
   // Stop the submarine (similar to boundary collision)
@@ -1313,6 +1310,15 @@ function updateScene() {
     gameState.navigation.targetPosition.y = targetPos.y;
     gameState.navigation.targetPosition.z = targetPos.z;
   } else {
+    // Apply falling physics if target is falling
+    if (gameState.navigation.targetFallVelocity < 0) {
+      gameState.navigation.targetPosition.y += gameState.navigation.targetFallVelocity * gameState.time.deltaTime;
+      // Stop at seabed
+      if (gameState.navigation.targetPosition.y <= gameState.constants.seabedDepth + 10) {
+        gameState.navigation.targetPosition.y = gameState.constants.seabedDepth + 10;
+        gameState.navigation.targetFallVelocity = 0;
+      }
+    }
     // Normal fixed position
     targetSphere.position.set(gameState.navigation.targetPosition.x, gameState.navigation.targetPosition.y, gameState.navigation.targetPosition.z);
   }

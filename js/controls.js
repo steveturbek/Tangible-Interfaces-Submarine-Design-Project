@@ -285,9 +285,14 @@ function emergencyBlowTanks() {
 }
 
 function grabTarget() {
-  // Check if target is already grabbed
+  // If already grabbed, drop it instead
   if (gameState.navigation.targetGrabbed) {
-    console.log("Target already grabbed!");
+    console.log("Dropping target!");
+    gameState.navigation.targetGrabbed = false;
+    gameState.navigation.targetFallVelocity = -20; // Start falling
+    if (typeof appendInstrumentConsoleMessage === "function") {
+      appendInstrumentConsoleMessage("💎 Target released! It's falling!");
+    }
     return;
   }
 
@@ -299,8 +304,8 @@ function grabTarget() {
   // Calculate distance to target
   const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-  // Check if within 10 units
-  if (distance > 10) {
+  // Check if within 20 units
+  if (distance > 20) {
     console.log(`Target too far away: ${distance.toFixed(2)} units`);
     return;
   }
@@ -325,8 +330,8 @@ function grabTarget() {
   const angleInRadians = Math.acos(Math.max(-1, Math.min(1, dotProduct)));
   const angleInDegrees = angleInRadians * (180 / Math.PI);
 
-  // Check if within ±10 degrees
-  if (angleInDegrees > 10) {
+  // Check if within ±30 degrees
+  if (angleInDegrees > 30) {
     console.log(`Target not in front: ${angleInDegrees.toFixed(1)} degrees off`);
     return;
   }
