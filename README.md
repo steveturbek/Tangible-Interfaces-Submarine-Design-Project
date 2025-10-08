@@ -274,6 +274,7 @@ http-server -p 8080
 - Design the instrument files using Figma or Illustrator
 - Use AI to modify the instrument logic, for example changing line chart to a dial chart
 - **If instruments are not updating, do 'hard reload' ( Cmd + Shift + R on a Mac) **
+- Note it is possible to use an iPad/iPhone for touchscreen controls using [Duet display](https://www.duetdisplay.com/)
 
 ## Project Structure
 
