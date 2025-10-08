@@ -46,3 +46,41 @@ window.addEventListener("keyup", (e) => {
 
 // Listen for updates from the main window
 // The game scripts in the main window will update the elements here by ID
+
+// Setup microbit connection when the window loads
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    const microbitInstrument = document.getElementById("instruments-microBitGauge");
+
+    if (microbitInstrument && microbitInstrument.contentDocument) {
+      const circuitBoard = microbitInstrument.contentDocument.getElementById("circuit-board-top-layer");
+
+      if (circuitBoard) {
+        circuitBoard.style.cursor = "pointer";
+
+        // Check if Web Serial API is supported
+        if ("serial" in navigator && window.opener && !window.opener.closed) {
+          circuitBoard.setAttribute("fill", "#ffffff");
+
+          // Connect click to main window's function
+          circuitBoard.addEventListener("click", async () => {
+            if (window.opener && window.opener.connectToMicrobit) {
+              await window.opener.connectToMicrobit();
+              // Update the color on success
+              circuitBoard.setAttribute("fill", "#00ff00");
+            }
+          });
+
+          // Try to auto-connect
+          setTimeout(() => {
+            if (window.opener && window.opener.autoConnectToMicrobit) {
+              window.opener.autoConnectToMicrobit();
+            }
+          }, 1000);
+        } else {
+          circuitBoard.setAttribute("fill", "#ff0000");
+        }
+      }
+    }
+  }, 500);
+});

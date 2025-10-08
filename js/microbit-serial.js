@@ -59,21 +59,11 @@ let readingInProgress = false;
 
 ////////////////////////////////////////////////
 async function connectToMicrobit() {
-  //   console.log("connectToMicrobit");
-  // window.alert(
-  //   "This button connects to a custom hardware device.  \n\n  In the next screen, click Cancel if you don't have it.  \n\n If you do have it, pick the option named BBC micro:bit and click Connect"
-  // );
-
-  window.alert(`This button connects to a custom electronics to steer the submarine. (Read the project overview for more information.)
-STEPS:
-1. Connect your BBC micro:bit via USB cable
-2. In the next dialog, pick:
-   ✅ "BBC micro:bit" or "micro:bit"
-   ❌  AVOID anything with "debug" or "Bluetooth"
-Click OK when ready!`);
-
   try {
     // Request a port and open a connection
+    // NOTE: The instructions for selecting "BBC micro:bit" are important:
+    // In the browser dialog, pick "BBC micro:bit" or "micro:bit"
+    // AVOID anything with "debug" or "Bluetooth" in the name
     port = await navigator.serial.requestPort();
 
     // Open the port with appropriate settings for Micro:bit
