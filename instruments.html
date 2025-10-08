@@ -14,6 +14,20 @@
         title="Connect hardware controls to steer the submarine"
         style="width: 50px"
       ></object>
+
+      <svg id="fullscreen-icon" height="100%" width="40px" version="1.1" viewBox="10 10 18 18" title="Click to go fullscreen">
+        <style>
+          path {
+            stroke: white;
+            fill: none;
+            stroke-width: 0.75;
+          }
+        </style>
+        <path d="m 10,16 2,0 0,-4 4,0 0,-2 L 10,10 l 0,6 0,0 z"></path>
+        <path d="m 20,10 0,2 4,0 0,4 2,0 L 26,10 l -6,0 0,0 z"></path>
+        <path d="m 24,24 -4,0 0,2 L 26,26 l 0,-6 -2,0 0,4 0,0 z"></path>
+        <path d="M 12,20 10,20 10,26 l 6,0 0,-2 -4,0 0,-4 0,0 z"></path>
+      </svg>
     </div>
     <div class="instruments-grid">
       <object id="oxygenGauge" type="image/svg+xml" data="instruments/instruments-oxygen.svg"></object>
@@ -36,6 +50,20 @@
     </div>
 
     <script src="js/instruments-window.js"></script>
+    <script>
+      // Fullscreen functionality
+      document.getElementById("fullscreen-icon").addEventListener("click", function() {
+        if (!document.fullscreenElement) {
+          // Enter fullscreen
+          document.documentElement.requestFullscreen().catch(err => {
+            console.error("Error attempting to enable fullscreen:", err);
+          });
+        } else {
+          // Exit fullscreen
+          document.exitFullscreen();
+        }
+      });
+    </script>
   </body>
 
   <style>
@@ -109,6 +137,16 @@
     #restart-btn:hover {
       background: #ff8500;
       transform: scale(1.05);
+    }
+
+    /* Fullscreen icon */
+    #fullscreen-icon {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    #fullscreen-icon:hover {
+      transform: scale(1.1);
     }
   </style>
 </html>

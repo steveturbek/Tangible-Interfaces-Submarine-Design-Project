@@ -217,6 +217,10 @@
         </div>
 
         <button class="start-button" onclick="startMission()">Start Mission</button>
+
+        <div style="margin-top: 20px; color: #888; font-size: 0.8em;">
+          Press <strong>F</strong> for fullscreen
+        </div>
       </div>
     </div>
 
@@ -356,6 +360,54 @@
           }, 1000);
         }
       }
+
+      // Fullscreen functionality for main window - keyboard shortcut 'F'
+      document.addEventListener("keydown", function(e) {
+        if (e.key === "f" || e.key === "F") {
+          e.preventDefault();
+          if (!document.fullscreenElement) {
+            // Enter fullscreen
+            document.documentElement.requestFullscreen().catch(err => {
+              console.error("Error attempting to enable fullscreen:", err);
+            });
+          } else {
+            // Exit fullscreen
+            document.exitFullscreen();
+          }
+        }
+      });
+
+      // Handle fullscreen change to resize canvas properly
+      document.addEventListener("fullscreenchange", function() {
+        setTimeout(() => {
+          const canvas = document.getElementById("outside-scene");
+          const container = document.getElementById("container");
+
+          // Get actual screen dimensions
+          const width = window.innerWidth;
+          const height = window.innerHeight;
+
+          // Force container to fill the actual screen
+          container.style.width = width + 'px';
+          container.style.height = height + 'px';
+
+          // Force canvas to match
+          canvas.style.width = width + 'px';
+          canvas.style.height = height + 'px';
+
+          // Update renderer and camera directly
+          if (typeof renderer !== 'undefined' && renderer) {
+            renderer.setSize(width, height, false);
+            if (typeof camera !== 'undefined' && camera) {
+              camera.aspect = width / height;
+              camera.updateProjectionMatrix();
+            }
+          }
+
+          // Also trigger standard resize handler
+          window.dispatchEvent(new Event('resize'));
+        }, 100);
+      });
     </script>
   </body>
 </html>
