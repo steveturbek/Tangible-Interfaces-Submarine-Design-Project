@@ -362,6 +362,16 @@ function updateSubmarineState(deltaTime) {
 
 // REPLACE the applyBoundaryConstraints function with this corrected version:
 
+// Helper function to reset velocities when hitting boundaries
+function resetVelocities() {
+  gameState.velocity.x = 0;
+  gameState.velocity.y = 0;
+  gameState.velocity.z = 0;
+  gameState.angularVelocity.x = 0;
+  gameState.angularVelocity.y = 0;
+  gameState.angularVelocity.z = 0;
+}
+
 function applyBoundaryConstraints() {
   // Get current position
   const { x, y, z } = gameState.position;
@@ -411,12 +421,20 @@ function applyBoundaryConstraints() {
     resetVelocities();
     isHittingBoundary = true;
     console.log("Hit seabed - stopping submarine");
+
+    // Auto-level the submarine to prevent driving back into floor
+    gameState.rotation.x = 0; // Level pitch
+    gameState.rotation.z = 0; // Level roll
   } else if (y > threeJsWaterSurfaceY) {
     // Above water surface
     newPosition.y = threeJsWaterSurfaceY - 10;
     resetVelocities();
     isHittingBoundary = true;
     console.log("Hit water surface - stopping submarine");
+
+    // Auto-level the submarine to prevent driving back into ceiling
+    gameState.rotation.x = 0; // Level pitch
+    gameState.rotation.z = 0; // Level roll
   }
 
   // Z boundary (forward/backward)
@@ -431,13 +449,6 @@ function applyBoundaryConstraints() {
   gameState.position.x = newPosition.x;
   gameState.position.y = newPosition.y;
   gameState.position.z = newPosition.z;
-
-  // Console log the corrected position
-  if (isHittingBoundary) {
-    console.log(
-      `Position after bounds check: x=${gameState.position.x.toFixed(2)}, y=${gameState.position.y.toFixed(2)}, z=${gameState.position.z.toFixed(2)}`
-    );
-  }
 
   // Set boundary warning flag
   const boundaryWarningThreshold = worldBoundary * 0.9;
@@ -535,7 +546,7 @@ function updateDerivedValues() {
   const speed = Math.sqrt(
     gameState.velocity.x * gameState.velocity.x + gameState.velocity.y * gameState.velocity.y + gameState.velocity.z * gameState.velocity.z
   );
-  gameState.navigation.currentSpeed = (speed / gameState.constants.maxSpeed) * 100;
+  gameState.navigation.currentSpeed = Math.min(100, (speed / gameState.constants.maxSpeed) * 100);
 
   // Convert depth to positive number for display (Y is up, so negative Y is depth)
   // OLD gameState.status.depth = Math.min(gameState.constants.maxDepth, -gameState.position.y + gameState.constants.waterSurface);

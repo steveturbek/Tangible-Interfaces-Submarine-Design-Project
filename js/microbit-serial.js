@@ -154,19 +154,20 @@ async function autoConnectToMicrobit() {
     readSerialData();
 
     // console.log("Auto-connected to Micro:bit successfully");
-    document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").setAttribute("fill", "#00ff00");
-
-    document
-      .getElementById("instruments-microBitGauge")
-      .contentDocument.getElementById("circuit-board-top-layer")
-      .removeEventListener("click", connectToMicrobit);
-    document
-      .getElementById("instruments-microBitGauge")
-      .contentDocument.getElementById("circuit-board-top-layer")
-      .addEventListener("click", disconnectFromMicrobit);
+    const microbitGauge = document.getElementById("instruments-microBitGauge");
+    if (microbitGauge && microbitGauge.contentDocument) {
+      const circuitBoard = microbitGauge.contentDocument.getElementById("circuit-board-top-layer");
+      if (circuitBoard) {
+        circuitBoard.setAttribute("fill", "#00ff00");
+        circuitBoard.removeEventListener("click", connectToMicrobit);
+        circuitBoard.addEventListener("click", disconnectFromMicrobit);
+      }
+    }
+    return true; // Successfully connected
   } catch (error) {
     console.log(`Auto-connect error: ${error.message}`);
     // If auto-connect fails, we leave the manual connect option available
+    return false;
   }
 }
 
@@ -296,6 +297,9 @@ function parseMicrobitSerialLine(lineIn) {
       // console.log("NaN " + ControlInputValuesArray[a].substring(1));
       continue;
     }
-    commandArray[a][SetOrAdjust](value * direction);
+
+    // Scale 0-99 from microbit to 0-100 for full range
+    const scaledValue = Math.round((value / 99) * 100);
+    commandArray[a][SetOrAdjust](scaledValue * direction);
   }
 }

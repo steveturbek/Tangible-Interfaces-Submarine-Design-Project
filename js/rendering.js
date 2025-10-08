@@ -351,6 +351,14 @@ function createCoralReef() {
 
 // Check if a position is too close to existing coral
 function isTooCloseToExisting(newPos, minDistance) {
+  // Check distance from submarine starting position (0, 0) with a safety radius
+  const startSafetyRadius = 200; // Keep coral away from starting position
+  const distanceFromStart = Math.sqrt(newPos.x * newPos.x + newPos.z * newPos.z);
+  if (distanceFromStart < startSafetyRadius) {
+    return true;
+  }
+
+  // Check distance from existing coral
   for (let obstacle of coralObstacles) {
     const dx = newPos.x - obstacle.position.x;
     const dz = newPos.z - obstacle.position.z;

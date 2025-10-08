@@ -302,10 +302,10 @@ function emergencyAllStop() {
   gameState.angularVelocity.y = 0; // Stop yaw rotation
   gameState.angularVelocity.z = 0; // Stop roll rotation
 
-  // Optionally reduce forward momentum (comment out if you want to coast)
-  gameState.velocity.x *= 0.5; // Reduce sideways movement
-  gameState.velocity.y *= 0.5; // Reduce vertical movement
-  gameState.velocity.z *= 0.7; // Reduce forward/backward movement (keep some momentum)
+  // Immediately stop all velocity
+  gameState.velocity.x = 0;
+  gameState.velocity.y = 0;
+  gameState.velocity.z = 0;
 }
 
 // Initialize keyboard controls when the window loads

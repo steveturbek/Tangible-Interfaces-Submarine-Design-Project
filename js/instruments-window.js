@@ -62,19 +62,46 @@ window.addEventListener("load", () => {
         if ("serial" in navigator && window.opener && !window.opener.closed) {
           circuitBoard.setAttribute("fill", "#ffffff");
 
-          // Connect click to main window's function
+          let isConnected = false;
+
+          // Toggle between connect and disconnect
           circuitBoard.addEventListener("click", async () => {
-            if (window.opener && window.opener.connectToMicrobit) {
-              await window.opener.connectToMicrobit();
-              // Update the color on success
-              circuitBoard.setAttribute("fill", "#00ff00");
+            if (!window.opener) return;
+
+            try {
+              if (isConnected) {
+                // Disconnect
+                if (window.opener.disconnectFromMicrobit) {
+                  await window.opener.disconnectFromMicrobit();
+                  circuitBoard.setAttribute("fill", "#ffffff");
+                  isConnected = false;
+                }
+              } else {
+                // Connect
+                if (window.opener.connectToMicrobit) {
+                  await window.opener.connectToMicrobit();
+                  circuitBoard.setAttribute("fill", "#00ff00");
+                  isConnected = true;
+                }
+              }
+            } catch (error) {
+              console.log("Microbit toggle error:", error.message);
             }
           });
 
           // Try to auto-connect
-          setTimeout(() => {
+          setTimeout(async () => {
             if (window.opener && window.opener.autoConnectToMicrobit) {
-              window.opener.autoConnectToMicrobit();
+              try {
+                const connected = await window.opener.autoConnectToMicrobit();
+                // Check if connection succeeded
+                if (connected) {
+                  circuitBoard.setAttribute("fill", "#00ff00");
+                  isConnected = true;
+                }
+              } catch (error) {
+                // Auto-connect failed, stay disconnected
+              }
             }
           }, 1000);
         } else {
