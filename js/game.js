@@ -521,8 +521,9 @@ function updateDerivedValues() {
   const dz = gameState.navigation.targetPosition.z - gameState.position.z;
   const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-  // Scale distance to 0-100%
-  gameState.navigation.distanceToTarget = Math.min(100, (distance / gameState.constants.maxDistance) * 100);
+  // Scale distance to 0-100 range for the gauge
+  // World units are large (~1200 max), so scale to 0-100 for display
+  gameState.navigation.distanceToTarget = Math.min(100, (distance / 15));
 
   // Calculate compass heading (in XZ plane)
   gameState.navigation.headingToTarget = ((Math.atan2(dx, -dz) * 180) / Math.PI + 360) % 360;

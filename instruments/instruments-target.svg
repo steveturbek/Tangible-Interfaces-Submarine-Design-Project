@@ -21,7 +21,7 @@
 
   <text x="10" y="40" style="font-family: Arial; font-size: 50px; font-weight: bold; fill: white;">Target</text>
   <text x="40" y="180" style="font-family: Arial; font-size: 20px; fill: white;">0m</text>
-  <text x="410" y="180" style="font-family: Arial; font-size: 20px; fill: white;">100m</text>
+  <text x="410" y="180" style="font-family: Arial; font-size: 20px; fill: white;">100%</text>
 
   <script type="text/javascript">
     window.updateInstrument = function(meters) {
