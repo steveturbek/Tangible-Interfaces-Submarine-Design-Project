@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 512 256">
+  <defs>
+    <style>
+      .line {
+        fill: none;
+        stroke-width: 5px;
+        stroke: #fff;
+      }
+
+      .back {
+        fill: #231f20;
+        stroke-width: 4px;
+      }
+    </style>
+  </defs>
+  <path id="back" class="back" d="M503.8,256c0-136.9-110.9-247.8-247.8-247.8S8.2,119.1,8.2,256"/>
+  <line id="line" class="line" x1="256" y1="252.9" x2="492.4" y2="252.9"/>
+  <text x="10" y="40" style="font-family: Arial; font-size: 50px; font-weight: bold; fill: white;"> Oxygen</text>
+
+  <script type="text/javascript">
+    // ========================================
+    // STUDENT EDIT ZONE
+    // This script controls how the oxygen gauge displays
+    // ========================================
+
+    /**
+     * Updates the oxygen gauge display
+     * @param {number} percentage - Oxygen level from 0 to 100
+     *
+     * How it works:
+     * - The gauge needle (line) rotates to show oxygen level
+     * - 0% oxygen = -180 degrees (pointing left)
+     * - 50% oxygen = -90 degrees (pointing up)
+     * - 100% oxygen = 0 degrees (pointing right)
+     */
+    window.updateInstrument = function(percentage) {
+      // Get the needle line element
+      const line = document.getElementById('line');
+      if (!line) return;
+
+      // Make sure percentage is between 0 and 100
+      const normalizedLevel = Math.max(0, Math.min(100, percentage));
+
+      // Calculate rotation angle
+      // Formula: -180 degrees + (percentage * 1.8)
+      const angle = -180 + normalizedLevel * 1.8;
+
+      // Get the pivot point (start of the line)
+      const x1 = parseFloat(line.getAttribute('x1'));
+      const y1 = parseFloat(line.getAttribute('y1'));
+
+      // Rotate the needle around its pivot point
+      line.setAttribute('transform', `rotate(${angle}, ${x1}, ${y1})`);
+    };
+
+    //console.log('Oxygen gauge script loaded');
+  </script>
+</svg>
