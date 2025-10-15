@@ -51,10 +51,10 @@ function handleKeyPress(event) {
 
     // Elevator (pitch) controls
     case "arrowup":
-      adjustElevator(-controlConfig.flapIncrement);
+      adjustElevator(controlConfig.flapIncrement);
       break;
     case "arrowdown":
-      adjustElevator(controlConfig.flapIncrement);
+      adjustElevator(-controlConfig.flapIncrement);
       break;
 
     // Rudder (yaw) controls
@@ -210,7 +210,10 @@ function adjustStarboardThruster(amount) {
  */
 function adjustElevator(amount) {
   if (!gameState || !gameState.controls) return;
-  setElevator(gameState.controls.PitchElevatorAngle + amount);
+  // Convert current angle to percentage, add the increment, then pass to setElevator
+  const currentPercent = (gameState.controls.PitchElevatorAngle / gameState.controls.maxPitchElevatorAngle) * 100;
+  const newPercent = currentPercent + (amount / gameState.controls.maxPitchElevatorAngle) * 100;
+  setElevator(newPercent);
 }
 
 /**
@@ -220,7 +223,10 @@ function adjustElevator(amount) {
  */
 function adjustRudder(amount) {
   if (!gameState || !gameState.controls) return;
-  setRudder(gameState.controls.YawRudderAngle + amount);
+  // Convert current angle to percentage, add the increment, then pass to setRudder
+  const currentPercent = (gameState.controls.YawRudderAngle / gameState.controls.maxYawRudderAngle) * 100;
+  const newPercent = currentPercent + (amount / gameState.controls.maxYawRudderAngle) * 100;
+  setRudder(newPercent);
 }
 
 /**

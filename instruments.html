@@ -30,7 +30,10 @@
         <title>Click to go fullscreen</title>
       </svg>
     </div>
+
     <div class="instruments-grid">
+      <div style="grid-column: span 4; font-size: x-large">Submarine Instruments (Students to Design)</div>
+
       <object id="oxygenGauge" type="image/svg+xml" data="instruments/instruments-oxygen.svg"></object>
       <object id="batteryGauge" type="image/svg+xml" data="instruments/instruments-battery.svg"></object>
       <object id="compassGauge" type="image/svg+xml" data="instruments/instruments-compass.svg" style="grid-column: span 2; /* Takes up 2 columns */"></object>
@@ -47,6 +50,8 @@
       <object id="elevatorGauge" type="image/svg+xml" data="instruments/instruments-elevator.svg"></object>
       <object id="verticalThrusterGauge" type="image/svg+xml" data="instruments/instruments-vertical-thruster.svg"></object>
 
+      <div id="sub-data-text" style="grid-column: span 3"></div>
+
       <iframe
         data-testid="embed-iframe"
         style="border-radius: 12px; grid-column: span 3"
@@ -58,8 +63,6 @@
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         loading="lazy"
       ></iframe>
-
-      <div id="sub-data-text" style="grid-column: span 3"></div>
     </div>
 
     <script src="js/instruments-window.js"></script>

@@ -15,9 +15,7 @@ gameState.navigation.currentSpeed
 // ========================================
 function getSVGContentDocument(svgElementId) {
   // Check if instruments are in a separate window
-  const doc = window.instrumentsWindow && !window.instrumentsWindow.closed
-    ? window.instrumentsWindow.document
-    : document;
+  const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
 
   const svgObject = doc.getElementById(svgElementId);
   if (!svgObject || !svgObject.contentDocument) return null;
@@ -115,7 +113,7 @@ function updateInstruments_pitch() {
   if (!svgDoc) return;
 
   if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
-    svgDoc.defaultView.updateInstrument(pitch);
+    svgDoc.defaultView.updateInstrument(Math.round((pitch / gameState_original.controls.maxPitchElevatorAngle) * 100));
   }
 }
 
@@ -151,7 +149,8 @@ function updateInstruments_rudder() {
   if (!svgDoc) return;
 
   if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
-    svgDoc.defaultView.updateInstrument(rudder);
+    // svgDoc.defaultView.updateInstrument(rudder);
+    svgDoc.defaultView.updateInstrument(Math.round((rudder / gameState_original.controls.maxYawRudderAngle) * 100));
   }
 }
 
@@ -163,7 +162,8 @@ function updateInstruments_elevator() {
   if (!svgDoc) return;
 
   if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
-    svgDoc.defaultView.updateInstrument(elevator);
+    // svgDoc.defaultView.updateInstrument(elevator);
+    svgDoc.defaultView.updateInstrument(Math.round((elevator / gameState_original.controls.maxPitchElevatorAngle) * 100));
   }
 }
 
@@ -192,9 +192,7 @@ window.addEventListener(
     // Wait a bit for instruments window to open
     setTimeout(() => {
       // Check if instruments are in a separate window
-      const doc = window.instrumentsWindow && !window.instrumentsWindow.closed
-        ? window.instrumentsWindow.document
-        : document;
+      const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
 
       // Set initial state
       if (gameState && gameState.status) updateInstruments();
