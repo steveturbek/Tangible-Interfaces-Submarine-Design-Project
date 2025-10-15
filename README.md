@@ -1,61 +1,45 @@
 # Tangible Interfaces Submarine Design Project
 
+![Illustration of a Submarine Cockpit](artwork/submarine-illus.png "Illustration of a Submarine Cockpit")
+
 ## Introduction
 
-This Submarine Design Project is part of [Steve Turbek's "Tangible Interfaces" Industrial Design class](https://turbek.com/articles/tangible-interfaces-class.html) at Pratt Institute. This collaborative challenge sits at the intersection of industrial design, user experience, and physical computing. Throughout this project, you'll work in teams to create an immersive submarine piloting experience that combines digital interfaces with physical controls.
-
-![Illustration of a Submarine Cockpit](artwork/submarine-illus.png "Illustration of a Submarine Cockpit")
+This Submarine Design Project is part of [Steve Turbek's "Tangible Interfaces" Industrial Design class](https://turbek.com/articles/tangible-interfaces-class.html) at Pratt Institute. In this project, you'll work in teams to create an immersive submarine piloting experience that combines industrial design, user interface design, and physical computing.
 
 ## The Design Challenge
 
-You are a design team tasked by "AquaNova Submarine" with creating the next generation of personal submersibles. Your submersible needs to navigate complex underwater environments while providing an intuitive interface for beginner pilots.
+You are a design team tasked by "AquaNova Submarine" with creating the next generation of personal submersibles for beginner pilots.
 
 Success in this project will require balancing aesthetic appeal with functional clarity. Your instruments must be visually consistent with your cockpit design while providing clear information. Your physical controls must feel natural while providing the precision needed for delicate maneuvers.
 
-You'll work in teams of three to cover all the tasks. At the end of the project, visiting guests will test each design to determine which provides the most intuitive user experience, their average time to complete the mission will be a factor in rating the design of the team.
+You'll work in teams of three/four to cover all the tasks. At the end of the project, visiting guests will test each design to determine which provides the most intuitive user experience, their average time to complete the mission will be a factor in rating the design of the team.
 
-Your mission:
+To make this project possible for a design student, a technical framework has been made. The project contains basic recipes to connect hardware controls to this game. Very little electronics or programming is expected. Examples are provided to learn from.
 
-1. Research and identify a target market
-1. Create the brand for your sub
-1. Research and design the vehicle exterior and interior
-1. Design the visual styling of your submersible user experience for the instruments that effectively communicate critical vehicle information
-1. Build physical control set (buttons, joysticks, etc.) to drive the submarine that provide an intuitive piloting experience
-1. Write and Design a User Start Guide (Printed, PDF, or interactive)
-1. Test with real people
+**We want the control experience to be THE major selling point of this sub - what innovative and cool experience can you design?**
+
+### Your mission:
+
+1. Research and identify a **target market**
+1. Create the **brand** for your sub
+1. Research and **design the vehicle** exterior
+1. A **cockpit interior design** prototype, either beautiful or rough, from wood or cardboard, with a pilot position (Seated, Prone, Recumbent, or Standing)
+1. An innovative and beautiful **physical controls** (buttons, joysticks, etc.) to drive the submarine with an intuitive piloting experience
+1. **Microbit code** to interpret the controls and send to the laptop.
+1. Design submersible **dashboard user experience** for the instruments to communicate critical vehicle information
+1. Write and Design a **User Start Guide** (Printed, PDF, or interactive)
+1. **Test** with real people
 1. Write up and present design, process, and findings
 
-## Physical Prototype
+### Game Setup
 
-To make this project possible for a design student, we have a technical framework to build from. This GitHub Project builds a web app 'game' with on-screen UX instruments that can be customized. The project contains basic recipes to connect hardware controls to this game. Very little electronics or programming is expected. Examples are provided to learn from.
+- The [Submarine Simulator](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project) is a web based game that connects to a Microbit (or other device) via USB cable.
+- The game has two windows/monitors: the submarine's front window and an instrument panel. In the final presentation, the instruments are in a laptop window, with a projector for the outside view.
+- A Microbit can be programmed to interpret sensor inputs from a custom designed control to steer the submarine.
 
-The student will design and fabricate
+## Research and Reference
 
-1. A cockpit design prototype, either beautiful or rough, from wood or cardboard
-1. An innovative and beautiful physical control set
-1. The controls will send signals to the Micro:bit board
-1. The board will send a USB message to the student laptop
-1. The laptop drive an external monitor(s) embedded in cockpit design prototype (blue rectangle)
-
-The four teams will each design a cockpit for a pilot who could be:
-
-- Seated upright
-- Prone (like a swimmer)
-- Recumbent
-- Standing/leaning
-
-## Submarine Description
-
-The student will have the ability to design the submarine. Here are the technical design constraints. A clever team can write code to change these, but they are responsible for these customizations.
-
-- Left (Port) and Right(Starboard) [Underwater thrusters](https://en.wikipedia.org/wiki/Underwater_thruster) : These face forward and are centered front to back and top to bottom. They operate like tank treads, if both drive forward, the vehicle goes forward; both back: back; one front the other back, vehicle turns. One operating, the other not, the vehicle goes at half speed and turns in the opposite direction.
-- [Rudder](https://en.wikipedia.org/wiki/Rudder): turns vehicle left and right, proportional to vehicle speed
-- [Elevators](<https://en.wikipedia.org/wiki/Elevator_(aeronautics)>): points vehicle up and down, proportional to vehicle speed
-- Vertical thrusters; Small thrusters that point vehicle up and down; very slow, but works when not in motion
-
-The submarine simulation is an idealized vehicle to keep the project fun!
-
-## Submarines for Inspiration
+### Submarines for Inspiration
 
 - https://www.uboatworx.com/custom2
 - https://tritonsubs.com/subs/
@@ -65,9 +49,9 @@ The submarine simulation is an idealized vehicle to keep the project fun!
 - https://robbreport.com/motors/marine/gallery/personal-submersibles-exploration-1234848269/
 - [User instructions to flush a toilet underwater](https://firehead.net/2009/08/submarine-toilet-flushing-instructions/). Funny only [if it is not you](https://en.wikipedia.org/wiki/German_submarine_U-1206#Fate)!
 
-## Videos of Submarines, with a focus on their controls
+### Videos of Submarines, with a focus on their controls
 
-### Triton
+#### Triton
 
 - [TRITON 660 AVA intro video](https://youtu.be/dR12ckJUCU8)
 - [Triton control panels shown](https://youtu.be/SAGwGN_V4nk)
@@ -75,7 +59,7 @@ The submarine simulation is an idealized vehicle to keep the project fun!
 - [Making of deep submergence vehicle](https://youtu.be/pb5j9oeZCm0)
 - [NOVA PBS episode](https://www.pbs.org/wgbh/nova/video/building-stuff-reach-it/) - Triton section can be found between these timings: 14:50 - 27.26.
 
-### U-Boat Worx
+#### U-Boat Worx
 
 - [U Boat-Worx Controls](https://youtu.be/eqIBfny8q70)
 - [Nemo vehicle](https://youtu.be/AvE27dh70qM)
@@ -83,7 +67,7 @@ The submarine simulation is an idealized vehicle to keep the project fun!
 - [Controls demo](https://youtu.be/JPVJ8ZV5em8)
 - [Mexico Expedition C-Explorer 5 - Whale Shark Diving](https://www.youtube.com/watch?v=fpxmoK-bL9c)
 
-## (Fictional) Movies for inspiration
+### (Fictional) Movies for inspiration
 
 - [Last Breath (2025)](https://www.imdb.com/title/tt14403504) - Submarine Divers in trouble
 - [The Abyss (1989)](https://www.imdb.com/title/tt0096754/) - James Cameron's sci-fi thriller about a deep-sea oil rig crew encountering mysterious underwater phenomena
@@ -91,7 +75,7 @@ The submarine simulation is an idealized vehicle to keep the project fun!
 - [The Hunt for Red October (1990)](https://www.imdb.com/title/tt0099810/) - Cold War thriller about a Soviet submarine captain's defection attempt
 - [Gravity (2013)](https://www.imdb.com/title/tt1454468) - In space, but key scene involves learning old user controls
 
-## Submarine Technical Reference
+### Submarine Technical Reference
 
 - [Pressure Vessel for Human Occupancy](https://en.wikipedia.org/wiki/Pressure_vessel_for_human_occupancy)
 - [PVHO-1 - Safety Standard for Pressure Vessels for Human Occupancy](https://www.asme.org/codes-standards/find-codes-standards/safety-standard-for-pressure-vessels-for-human-occupancy/2023/pdf)
@@ -159,13 +143,24 @@ These criteria balance the practical requirements (can users actually pilot the 
 
 ## Game Overview
 
-## The Gameplay Experience
+### The Gameplay Experience
 
 Your submersible will navigate through an underwater maze of coral reefs. The pilot must reach an underwater base before running out of oxygen or electricity. The gameplay emphasizes careful resource management and precise navigation through challenging 3D environments.
 
 [Submarine Simulator](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project)
 
 Note the game is intended to be played with custom hardware controls, but can be steered with USB gamepad for development or keyboard (See below for tips).
+
+### Submarine Controls
+
+The student will have the ability to design the submarine. Here are the technical design constraints. A clever team can write code to change these, but they are responsible for these customizations.
+
+- Left (Port) and Right(Starboard) [Underwater thrusters](https://en.wikipedia.org/wiki/Underwater_thruster) : These face forward and are centered front to back and top to bottom. They operate like tank treads, if both drive forward, the vehicle goes forward; both back: back; one front the other back, vehicle turns. One operating, the other not, the vehicle goes at half speed and turns in the opposite direction.
+- [Rudder](https://en.wikipedia.org/wiki/Rudder): turns vehicle left and right, proportional to vehicle speed
+- [Elevators](<https://en.wikipedia.org/wiki/Elevator_(aeronautics)>): points vehicle up and down, proportional to vehicle speed
+- Vertical thrusters; Small thrusters that point vehicle up and down; very slow, but works when not in motion
+
+The submarine simulation is an idealized vehicle to keep the project fun!
 
 ### 💡 Tips for New Pilots
 
@@ -300,7 +295,7 @@ The repository is organized as follows:
 └── examples/           # Example code
 ```
 
-### Submarine Control via Keyboard
+<!-- ### Submarine Control via Keyboard
 
 Note the game is intended to be played with custom hardware controls, but can be clumsily steered with keyboard for development.
 
@@ -315,9 +310,8 @@ Note the game is intended to be played with custom hardware controls, but can be
 | `z`   | Left Thruster Decrease     | Decreases power to the left thruster     |
 | `s`   | Right Thruster Increase    | Increases power to the right thruster    |
 | `x`   | Right Thruster Decrease    | Decreases power to the right thruster    |
-| `TAB` | Sub-Data-Overlay Toggle    | Toggles the submarine data overlay       |
 | `ESC` | Emergency Brake            | Slows it down                            |
 | `P`   | Vertical Thruster Increase | Increases power to the Vertical thruster |
 | `L`   | Vertical Thruster Decrease | Decreases power to the Vertical thruster |
 | `B`   | Emergency Surface          | Activates emergency surfacing procedure  |
-```
+``` -->

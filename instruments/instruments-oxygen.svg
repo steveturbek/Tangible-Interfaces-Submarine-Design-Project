@@ -88,8 +88,8 @@
   <!-- Needle: defined vertically up (x2 = 200, y2 = 140) and initially rotated to -150deg
        Pivot MUST remain x1="200" y1="260" for your handler to work unchanged. -->
   <g id="needleGroup">
-    <line id="line" x1="200" y1="260" x2="200" y2="140" class="needle" transform="rotate( 200 260)"/>
-    <line x1="200" y1="140" x2="200" y2="130" class="needleTip" transform=" 200 260)"/>
+    <line id="line" x1="200" y1="260" x2="200" y2="140" class="needle" transform="rotate(0 200 260)"/>
+    <line x1="200" y1="140" x2="200" y2="130" class="needleTip" transform="rotate(0 200 260)"/>
     <circle cx="200" cy="260" r="6" class="pivot"/>
     <circle cx="200" cy="260" r="3" fill="#fff" opacity="0.08"/>
   </g>

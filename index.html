@@ -233,6 +233,22 @@
         height: 100%;
         display: block;
       }
+
+      kbd {
+        display: inline-block; /* Allows padding and margin to be applied correctly */
+        padding: 0.2em 0.6em; /* Adjust padding for key size */
+        margin: 0.1em; /* Add slight spacing between keys */
+        border: 1px solid #ccc; /* Basic border for key outline */
+        border-radius: 3px; /* Rounded corners for a softer look */
+        background-color: #f0f0f0; /* Light background color */
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px #fff inset; /* subtle shadow for depth */
+        font-family: monospace; /* Monospace font for a classic key look */
+        font-size: 0.85em; /* Adjust font size relative to parent */
+        color: #333; /* Darker text color */
+        text-align: center; /* Center the text within the key */
+        line-height: 1; /* Ensure text is vertically centered */
+        white-space: nowrap; /* Prevent text from wrapping inside the key */
+      }
     </style>
   </head>
   <body>
@@ -243,26 +259,40 @@
 
         <div class="description">
           <p>
-            The Tangible Interfaces Submarine Simulation project teaches HTML, CSS, and hardware integration through building submarine control instruments.
+            This game supports a
+            <a href="https://turbek.com/articles/tangible-interfaces-class.html" target="_blank">Tangible Interfaces class</a> project. The students design
+            integrated hardware controls, software, and UX design to control this submarine. This is an open source project available for teachers on the
+            <a
+              href="https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main?tab=readme-ov-file#tangible-interfaces-submarine-design-project"
+              target="_blank"
+              >Github Project Page</a
+            >
           </p>
 
           <h3>How to Play:</h3>
           <ul>
-            <li>Goal: Find and Navigate to the orange sphere</li>
+            <li>Goal: Find and Navigate to the Gem and return to the surface opening</li>
             <li>Avoid coral obstacles and stay within boundaries</li>
             <li>Manage your oxygen and battery levels</li>
-            <li>
-              For students: Edit <code>instruments.html</code> to customize your dashboard. More details at
-              <a href="https://github.com/yourusername/submarine-game" target="_blank"> Project Pages </a>
-            </li>
           </ul>
+
+          <details>
+            <summary>This game is meant to be played with custom joystick controllers, but these keyboard controls work for testing</summary>
+            <kbd>a</kbd> Port (left) engine power increase<br />
+            <kbd>z</kbd> Port (left) engine power decrease<br />
+            <kbd>s</kbd> Starboard (right) engine power increase<br />
+            <kbd>x</kbd> Starboard (right) engine power decrease<br />
+            <kbd>←</kbd> Elevator Up<br />
+            <kbd>→</kbd> Elevator Down<br />
+            <kbd>↑</kbd> Rudder Left<br />
+            <kbd>↓</kbd> Rudder Right<br />
+            <kbd>ESC</kbd> Emergency Brake<br />
+          </details>
         </div>
 
         <button class="start-button" onclick="startMission()">Start Mission</button>
 
-        <div style="margin-top: 20px; color: #888; font-size: 0.8em;">
-          Press <strong>F</strong> for fullscreen
-        </div>
+        <div style="margin-top: 20px; color: #888; font-size: 0.8em">Press <strong>F</strong> for fullscreen</div>
       </div>
     </div>
 
@@ -284,7 +314,7 @@
       <div class="gameover-container">
         <div class="mission-failed">💀 OUT OF OXYGEN 💀</div>
         <div class="stats">
-          <div style="font-size: 1.3em; margin: 20px 0;">You ran out of oxygen!</div>
+          <div style="font-size: 1.3em; margin: 20px 0">You ran out of oxygen!</div>
           <div>⏱️ Survived: <span id="gameover-time">0:00</span></div>
         </div>
         <button class="play-again-button" onclick="restartGame()">Dive Again</button>
@@ -420,12 +450,12 @@
       }
 
       // Fullscreen functionality for main window - keyboard shortcut 'F'
-      document.addEventListener("keydown", function(e) {
+      document.addEventListener("keydown", function (e) {
         if (e.key === "f" || e.key === "F") {
           e.preventDefault();
           if (!document.fullscreenElement) {
             // Enter fullscreen
-            document.documentElement.requestFullscreen().catch(err => {
+            document.documentElement.requestFullscreen().catch((err) => {
               console.error("Error attempting to enable fullscreen:", err);
             });
           } else {
@@ -436,7 +466,7 @@
       });
 
       // Handle fullscreen change to resize canvas properly
-      document.addEventListener("fullscreenchange", function() {
+      document.addEventListener("fullscreenchange", function () {
         setTimeout(() => {
           const canvas = document.getElementById("outside-scene");
           const container = document.getElementById("container");
@@ -446,24 +476,24 @@
           const height = window.innerHeight;
 
           // Force container to fill the actual screen
-          container.style.width = width + 'px';
-          container.style.height = height + 'px';
+          container.style.width = width + "px";
+          container.style.height = height + "px";
 
           // Force canvas to match
-          canvas.style.width = width + 'px';
-          canvas.style.height = height + 'px';
+          canvas.style.width = width + "px";
+          canvas.style.height = height + "px";
 
           // Update renderer and camera directly
-          if (typeof renderer !== 'undefined' && renderer) {
+          if (typeof renderer !== "undefined" && renderer) {
             renderer.setSize(width, height, false);
-            if (typeof camera !== 'undefined' && camera) {
+            if (typeof camera !== "undefined" && camera) {
               camera.aspect = width / height;
               camera.updateProjectionMatrix();
             }
           }
 
           // Also trigger standard resize handler
-          window.dispatchEvent(new Event('resize'));
+          window.dispatchEvent(new Event("resize"));
         }, 100);
       });
     </script>
