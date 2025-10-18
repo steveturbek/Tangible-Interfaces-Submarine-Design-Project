@@ -67,6 +67,10 @@ To make this project possible for a design student, a technical framework has be
 - [Controls demo](https://youtu.be/JPVJ8ZV5em8)
 - [Mexico Expedition C-Explorer 5 - Whale Shark Diving](https://www.youtube.com/watch?v=fpxmoK-bL9c)
 
+#### Seamagine
+
+- [Pilot training](https://www.youtube.com/watch?v=_N5IolEUQtk)
+
 ### (Fictional) Movies for inspiration
 
 - [Last Breath (2025)](https://www.imdb.com/title/tt14403504) - Submarine Divers in trouble
