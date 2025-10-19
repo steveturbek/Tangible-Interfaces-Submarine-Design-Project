@@ -14,7 +14,7 @@ class SubmarineGamepadController {
     this.connected = false;
 
     // Load configuration (use provided config or default GamepadConfig)
-    this.config = config || (typeof GamepadConfig !== 'undefined' ? GamepadConfig : this.getDefaultConfig());
+    this.config = config || (typeof GamepadConfig !== "undefined" ? GamepadConfig : this.getDefaultConfig());
     this.deadzone = this.config.deadzone;
 
     // Control outputs (normalized -1 to 1)
@@ -24,7 +24,13 @@ class SubmarineGamepadController {
       rudder: 0,
       elevator: 0,
       blowTanks: false,
-      allStop: false
+      allStop: false,
+      grabTarget: false,
+    };
+
+    // Track previous button states for edge detection
+    this.previousButtonStates = {
+      grabTarget: false,
     };
 
     this.init();
@@ -34,25 +40,25 @@ class SubmarineGamepadController {
     // Fallback config if gamepad-config.js is not loaded
     return {
       deadzone: 0.15,
-      leftStick: { xAxis: 0, yAxis: 1, method: 'clock' },
+      leftStick: { xAxis: 0, yAxis: 1, method: "clock" },
       rightStick: { xAxis: 5, yAxis: 2, invertX: true, invertY: false },
       buttons: {
         blowTanks: { buttonIndex: 0, triggerThreshold: 0.5 },
-        allStop: { buttonIndices: [6, 7], triggerThreshold: 0.3 }
-      }
+        allStop: { buttonIndices: [6, 7], triggerThreshold: 0.3 },
+      },
     };
   }
 
   init() {
     // Listen for gamepad connection
-    window.addEventListener('gamepadconnected', (e) => {
-      console.log('Gamepad connected:', e.gamepad.id);
+    window.addEventListener("gamepadconnected", (e) => {
+      console.log("Gamepad connected:", e.gamepad.id);
       this.gamepad = e.gamepad;
       this.connected = true;
     });
 
-    window.addEventListener('gamepaddisconnected', (e) => {
-      console.log('Gamepad disconnected');
+    window.addEventListener("gamepaddisconnected", (e) => {
+      console.log("Gamepad disconnected");
       this.gamepad = null;
       this.connected = false;
       this.resetControls();
@@ -64,7 +70,7 @@ class SubmarineGamepadController {
       if (gamepads[i]) {
         this.gamepad = gamepads[i];
         this.connected = true;
-        console.log('Gamepad already connected:', gamepads[i].id);
+        console.log("Gamepad already connected:", gamepads[i].id);
         break;
       }
     }
@@ -100,13 +106,23 @@ class SubmarineGamepadController {
 
     // All stop can use multiple buttons
     const allStopBtns = this.config.buttons.allStop;
-    const allStopIndices = Array.isArray(allStopBtns.buttonIndices)
-      ? allStopBtns.buttonIndices
-      : [allStopBtns.buttonIndices];
+    const allStopIndices = Array.isArray(allStopBtns.buttonIndices) ? allStopBtns.buttonIndices : [allStopBtns.buttonIndices];
 
-    this.controls.allStop = allStopIndices.some(idx =>
-      (this.gamepad.buttons[idx]?.value || 0) > allStopBtns.triggerThreshold
-    );
+    this.controls.allStop = allStopIndices.some((idx) => (this.gamepad.buttons[idx]?.value || 0) > allStopBtns.triggerThreshold);
+
+    // Grab target button (if configured) - only trigger on button press (rising edge)
+    if (this.config.buttons.grabTarget) {
+      const grabTargetBtns = this.config.buttons.grabTarget;
+      const grabTargetIndices = Array.isArray(grabTargetBtns.buttonIndices)
+        ? grabTargetBtns.buttonIndices
+        : [grabTargetBtns.buttonIndices];
+
+      const currentlyPressed = grabTargetIndices.some((idx) => this.gamepad.buttons[idx]?.pressed || false);
+
+      // Only trigger on rising edge (button just pressed, not held)
+      this.controls.grabTarget = currentlyPressed && !this.previousButtonStates.grabTarget;
+      this.previousButtonStates.grabTarget = currentlyPressed;
+    }
 
     // If all stop is engaged, zero out movement controls only
     if (this.controls.allStop) {
@@ -119,10 +135,10 @@ class SubmarineGamepadController {
   }
 
   calculateThrusterValues(stickX, stickY) {
-    const method = this.config.leftStick.method || 'clock';
+    const method = this.config.leftStick.method || "clock";
 
     // Use custom function if provided
-    if (method === 'custom' && this.config.leftStick.customFunction) {
+    if (method === "custom" && this.config.leftStick.customFunction) {
       const result = this.config.leftStick.customFunction(stickX, stickY);
       this.controls.leftThruster = result.left;
       this.controls.rightThruster = result.right;
@@ -130,11 +146,11 @@ class SubmarineGamepadController {
     }
 
     // Clock method (current implementation)
-    if (method === 'clock') {
+    if (method === "clock") {
       this.calculateClockMethod(stickX, stickY);
     }
     // Tank method (traditional)
-    else if (method === 'tank') {
+    else if (method === "tank") {
       this.calculateTankMethod(stickX, stickY);
     }
   }
@@ -209,6 +225,8 @@ class SubmarineGamepadController {
     this.controls.elevator = 0;
     this.controls.blowTanks = false;
     this.controls.allStop = false;
+    this.controls.grabTarget = false;
+    this.previousButtonStates.grabTarget = false;
   }
 
   getControls() {
@@ -221,6 +239,6 @@ class SubmarineGamepadController {
 }
 
 // Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = SubmarineGamepadController;
 }

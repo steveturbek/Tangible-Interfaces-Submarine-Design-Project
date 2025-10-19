@@ -546,6 +546,10 @@ function handleCoralCollision(obstacle) {
   gameState.angularVelocity.z = 0;
   gameState.rotation.z = 0; // Level roll after collision
 
+  // Reset control surfaces to prevent unexpected behavior after collision
+  gameState.controls.PitchElevatorAngle = 0;
+  gameState.controls.YawRudderAngle = 0;
+
   // Larger penalty for hitting these massive structures
   gameState.status.oxygenLevel = Math.max(0, gameState.status.oxygenLevel - 3);
   gameState.status.batteryLevel = Math.max(0, gameState.status.batteryLevel - 8);

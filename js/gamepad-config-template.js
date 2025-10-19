@@ -49,20 +49,19 @@ const GamepadConfig = {
   // Smaller = more sensitive, Larger = less sensitive
   deadzone: 0.15,
 
-
   // === LEFT STICK CONFIGURATION ===
   // This controls the submarine's side thrusters
 
   leftStick: {
     // Which axes to use for left stick
-    xAxis: 0,  // TODO: Change this to the axis you want for left/right
-    yAxis: 1,  // TODO: Change this to the axis you want for up/down
+    xAxis: 0, // TODO: Change this to the axis you want for left/right
+    yAxis: 1, // TODO: Change this to the axis you want for up/down
 
     // Control method:
     // - 'clock': stick position like clock hands (12=forward, 3=spin right, 6=back, 9=spin left)
     // - 'tank': traditional tank controls (Y=forward/back, X=turn while moving)
     // - 'custom': write your own function below
-    method: 'clock',  // TODO: Choose your control method
+    method: "clock", // TODO: Choose your control method
 
     // OPTIONAL: If using 'custom' method, write your function here
     // The function receives stickX and stickY (each -1 to 1)
@@ -78,20 +77,18 @@ const GamepadConfig = {
     */
   },
 
-
   // === RIGHT STICK CONFIGURATION ===
   // This controls the submarine's rudder and elevator
 
   rightStick: {
     // Which axes to use for right stick
-    xAxis: 5,  // TODO: Axis for rudder (left/right steering)
-    yAxis: 2,  // TODO: Axis for elevator (up/down pitch)
+    xAxis: 5, // TODO: Axis for rudder (left/right steering)
+    yAxis: 2, // TODO: Axis for elevator (up/down pitch)
 
     // Invert axes if the controls feel backwards
-    invertX: true,   // TODO: Set to true if rudder is reversed
-    invertY: false,  // TODO: Set to true if elevator is reversed
+    invertX: true, // TODO: Set to true if rudder is reversed
+    invertY: false, // TODO: Set to true if elevator is reversed
   },
-
 
   // === VERTICAL THRUSTER CONFIGURATION (OPTIONAL) ===
   // Controls direct up/down movement (ballast control)
@@ -125,25 +122,30 @@ const GamepadConfig = {
   //   invertAxis: false,      // TODO: Set true if up/down is backwards
   // },
 
-
   // === BUTTON CONFIGURATION ===
 
   buttons: {
     // Blow Tanks button (emergency surface)
     blowTanks: {
-      buttonIndex: 0,  // TODO: Which button to use (see reference above)
-      triggerThreshold: 0.5  // How hard to press (0.0 to 1.0)
+      buttonIndex: 0, // TODO: Which button to use (see reference above)
+      triggerThreshold: 0.5, // How hard to press (0.0 to 1.0)
     },
 
     // All Stop buttons (emergency brake)
     allStop: {
       // You can use one button or multiple (any will trigger)
-      buttonIndices: [6, 7],  // TODO: Which buttons for all-stop
-      triggerThreshold: 0.3   // How hard to press
-    }
-  }
-};
+      buttonIndices: [6, 7], // TODO: Which buttons for all-stop
+      triggerThreshold: 0.3, // How hard to press
+    },
 
+    // All stop (emergency brake)
+    grabTarget: {
+      // Can use multiple buttons - triggers if ANY are pressed
+      buttonIndices: [1, 3], // Left and Right triggers
+      triggerThreshold: 0.3,
+    },
+  },
+};
 
 // === DESIGN QUESTIONS TO CONSIDER ===
 /*
@@ -170,8 +172,7 @@ WRITE YOUR ANSWERS HERE:
 
 */
 
-
 // Export configuration
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = GamepadConfig;
 }

@@ -2,7 +2,7 @@
 const gameState_original = {
   // Position & Orientation (using Three.js coordinate system)
   position: { x: 0, y: 10, z: 0 }, // x: right/left, y: up/down, z: forward/backward
-  rotation: { x: 0, y: Math.random() * 360, z: 0 }, // x: pitch, y: yaw, z: roll
+  rotation: { x: 0, y: 0, z: 0 }, // x: pitch, y: yaw, z: roll - start facing forward (down -Z axis)
   velocity: { x: 0, y: 0, z: 0 }, // velocity vector in Three.js coordinates
   angularVelocity: { x: 0, y: 0, z: 0 }, // rotation speed in Three.js coordinates
 
@@ -461,6 +461,8 @@ function applyBoundaryConstraints() {
     gameState.angularVelocity.z = 0;
     gameState.controls.ThrottleLeft = 0;
     gameState.controls.ThrottleRight = 0;
+    gameState.controls.PitchElevatorAngle = 0;
+    gameState.controls.YawRudderAngle = 0;
   };
 
   // Make a copy of the position to track changes

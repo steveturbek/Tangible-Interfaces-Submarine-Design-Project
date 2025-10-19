@@ -39,11 +39,11 @@ const GamepadConfig = {
    * - 9 o'clock (left): spin left in place
    */
   leftStick: {
-    xAxis: 0,  // Axis index for X (left/right)
-    yAxis: 1,  // Axis index for Y (up/down)
+    xAxis: 0, // Axis index for X (left/right)
+    yAxis: 1, // Axis index for Y (up/down)
 
     // Control calculation method (options: 'clock', 'tank', 'custom')
-    method: 'clock',
+    method: "clock",
 
     // If using 'custom' method, define your own function here:
     // customFunction: (stickX, stickY) => { return {left: 0, right: 0} }
@@ -53,12 +53,12 @@ const GamepadConfig = {
    * Right stick controls rudder (X axis) and elevator (Y axis)
    */
   rightStick: {
-    xAxis: 5,  // Axis index for X (left/right)
-    yAxis: 2,  // Axis index for Y (up/down)
+    xAxis: 5, // Axis index for X (left/right)
+    yAxis: 2, // Axis index for Y (up/down)
 
     // Invert axes if needed (multiply by -1)
-    invertX: true,   // Rudder: push right to turn right
-    invertY: false,  // Elevator: push up to pitch up
+    invertX: true, // Rudder: push right to turn right
+    invertY: false, // Elevator: push up to pitch up
   },
 
   // === VERTICAL THRUSTER (OPTIONAL) ===
@@ -88,20 +88,27 @@ const GamepadConfig = {
   buttons: {
     // Emergency blow tanks (surface quickly)
     blowTanks: {
-      buttonIndex: 0,  // Y button
-      triggerThreshold: 0.5  // How hard to press (for analog buttons)
+      buttonIndex: 0, // Y button
+      triggerThreshold: 0.5, // How hard to press (for analog buttons)
     },
 
     // All stop (emergency brake)
     allStop: {
       // Can use multiple buttons - triggers if ANY are pressed
-      buttonIndices: [6, 7],  // Left and Right triggers
-      triggerThreshold: 0.3
-    }
-  }
+      buttonIndices: [6, 7], // Left and Right triggers
+      triggerThreshold: 0.3,
+    },
+
+    // All stop (emergency brake)
+    grabTarget: {
+      // Can use multiple buttons - triggers if ANY are pressed
+      buttonIndices: [1, 3], // Left and Right triggers
+      triggerThreshold: 0.3,
+    },
+  },
 };
 
 // Export for use in the controller
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = GamepadConfig;
 }
