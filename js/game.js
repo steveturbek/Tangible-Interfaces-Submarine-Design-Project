@@ -14,7 +14,7 @@ const gameState_original = {
 
     //Elevator flaps on the horizontal tail produce pitch
     PitchElevatorAngle: 0, // -100 to +100 (down to up)
-    maxPitchElevatorAngle: 25, // absolute number
+    maxPitchElevatorAngle: 45, // absolute number
 
     //rudder on the vertical tail produces yaw
     YawRudderAngle: 0, // -100 to +100 (left to right)
