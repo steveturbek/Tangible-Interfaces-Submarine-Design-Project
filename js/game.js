@@ -342,6 +342,32 @@ function updateSubmarineState(deltaTime) {
   gameState.velocity.y *= 1 - drag * deltaTime;
   gameState.velocity.z *= 1 - drag * deltaTime;
 
+  // DIRECTIONAL DRAG: Much higher resistance when moving sideways/backward
+  // This makes turns feel realistic - submarine naturally aligns with velocity
+  const yawRad = THREE.MathUtils.degToRad(gameState.rotation.y);
+  const pitchRad = THREE.MathUtils.degToRad(gameState.rotation.x);
+
+  // Calculate submarine's forward direction vector
+  const forwardX = Math.sin(yawRad) * Math.cos(pitchRad);
+  const forwardZ = -Math.cos(yawRad) * Math.cos(pitchRad);
+
+  // Calculate speed and direction of movement
+  const speed = Math.sqrt(gameState.velocity.x ** 2 + gameState.velocity.z ** 2);
+
+  if (speed > 0.01) {
+    // Calculate how much velocity aligns with submarine's forward direction
+    const velocityX = gameState.velocity.x / speed;
+    const velocityZ = gameState.velocity.z / speed;
+    const alignment = velocityX * forwardX + velocityZ * forwardZ; // -1 to 1
+
+    // Apply extra drag to sideways/backward motion (perpendicular to forward)
+    const lateralDragFactor = 3.0; // Sideways drag is 3x stronger than forward
+    const lateralDrag = (1 - Math.abs(alignment)) * lateralDragFactor * drag * deltaTime;
+
+    gameState.velocity.x *= 1 - lateralDrag;
+    gameState.velocity.z *= 1 - lateralDrag;
+  }
+
   // Apply drag to angular velocities
   gameState.angularVelocity.x *= 1 - drag * 4 * deltaTime;
   gameState.angularVelocity.y *= 1 - drag * 4 * deltaTime;
