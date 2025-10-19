@@ -253,12 +253,23 @@ http-server -p 8080
 1. Open Terminal.app
 1. Go to the project directory, type `cd ~/Documents/Tangible-Interfaces-Submarine-Design-Project`
 1. Start web server just on your computer, type `python3 -m http.server 8080`
-   1. (you may occasionally need to re-do this,like after a computer restart).
+   1. (you may occasionally need to re-do this, like after a computer restart).
    1. Leave this window running, you can hide it.
    1. To stop the web server `lsof -ti:8080 | xargs kill`
 1. Open Chrome, go to `http://localhost:8080/`
 
 ### Development Workflow
+
+#### Physical Controls
+
+1. What is your concept of control? What are the physical motions a pilot could use? Which parts of their body.
+1. Choose your sensors - joystick components are the least interesting choice. Take inspiration from planes, vehicles, Sci-Fi movies..
+1. Rig up a prototype & TEST it with friends
+1. Program a microbit to send the output to the game via serial over USB. Use [this sample code](microbit/thunderstick-serial-demo.microbitJavascript) to start from. [Makecode link](https://makecode.microbit.org/S99508-25130-71089-08675)
+1. Refine prototype to a looks-like/works-like unit & TEST it with friends
+1. Final CAD / Product manufacture
+
+#### Instruments
 
 1. Modify the SVG instrument files in `instruments/` folder
 1. Test your implementation using keyboard controls or USB gamepad
