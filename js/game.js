@@ -217,7 +217,7 @@ function updateSubmarineState(deltaTime) {
   // Get orientation angles in radians (for Three.js coordinates)
   const pitch = THREE.MathUtils.degToRad(gameState.rotation.x);
   const yaw = THREE.MathUtils.degToRad(gameState.rotation.y);
-  const roll = THREE.MathUtils.degToRad(gameState.rotation.z);
+  const roll = 0; //THREE.MathUtils.degToRad(gameState.rotation.z);
 
   // Calculate thrust based on thruster values
   if (gameState.status.batteryLevel > 0) {
@@ -361,6 +361,10 @@ function updateSubmarineState(deltaTime) {
   gameState.rotation.y += gameState.angularVelocity.y * deltaTime;
   gameState.rotation.z += gameState.angularVelocity.z * deltaTime;
 
+  // Hard clamp roll to prevent excessive banking - keeps submarine feeling upright
+  const maxRoll = 5; // Allow only ±5° of roll (barely noticeable)
+  gameState.rotation.z = Math.max(-maxRoll, Math.min(maxRoll, gameState.rotation.z));
+
   // Apply boundary constraints
   applyBoundaryConstraints();
 
@@ -500,7 +504,7 @@ function updateUI() {
   const inHoleRadius = distanceFromHole < 50; // Within 50 units of the hole
 
   if (gameState.navigation.targetGrabbed && atSurface && inHoleRadius) {
-    appendInstrumentConsoleMessage("🏆 MISSION COMPLETE! You found the target and returned to the hole!");
+    appendInstrumentConsoleMessage("🏆 MISSION COMPLETE! You found the target and returned to the surface!");
     showWinScreen();
     stopGame();
   }

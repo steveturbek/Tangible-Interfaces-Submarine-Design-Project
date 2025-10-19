@@ -540,6 +540,7 @@ function handleCoralCollision(obstacle) {
   gameState.angularVelocity.x = 0;
   gameState.angularVelocity.y = 0;
   gameState.angularVelocity.z = 0;
+  gameState.rotation.z = 0; // Level roll after collision
 
   // Larger penalty for hitting these massive structures
   gameState.status.oxygenLevel = Math.max(0, gameState.status.oxygenLevel - 3);
