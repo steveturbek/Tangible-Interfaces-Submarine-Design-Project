@@ -269,6 +269,10 @@ http-server -p 8080
 1. Refine prototype to a looks-like/works-like unit & TEST it with friends
 1. Final CAD / Product manufacture
 
+**Note**
+
+- A Makecode editor open in a browser tab at the same time as the game may have worse performance as each tab is 'taking' the serial messages from the microbit.
+
 #### Instruments
 
 1. Modify the SVG instrument files in `instruments/` folder
