@@ -14,7 +14,7 @@ const gameState_original = {
 
     //Elevator flaps on the horizontal tail produce pitch
     PitchElevatorAngle: 0, // -100 to +100 (down to up)
-    maxPitchElevatorAngle: 30, // absolute number
+    maxPitchElevatorAngle: 25, // absolute number
 
     //rudder on the vertical tail produces yaw
     YawRudderAngle: 0, // -100 to +100 (left to right)
@@ -56,7 +56,6 @@ const gameState_original = {
     maxBatteryTime: 300, // 2.5 minutes at full throttle
     maxDepth: 100, // Maximum dive depth
     maxSpeed: 10, // Units per second at 100% throttle
-    maxPitchAngle: 25, // Maximum physical pitch in degrees
     maxYawRate: 20, // Maximum yaw rate in degrees per second
     dragCoefficient: 0.05, // Water resistance factor
     mass: 1000, // Mass affects momentum
@@ -260,7 +259,11 @@ function updateSubmarineState(deltaTime) {
 
     // Apply elevator effect (pitch control)
     gameState.angularVelocity.x +=
-      (gameState.controls.PitchElevatorAngle / 100) * (forwardSpeed / gameState.constants.maxSpeed) * gameState.constants.maxPitchAngle * 0.5 * deltaTime;
+      (gameState.controls.PitchElevatorAngle / 100) *
+      (forwardSpeed / gameState.constants.maxSpeed) *
+      gameState.constants.maxPitchElevatorAngle *
+      0.5 *
+      deltaTime;
 
     // INTENTIONALLY NOT AFFECTING Z (ROLL) AXIS
 
@@ -345,7 +348,7 @@ function updateSubmarineState(deltaTime) {
   gameState.angularVelocity.z *= 1 - drag * 2 * deltaTime;
 
   // Limit maximum pitch angle
-  const maxPitch = gameState.constants.maxPitchAngle;
+  const maxPitch = gameState.constants.maxPitchElevatorAngle;
   gameState.rotation.x = Math.max(-maxPitch, Math.min(maxPitch, gameState.rotation.x));
 
   // Update position based on velocity

@@ -20,21 +20,21 @@
   <line id="indicator" class="pitch-indicator" x1="256" y1="100" x2="256" y2="156"/>
 
   <text x="10" y="40" style="font-family: Arial; font-size: 50px; font-weight: bold; fill: white;">Pitch</text>
-  <text x="30" y="180" style="font-family: Arial; font-size: 20px; fill: white;">-45°</text>
+  <text x="30" y="180" style="font-family: Arial; font-size: 20px; fill: white;">-25°</text>
   <text x="230" y="180" style="font-family: Arial; font-size: 20px; fill: white;">0°</text>
-  <text x="420" y="180" style="font-family: Arial; font-size: 20px; fill: white;">+45°</text>
+  <text x="420" y="180" style="font-family: Arial; font-size: 20px; fill: white;">+25°</text>
 
   <script type="text/javascript">
     window.updateInstrument = function(degrees) {
       const indicator = document.getElementById('indicator');
       if (!indicator) return;
 
-      // Clamp pitch between -45 and +45 degrees
-      const normalizedPitch = Math.max(-45, Math.min(45, degrees));
+      // Clamp pitch between -25 and +25 degrees
+      const normalizedPitch = Math.max(-25, Math.min(25, degrees));
 
-      // Map -45 to +45 degrees to x position 50 to 462
+      // Map -25 to +25 degrees to x position 50 to 462
       // Center (0°) is at x=256
-      const xPosition = 256 + (normalizedPitch / 45) * 206;
+      const xPosition = 256 + (normalizedPitch / 25) * 206;
 
       indicator.setAttribute('x1', xPosition);
       indicator.setAttribute('x2', xPosition);
