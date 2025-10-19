@@ -87,6 +87,14 @@ Object.keys(gameState_original).forEach((key) => {
   }
 });
 
+// Debug: Verify gameState is properly initialized
+// console.log("gameState initialized:", {
+//   hasStatus: !!gameState.status,
+//   oxygenLevel: gameState.status?.oxygenLevel,
+//   hasPosition: !!gameState.position,
+//   hasRotation: !!gameState.rotation
+// });
+
 //////////////////////////////////////////////////////////////////////////////////////////
 
 // Function to start the game
@@ -261,7 +269,7 @@ function updateSubmarineState(deltaTime) {
     gameState.angularVelocity.x +=
       (gameState.controls.PitchElevatorAngle / 100) *
       (forwardSpeed / gameState.constants.maxSpeed) *
-      gameState.constants.maxPitchElevatorAngle *
+      gameState.controls.maxPitchElevatorAngle *
       0.5 *
       deltaTime;
 
@@ -374,7 +382,7 @@ function updateSubmarineState(deltaTime) {
   gameState.angularVelocity.z *= 1 - drag * 2 * deltaTime;
 
   // Limit maximum pitch angle
-  const maxPitch = gameState.constants.maxPitchElevatorAngle;
+  const maxPitch = gameState.controls.maxPitchElevatorAngle;
   gameState.rotation.x = Math.max(-maxPitch, Math.min(maxPitch, gameState.rotation.x));
 
   // Update position based on velocity
@@ -474,6 +482,13 @@ function applyBoundaryConstraints() {
     isHittingBoundary = true;
     appendInstrumentConsoleMessage("Hit seabed - stopping submarine");
 
+    // Drop the target if it was grabbed!
+    if (gameState.navigation.targetGrabbed) {
+      gameState.navigation.targetGrabbed = false;
+      gameState.navigation.targetFallVelocity = -20; // Start falling
+      appendInstrumentConsoleMessage("💎 You dropped the target! It's falling!");
+    }
+
     // Auto-level the submarine to prevent driving back into floor
     gameState.rotation.x = 0; // Level pitch
     gameState.rotation.z = 0; // Level roll
@@ -484,6 +499,12 @@ function applyBoundaryConstraints() {
     isHittingBoundary = true;
     appendInstrumentConsoleMessage("Hit Cave ceiling  - stopping submarine");
 
+    // Drop the target if it was grabbed!
+    if (gameState.navigation.targetGrabbed) {
+      gameState.navigation.targetGrabbed = false;
+      gameState.navigation.targetFallVelocity = -20; // Start falling
+      appendInstrumentConsoleMessage("💎 You dropped the target! It's falling!");
+    }
     // Auto-level the submarine to prevent driving back into ceiling
     gameState.rotation.x = 0; // Level pitch
     gameState.rotation.z = 0; // Level roll
@@ -537,6 +558,7 @@ function updateUI() {
 
   // oxygen level
   if (gameState.status.oxygenLevel <= 0) {
+    console.log("GAME OVER: Oxygen depleted, level =", gameState.status.oxygenLevel);
     appendInstrumentConsoleMessage("CRITICAL: Oxygen depleted!");
     showGameOverScreen();
     stopGame();
@@ -656,7 +678,6 @@ function gameLoop(currentTime) {
   // Request the next frame if the game is still running
   if (isGameRunning) {
     // We're calling renderUnderwaterScene directly from rendering.js
-    // This is defined there and should not recreate the coral reef
     renderUnderwaterScene();
     animationFrameId = requestAnimationFrame(gameLoop);
   }

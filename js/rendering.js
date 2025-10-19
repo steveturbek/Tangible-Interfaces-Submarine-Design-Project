@@ -48,12 +48,16 @@ function initScene() {
 
   // Create renderer and attach to canvas
   const canvas = document.getElementById("outside-scene");
+  // console.log("initScene - Canvas dimensions:", canvas.offsetWidth, "x", canvas.offsetHeight);
+
   renderer = new THREE.WebGLRenderer({
     canvas: canvas,
     antialias: true,
   });
   renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
+
+  // console.log("Renderer initialized with size:", canvas.offsetWidth, "x", canvas.offsetHeight);
 
   // Enable physically correct lighting
   renderer.physicallyCorrectLights = true;
@@ -1224,6 +1228,12 @@ function addUnderwaterParticles() {
 
 // Update camera position for first-person view
 function updateCameraPosition() {
+  // Defensive check - ensure gameState is initialized
+  if (!gameState || !gameState.position || !gameState.rotation) {
+    console.warn("updateCameraPosition: gameState not fully initialized yet");
+    return;
+  }
+
   // Position camera at submarine position
   camera.position.copy(gameState.position);
 
@@ -1247,6 +1257,11 @@ function updateCameraPosition() {
 
 // Adjust fog based on water depth
 function updateFogWithDepth() {
+  // Defensive check - ensure gameState is initialized
+  if (!gameState || !gameState.position || !gameState.constants) {
+    return;
+  }
+
   // Get current depth (in Three.js, depth is negative Y from water surface)
   const depth = Math.max(0, -gameState.position.y + gameState.constants.waterSurface);
 
@@ -1297,6 +1312,12 @@ function onWindowResize() {
 
 // Update scene elements based on game state
 function updateScene() {
+  // Defensive check - ensure gameState is initialized
+  if (!gameState || !gameState.navigation || !gameState.constants || !gameState.time) {
+    console.warn("updateScene: gameState not fully initialized yet");
+    return;
+  }
+
   // Update target position - if grabbed, follow camera, otherwise stay at fixed position
   if (gameState.navigation.targetGrabbed) {
     // Position target in front of camera when grabbed
@@ -1383,6 +1404,17 @@ function updateScene() {
 
 // Render the 3D scene
 function renderUnderwaterScene() {
+  // Defensive check - ensure rendering objects are initialized
+  if (!renderer || !scene || !camera) {
+    console.error("renderUnderwaterScene: renderer, scene, or camera not initialized!");
+    return;
+  }
+
+  // // Debug: Log occasionally to verify rendering is happening
+  // if (Math.random() < 0.01) {
+  //   console.log("Rendering frame - camera pos:", camera.position, "scene children:", scene.children.length);
+  // }
+
   // Update scene elements
   updateScene();
 

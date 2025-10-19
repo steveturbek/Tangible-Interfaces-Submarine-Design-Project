@@ -57,6 +57,7 @@ function updateInstruments_Battery() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_depth() {
+  if (!gameState || !gameState.status) return;
   const depth = gameState.status.depth;
 
   // Get the SVG's content document
@@ -71,6 +72,7 @@ function updateInstruments_depth() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_distanceToTarget() {
+  if (!gameState || !gameState.navigation) return;
   const distanceToTarget = gameState.navigation.distanceToTarget;
 
   const svgDoc = getSVGContentDocument("targetGauge");
@@ -95,6 +97,7 @@ function updateInstruments_compassHeading() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_currentSpeed() {
+  if (!gameState || !gameState.navigation) return;
   const currentSpeed = gameState.navigation.currentSpeed;
 
   const svgDoc = getSVGContentDocument("speedGauge");
@@ -107,13 +110,15 @@ function updateInstruments_currentSpeed() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_pitch() {
+  if (!gameState || !gameState.rotation) return;
   const pitch = gameState.rotation.x;
 
   const svgDoc = getSVGContentDocument("pitchGauge");
   if (!svgDoc) return;
 
   if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
-    svgDoc.defaultView.updateInstrument(Math.round((pitch / gameState_original.controls.maxPitchElevatorAngle) * 100));
+    // Pass pitch directly in degrees (SVG expects -25 to +25 degrees)
+    svgDoc.defaultView.updateInstrument(Math.round(pitch));
   }
 }
 
@@ -143,27 +148,29 @@ function updateInstruments_rightThrust() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_rudder() {
+  if (!gameState || !gameState.controls) return;
   const rudder = gameState.controls.YawRudderAngle;
 
   const svgDoc = getSVGContentDocument("rudderGauge");
   if (!svgDoc) return;
 
   if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
-    // svgDoc.defaultView.updateInstrument(rudder);
-    svgDoc.defaultView.updateInstrument(Math.round((rudder / gameState_original.controls.maxYawRudderAngle) * 100));
+    // Pass rudder value directly (already in correct range)
+    svgDoc.defaultView.updateInstrument(Math.round(rudder));
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_elevator() {
+  if (!gameState || !gameState.controls) return;
   const elevator = gameState.controls.PitchElevatorAngle;
 
   const svgDoc = getSVGContentDocument("elevatorGauge");
   if (!svgDoc) return;
 
   if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
-    // svgDoc.defaultView.updateInstrument(elevator);
-    svgDoc.defaultView.updateInstrument(Math.round((elevator / gameState_original.controls.maxPitchElevatorAngle) * 100));
+    // Pass elevator value directly (already in correct range)
+    svgDoc.defaultView.updateInstrument(Math.round(elevator));
   }
 }
 
