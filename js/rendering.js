@@ -32,9 +32,12 @@ function initScene() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(WATER_COLOR);
 
-  // Add underwater fog effect for light scattering/distance obscuring
-  underwaterFog = new THREE.Fog(FOG_COLOR, FOG_NEAR, FOG_FAR);
-  scene.fog = underwaterFog;
+  // Add underwater fog effect for light scattering/distance obscuring (skip for easy mode)
+  const difficulty = window.gameDifficulty || "hard";
+  if (difficulty !== "easy") {
+    underwaterFog = new THREE.Fog(FOG_COLOR, FOG_NEAR, FOG_FAR);
+    scene.fog = underwaterFog;
+  }
 
   // Create camera - first person view
   const aspectRatio = window.innerWidth / window.innerHeight;
@@ -85,8 +88,10 @@ function initScene() {
   // Add water effects - caustics, particles, etc.
   // createWaterEffects();  //there was some flashing
 
-  // Add coral reef elements
-  createCoralReef();
+  // Add coral reef elements (skip for easy mode)
+  if (difficulty !== "easy") {
+    createCoralReef();
+  }
 
   // Add visible water surface boundary
   createWaterSurfaceBoundary();
@@ -1266,6 +1271,11 @@ function updateFogWithDepth() {
     return;
   }
 
+  // Skip fog updates if fog doesn't exist (easy mode)
+  if (!underwaterFog) {
+    return;
+  }
+
   // Get current depth (in Three.js, depth is negative Y from water surface)
   const depth = Math.max(0, -gameState.position.y + gameState.constants.waterSurface);
 
@@ -1434,11 +1444,58 @@ function initRenderer() {
   canvas.width = container.clientWidth;
   canvas.height = container.clientHeight;
 
-  // Initialize 3D scene
+  // Initialize 3D scene with default difficulty for preview
+  if (!window.gameDifficulty) {
+    window.gameDifficulty = "preview"; // Special mode for initial preview
+  }
   initScene();
 
   // Perform initial render
   renderUnderwaterScene();
+}
+
+// Function to reinitialize scene with correct difficulty
+function reinitSceneForDifficulty() {
+  // Clear existing scene objects that are difficulty-dependent
+  // Keep renderer and camera, but rebuild scene elements
+
+  // Remove all children from scene
+  while (scene.children.length > 0) {
+    scene.remove(scene.children[0]);
+  }
+
+  // Reset fog
+  scene.fog = null;
+  underwaterFog = null;
+
+  // Rebuild scene with current difficulty
+  const difficulty = window.gameDifficulty || "hard";
+
+  // Re-add fog if not easy mode
+  if (difficulty !== "easy") {
+    underwaterFog = new THREE.Fog(FOG_COLOR, FOG_NEAR, FOG_FAR);
+    scene.fog = underwaterFog;
+  }
+
+  // Rebuild lighting
+  setupLighting();
+
+  // Rebuild seabed
+  createSeabed();
+
+  // Rebuild target
+  createTarget();
+
+  // Rebuild start marker
+  createStartMarker();
+
+  // Rebuild coral only if not easy mode
+  if (difficulty !== "easy") {
+    createCoralReef();
+  }
+
+  // Rebuild water surface boundary
+  createWaterSurfaceBoundary();
 }
 
 // Renderer initialization is now handled in index.html

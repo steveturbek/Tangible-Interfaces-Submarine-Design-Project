@@ -101,7 +101,13 @@ Object.keys(gameState_original).forEach((key) => {
 function startGame() {
   // console.log("startGame called, isGameRunning =", isGameRunning);
   if (!isGameRunning) {
-    console.log("Starting game");
+    console.log("Starting game with difficulty:", window.gameDifficulty);
+
+    // Reinitialize scene with the selected difficulty
+    if (typeof reinitSceneForDifficulty === "function") {
+      reinitSceneForDifficulty();
+    }
+
     isGameRunning = true;
     lastFrameTime = 0; // Reset the time tracker
 
@@ -191,34 +197,45 @@ function updateSubmarineState(deltaTime) {
   gameState.time.elapsed += deltaTime;
   gameState.time.logTimeCounter += deltaTime;
 
-  // Update oxygen based on elapsed time
-  gameState.status.oxygenLevel = Math.max(
-    0,
-    Math.ceil(((gameState.constants.maxOxygenTime - gameState.time.elapsed) / gameState.constants.maxOxygenTime) * 100)
-  );
+  // Update oxygen based on elapsed time (skip for easy mode)
+  const difficulty = window.gameDifficulty || 'hard';
+  if (difficulty !== 'easy') {
+    gameState.status.oxygenLevel = Math.max(
+      0,
+      Math.ceil(((gameState.constants.maxOxygenTime - gameState.time.elapsed) / gameState.constants.maxOxygenTime) * 100)
+    );
+  } else {
+    // Easy mode: oxygen stays at 100%
+    gameState.status.oxygenLevel = 100;
+  }
 
   // Calculate engine RPM based on thruster values
   // Average the absolute values of both thrusters to get overall engine load
   const avgThrottle = (Math.abs(gameState.controls.ThrottleLeft) + Math.abs(gameState.controls.ThrottleRight)) / 2;
   gameState.status.engineRPM = avgThrottle;
 
-  // Update battery based on engine usage and aft thruster
-  const mainPowerDrain = (avgThrottle * deltaTime) / gameState.constants.maxBatteryTime;
-  // Aft thrusters also use some power, but less than main thrusters
-  const aftPowerDrain = (Math.abs(gameState.controls.VerticalThruster) * 0.3 * deltaTime) / gameState.constants.maxBatteryTime;
-  const totalPowerDrain = mainPowerDrain + aftPowerDrain;
+  // Update battery based on engine usage and aft thruster (skip for easy mode)
+  if (difficulty !== 'easy') {
+    const mainPowerDrain = (avgThrottle * deltaTime) / gameState.constants.maxBatteryTime;
+    // Aft thrusters also use some power, but less than main thrusters
+    const aftPowerDrain = (Math.abs(gameState.controls.VerticalThruster) * 0.3 * deltaTime) / gameState.constants.maxBatteryTime;
+    const totalPowerDrain = mainPowerDrain + aftPowerDrain;
 
-  gameState.status.batteryLevel = Math.max(0, gameState.status.batteryLevel - totalPowerDrain);
+    gameState.status.batteryLevel = Math.max(0, gameState.status.batteryLevel - totalPowerDrain);
 
-  // Battery warnings at every 10% threshold
-  const currentThreshold = Math.floor(gameState.status.batteryLevel / 10) * 10;
-  if (currentThreshold < gameState.status.lastBatteryWarning && gameState.status.batteryLevel > 0) {
-    gameState.status.lastBatteryWarning = currentThreshold;
-    if (currentThreshold === 0) {
-      appendInstrumentConsoleMessage("BATTERY DEPLETED! Thrusters offline!");
-    } else {
-      appendInstrumentConsoleMessage(`Battery at ${currentThreshold}%`);
+    // Battery warnings at every 10% threshold
+    const currentThreshold = Math.floor(gameState.status.batteryLevel / 10) * 10;
+    if (currentThreshold < gameState.status.lastBatteryWarning && gameState.status.batteryLevel > 0) {
+      gameState.status.lastBatteryWarning = currentThreshold;
+      if (currentThreshold === 0) {
+        appendInstrumentConsoleMessage("BATTERY DEPLETED! Thrusters offline!");
+      } else {
+        appendInstrumentConsoleMessage(`Battery at ${currentThreshold}%`);
+      }
     }
+  } else {
+    // Easy mode: battery stays at 100%
+    gameState.status.batteryLevel = 100;
   }
 
   // Calculate forward thrust vector based on submarine orientation
@@ -402,8 +419,8 @@ function updateSubmarineState(deltaTime) {
   // Apply boundary constraints
   applyBoundaryConstraints();
 
-  // Check for coral collisions
-  if (typeof checkCoralCollisions === "function") {
+  // Check for coral collisions (skip for easy and medium modes)
+  if (difficulty === 'hard' && typeof checkCoralCollisions === "function") {
     checkCoralCollisions();
   }
 

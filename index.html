@@ -290,9 +290,9 @@
           </details>
         </div>
 
-        <button class="start-button" onclick="startMission()">Easy Mission</button>
-        <button class="start-button" onclick="startMission()">Medium Mission</button>
-        <button class="start-button" onclick="startMission()">Hard Mission</button>
+        <button class="start-button" onclick="startMission('easy')">Easy Mission</button>
+        <button class="start-button" onclick="startMission('medium')">Medium Mission</button>
+        <button class="start-button" onclick="startMission('hard')">Hard Mission</button>
 
         <div style="margin-top: 20px; color: #888; font-size: 0.8em">Press <strong>F</strong> for fullscreen</div>
       </div>
@@ -388,8 +388,11 @@
         }
       });
 
-      function startMission() {
+      function startMission(difficulty = 'hard') {
         if (gameStarted) return;
+
+        // Store difficulty level globally for game.js and rendering.js to access
+        window.gameDifficulty = difficulty;
 
         // Close any existing instruments window before starting
         if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
