@@ -114,12 +114,16 @@ function updateInstruments_pitch() {
   if (!gameState || !gameState.rotation) return;
   const pitch = gameState.rotation.x;
 
+  // Convert pitch to percentage (-100% to +100%), then map to SVG's -25 to +25 degree display range
+  const pitchPercent = (pitch / gameState.controls.maxPitchElevatorAngle) * 100;
+  const pitchForDisplay = (pitchPercent / 100) * 25; // Map percentage to ±25 degrees for display
+
   const svgDoc = getSVGContentDocument("pitchGauge");
   if (!svgDoc) return;
 
   if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
-    // Pass pitch directly in degrees (SVG expects -25 to +25 degrees)
-    svgDoc.defaultView.updateInstrument(Math.round(pitch));
+    // Pass pitch as a value scaled to ±25 degrees
+    svgDoc.defaultView.updateInstrument(Math.round(pitchForDisplay));
   }
 }
 
@@ -152,12 +156,15 @@ function updateInstruments_rudder() {
   if (!gameState || !gameState.controls) return;
   const rudder = gameState.controls.YawRudderAngle;
 
+  // Convert rudder angle to percentage (-100% to +100%)
+  const rudderPercent = (rudder / gameState.controls.maxYawRudderAngle) * 100;
+
   const svgDoc = getSVGContentDocument("rudderGauge");
   if (!svgDoc) return;
 
   if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
-    // Pass rudder value directly (already in correct range)
-    svgDoc.defaultView.updateInstrument(Math.round(rudder));
+    // Pass rudder value as percentage
+    svgDoc.defaultView.updateInstrument(Math.round(rudderPercent));
   }
 }
 
@@ -166,12 +173,15 @@ function updateInstruments_elevator() {
   if (!gameState || !gameState.controls) return;
   const elevator = gameState.controls.PitchElevatorAngle;
 
+  // Convert elevator angle to percentage (-100% to +100%)
+  const elevatorPercent = (elevator / gameState.controls.maxPitchElevatorAngle) * 100;
+
   const svgDoc = getSVGContentDocument("elevatorGauge");
   if (!svgDoc) return;
 
   if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
-    // Pass elevator value directly (already in correct range)
-    svgDoc.defaultView.updateInstrument(Math.round(elevator));
+    // Pass elevator value as percentage
+    svgDoc.defaultView.updateInstrument(Math.round(elevatorPercent));
   }
 }
 
