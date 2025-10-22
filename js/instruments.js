@@ -99,13 +99,13 @@ function updateInstruments_compassHeading() {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_currentSpeed() {
   if (!gameState || !gameState.navigation) return;
-  const currentSpeed = gameState.navigation.currentSpeed;
 
+  // console.log("currentSpeed:" + Math.round(gameState.navigation.currentSpeedAsPercentage) + "%");
   const svgDoc = getSVGContentDocument("speedGauge");
   if (!svgDoc) return;
 
   if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
-    svgDoc.defaultView.updateInstrument(currentSpeed);
+    svgDoc.defaultView.updateInstrument(gameState.navigation.currentSpeedAsPercentage);
   }
 }
 

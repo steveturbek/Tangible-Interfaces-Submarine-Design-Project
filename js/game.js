@@ -44,7 +44,7 @@ const gameState_original = {
     distanceToTarget: 0, // 0-100% (scaled)
     headingToTarget: 0, // 0-359 degrees
     // proximityWarning: 0, // 0-100% (distance to nearest obstacle)
-    currentSpeed: 0, // 0-100% (scalar speed value)
+    currentSpeedAsPercentage: 0, // 0-100% (scalar speed value)
     compassHeading: 0, // 0-359 degrees
     targetGrabbed: false, // Has the target been grabbed?
     targetFallVelocity: 0, // Falling speed when dropped
@@ -63,7 +63,9 @@ const gameState_original = {
     worldBoundaryVisible: 4000, //defines how far you can see. 4x worldBoundary seems to look good
     seabedDepth: 0, // Depth of the seabed from rendering.js
     waterSurface: 400, // Water surface level from rendering.js (doubled from 100 to 200)
-  },
+    // Maximum possible distance in world: diagonal from corner to corner
+    // sqrt(worldBoundary^2 + waterSurface^2 + worldBoundary^2) = sqrt(2000^2 + 400^2 + 2000^2) ≈ 2840
+    maxWorldDistance: 0, // to be calculated later
 
   // Game time tracking
   time: {
@@ -75,6 +77,11 @@ const gameState_original = {
 };
 
 gameState_original.position.y = gameState_original.constants.waterSurface - 10;
+gameState_original.constants.maxWorldDistance = Math.sqrt(
+  gameState_original.constants.worldBoundary * gameState_original.constants.worldBoundary +
+    gameState_original.constants.waterSurface * gameState_original.constants.waterSurface +
+    gameState_original.constants.worldBoundary * gameState_original.constants.worldBoundary
+);
 
 const gameState = [];
 
@@ -557,8 +564,6 @@ function applyBoundaryConstraints() {
 //////////////////////////////////////////////////////////////////////////////////////////
 
 function updateUI() {
-  // console.log(gameState.navigation.distanceToTarget);
-
   // Win condition: Must have grabbed target AND returned to the starting hole at surface
   const atSurface = gameState.position.y >= gameState.constants.waterSurface - 5; // Near surface
 
@@ -592,7 +597,7 @@ function updateUI() {
   //   //   `<a href="https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main?tab=readme-ov-file#tangible-interfaces-submarine-design-project" target="new" style="color:white">Read Me for details</a>` +
   //   //`Position(${gameState.position.x.toFixed(2)},${gameState.position.y.toFixed(2)},${gameState.position.z.toFixed(2)}) | ` +
   //   `\nCompass: ${Math.round(gameState.navigation.compassHeading)}° ` +
-  //   `\nSpeed: ${Math.round(gameState.navigation.currentSpeed)}% ` +
+  //   `\nSpeed: ${Math.round(gameState.navigation.currentSpeedAsPercentage)}% ` +
   //   `\nDepth: ${gameState.status.depth.toFixed(2)}m ` +
   //   `\nPitch: ${Math.round(gameState.rotation.x)}°` +
   //   `\n` +
@@ -644,11 +649,12 @@ function updateDerivedValues() {
   const dx = gameState.navigation.targetPosition.x - gameState.position.x;
   const dy = gameState.navigation.targetPosition.y - gameState.position.y;
   const dz = gameState.navigation.targetPosition.z - gameState.position.z;
-  const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+  const distanceToTargetRaw = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-  // Scale distance to 0-100 range for the gauge
-  // World units are large (~1200 max), so scale to 0-100 for display
-  gameState.navigation.distanceToTarget = Math.min(100, distance / 15);
+  // Scale distance to 0-100% based on maximum possible world distance
+  // This gives a consistent reference frame: 0% = at target, 100% = at opposite corner of world
+  // maxWorldDistance ≈ 2840 units (diagonal across entire world)
+  gameState.navigation.distanceToTarget = Math.min(100, (distanceToTargetRaw / gameState.constants.maxWorldDistance) * 100);
 
   // Calculate compass heading (in XZ plane)
   gameState.navigation.headingToTarget = ((Math.atan2(dx, -dz) * 180) / Math.PI + 360) % 360;
@@ -660,7 +666,7 @@ function updateDerivedValues() {
   const speed = Math.sqrt(
     gameState.velocity.x * gameState.velocity.x + gameState.velocity.y * gameState.velocity.y + gameState.velocity.z * gameState.velocity.z
   );
-  gameState.navigation.currentSpeed = Math.min(100, (speed / gameState.constants.maxSpeed) * 100);
+  gameState.navigation.currentSpeedAsPercentage = Math.min(100, (speed / gameState.constants.maxSpeed) * 100);
 
   // Convert depth to positive number for display (Y is up, so negative Y is depth)
   const maxDepth = gameState.constants.waterSurface - gameState.constants.seabedDepth;
