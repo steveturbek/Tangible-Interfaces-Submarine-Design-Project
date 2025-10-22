@@ -66,7 +66,7 @@ const gameState_original = {
     // Maximum possible distance in world: diagonal from corner to corner
     // sqrt(worldBoundary^2 + waterSurface^2 + worldBoundary^2) = sqrt(2000^2 + 400^2 + 2000^2) ≈ 2840
     maxWorldDistance: 0, // to be calculated later
-
+  },
   // Game time tracking
   time: {
     elapsed: 0, // Total game time in seconds
