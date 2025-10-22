@@ -198,8 +198,8 @@ function updateSubmarineState(deltaTime) {
   gameState.time.logTimeCounter += deltaTime;
 
   // Update oxygen based on elapsed time (skip for easy mode)
-  const difficulty = window.gameDifficulty || 'hard';
-  if (difficulty !== 'easy') {
+  const difficulty = window.gameDifficulty || "hard";
+  if (difficulty !== "easy") {
     gameState.status.oxygenLevel = Math.max(
       0,
       Math.ceil(((gameState.constants.maxOxygenTime - gameState.time.elapsed) / gameState.constants.maxOxygenTime) * 100)
@@ -215,7 +215,7 @@ function updateSubmarineState(deltaTime) {
   gameState.status.engineRPM = avgThrottle;
 
   // Update battery based on engine usage and aft thruster (skip for easy mode)
-  if (difficulty !== 'easy') {
+  if (difficulty !== "easy") {
     const mainPowerDrain = (avgThrottle * deltaTime) / gameState.constants.maxBatteryTime;
     // Aft thrusters also use some power, but less than main thrusters
     const aftPowerDrain = (Math.abs(gameState.controls.VerticalThruster) * 0.3 * deltaTime) / gameState.constants.maxBatteryTime;
@@ -420,7 +420,7 @@ function updateSubmarineState(deltaTime) {
   applyBoundaryConstraints();
 
   // Check for coral collisions (skip for easy and medium modes)
-  if (difficulty === 'hard' && typeof checkCoralCollisions === "function") {
+  if (difficulty === "hard" && typeof checkCoralCollisions === "function") {
     checkCoralCollisions();
   }
 
@@ -664,9 +664,9 @@ function updateDerivedValues() {
   gameState.navigation.currentSpeed = Math.min(100, (speed / gameState.constants.maxSpeed) * 100);
 
   // Convert depth to positive number for display (Y is up, so negative Y is depth)
-  // OLD gameState.status.depth = Math.min(gameState.constants.maxDepth, -gameState.position.y + gameState.constants.waterSurface);
+  gameState.status.depth = Math.min(gameState.constants.maxDepth, -gameState.position.y + gameState.constants.waterSurface);
 
-  gameState.status.depth = Math.min(gameState.constants.maxDepth, 100 - gameState.position.y);
+  //  gameState.status.depth = Math.min(gameState.constants.maxDepth, 100 - gameState.position.y);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
