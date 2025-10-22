@@ -11,6 +11,9 @@ let gamepadController = null;
 
 // Set up keyboard and gamepad event listeners
 function setupKeyboardControls() {
+  // console.log("setupKeyboardControls called - keyboard listener attached");
+  //console.log("window.gameState available:", !!window.gameState, "has controls:", !!window.gameState?.controls);
+
   // Key down handler for submarine controls
   document.addEventListener("keydown", handleKeyPress);
 
@@ -25,10 +28,13 @@ function setupKeyboardControls() {
 
 // Process key presses individually
 function handleKeyPress(event) {
-  // Make sure gameState exists
-  if (!gameState || !gameState.controls) return;
+  // Make sure gameState exists (access via window for file:// protocol compatibility)
+  if (!window.gameState || !window.window.gameState.controls) {
+    //console.log("handleKeyPress: gameState not ready", "window.gameState exists:", !!window.gameState);
+    return;
+  }
 
-  // console.log(event.key.toLowerCase());
+  // console.log("Key pressed:", event.key.toLowerCase());
 
   // Process the key press based on which key was pressed
   switch (event.key.toLowerCase()) {
@@ -112,13 +118,13 @@ function clamp(value, min, max) {
  * @param {number} percent - The percentage value (-100 to 100)
  */
 function setPortThruster(percent) {
-  if (!gameState || !gameState.controls) return;
+  if (!window.gameState || !window.gameState.controls) return;
 
-  gameState.controls.ThrottleLeft = Math.round(
-    clamp(percent * 0.01 * gameState.controls.MaxThrottle, -gameState.controls.MaxThrottle, gameState.controls.MaxThrottle)
+  window.gameState.controls.ThrottleLeft = Math.round(
+    clamp(percent * 0.01 * window.gameState.controls.MaxThrottle, -window.gameState.controls.MaxThrottle, window.gameState.controls.MaxThrottle)
   );
 
-  // console.log(`Left Thruster: ${gameState.controls.ThrottleLeft}%`);
+  // console.log(`Left Thruster: ${window.gameState.controls.ThrottleLeft}%`);
 }
 
 /**
@@ -127,13 +133,13 @@ function setPortThruster(percent) {
  * @param {number} percent - The percentage value (-100 to 100)
  */
 function setStarboardThruster(percent) {
-  if (!gameState || !gameState.controls) return;
+  if (!window.gameState || !window.gameState.controls) return;
 
-  gameState.controls.ThrottleRight = Math.round(
-    clamp(percent * 0.01 * gameState.controls.MaxThrottle, -gameState.controls.MaxThrottle, gameState.controls.MaxThrottle)
+  window.gameState.controls.ThrottleRight = Math.round(
+    clamp(percent * 0.01 * window.gameState.controls.MaxThrottle, -window.gameState.controls.MaxThrottle, window.gameState.controls.MaxThrottle)
   );
 
-  // console.log(percent, `Right Thruster: ${gameState.controls.ThrottleRight}%`);
+  // console.log(percent, `Right Thruster: ${window.gameState.controls.ThrottleRight}%`);
 }
 
 /**
@@ -142,14 +148,18 @@ function setStarboardThruster(percent) {
  * @param {number} percent - The percentage value (-100 to 100)
  */
 function setElevator(percent) {
-  if (!gameState || !gameState.controls) return;
+  if (!window.gameState || !window.gameState.controls) return;
 
   // Convert percentage to actual angle value and clamp to valid range
-  gameState.controls.PitchElevatorAngle = Math.round(
-    clamp(percent * 0.01 * gameState.controls.maxPitchElevatorAngle, -gameState.controls.maxPitchElevatorAngle, gameState.controls.maxPitchElevatorAngle)
+  window.gameState.controls.PitchElevatorAngle = Math.round(
+    clamp(
+      percent * 0.01 * window.gameState.controls.maxPitchElevatorAngle,
+      -window.gameState.controls.maxPitchElevatorAngle,
+      window.gameState.controls.maxPitchElevatorAngle
+    )
   );
 
-  // console.log(`Elevator Angle: ${gameState.controls.PitchElevatorAngle}%`);
+  // console.log(`Elevator Angle: ${window.gameState.controls.PitchElevatorAngle}%`);
 }
 
 /**
@@ -158,14 +168,18 @@ function setElevator(percent) {
  * @param {number} percent - The percentage value (-100 to 100)
  */
 function setRudder(percent) {
-  if (!gameState || !gameState.controls) return;
+  if (!window.gameState || !window.gameState.controls) return;
 
   // Convert percentage to actual angle value and clamp to valid range
-  gameState.controls.YawRudderAngle = Math.round(
-    clamp(percent * 0.01 * gameState.controls.maxYawRudderAngle, -gameState.controls.maxYawRudderAngle, gameState.controls.maxYawRudderAngle)
+  window.gameState.controls.YawRudderAngle = Math.round(
+    clamp(
+      percent * 0.01 * window.gameState.controls.maxYawRudderAngle,
+      -window.gameState.controls.maxYawRudderAngle,
+      window.gameState.controls.maxYawRudderAngle
+    )
   );
 
-  // console.log(`Rudder Angle: ${gameState.controls.YawRudderAngle}%`);
+  // console.log(`Rudder Angle: ${window.gameState.controls.YawRudderAngle}%`);
 }
 
 /**
@@ -174,11 +188,13 @@ function setRudder(percent) {
  * @param {number} percent - The percentage value (-100 to 100)
  */
 function setVerticalThruster(percent) {
-  if (!gameState || !gameState.controls) return;
+  if (!window.gameState || !window.gameState.controls) return;
 
-  gameState.controls.VerticalThruster = Math.round(clamp(percent, -gameState.controls.MaxVerticalThruster, gameState.controls.MaxVerticalThruster));
+  window.gameState.controls.VerticalThruster = Math.round(
+    clamp(percent, -window.gameState.controls.MaxVerticalThruster, window.gameState.controls.MaxVerticalThruster)
+  );
 
-  // console.log(`Aft Thruster: ${gameState.controls.VerticalThruster}%`);
+  // console.log(`Aft Thruster: ${window.gameState.controls.VerticalThruster}%`);
 }
 
 // ================ ADJUSTMENT WRAPPER FUNCTIONS ================
@@ -189,8 +205,16 @@ function setVerticalThruster(percent) {
  * @param {number} amount - Amount to adjust by (-100 to 100)
  */
 function adjustPortThruster(amount) {
-  if (!gameState || !gameState.controls) return;
-  setPortThruster(gameState.controls.ThrottleLeft + amount);
+  if (!window.gameState || !window.gameState.controls) {
+    // console.log("adjustPortThruster: gameState not ready");
+    return;
+  }
+  // console.log(`adjustPortThruster called: ${amount}, current: ${window.gameState.controls.ThrottleLeft}`);
+  // ThrottleLeft is already in the range -100 to 100, so just add and clamp directly
+  window.gameState.controls.ThrottleLeft = Math.round(
+    clamp(window.gameState.controls.ThrottleLeft + amount, -window.gameState.controls.MaxThrottle, window.gameState.controls.MaxThrottle)
+  );
+  // console.log(`New ThrottleLeft: ${window.gameState.controls.ThrottleLeft}`);
 }
 
 /**
@@ -199,8 +223,16 @@ function adjustPortThruster(amount) {
  * @param {number} amount - Amount to adjust by (-100 to 100)
  */
 function adjustStarboardThruster(amount) {
-  if (!gameState || !gameState.controls) return;
-  setStarboardThruster(gameState.controls.ThrottleRight + amount);
+  if (!window.gameState || !window.gameState.controls) {
+    // console.log("adjustStarboardThruster: gameState not ready");
+    return;
+  }
+  // console.log(`adjustStarboardThruster called: ${amount}, current: ${window.gameState.controls.ThrottleRight}`);
+  // ThrottleRight is already in the range -100 to 100, so just add and clamp directly
+  window.gameState.controls.ThrottleRight = Math.round(
+    clamp(window.gameState.controls.ThrottleRight + amount, -window.gameState.controls.MaxThrottle, window.gameState.controls.MaxThrottle)
+  );
+  // console.log(`New ThrottleRight: ${window.gameState.controls.ThrottleRight}`);
 }
 
 /**
@@ -209,10 +241,10 @@ function adjustStarboardThruster(amount) {
  * @param {number} amount - Amount to adjust by (-100 to 100)
  */
 function adjustElevator(amount) {
-  if (!gameState || !gameState.controls) return;
+  if (!window.gameState || !window.gameState.controls) return;
   // Convert current angle to percentage, add the increment, then pass to setElevator
-  const currentPercent = (gameState.controls.PitchElevatorAngle / gameState.controls.maxPitchElevatorAngle) * 100;
-  const newPercent = currentPercent + (amount / gameState.controls.maxPitchElevatorAngle) * 100;
+  const currentPercent = (window.gameState.controls.PitchElevatorAngle / window.gameState.controls.maxPitchElevatorAngle) * 100;
+  const newPercent = currentPercent + (amount / window.gameState.controls.maxPitchElevatorAngle) * 100;
   setElevator(newPercent);
 }
 
@@ -222,10 +254,10 @@ function adjustElevator(amount) {
  * @param {number} amount - Amount to adjust by (-100 to 100)
  */
 function adjustRudder(amount) {
-  if (!gameState || !gameState.controls) return;
+  if (!window.gameState || !window.gameState.controls) return;
   // Convert current angle to percentage, add the increment, then pass to setRudder
-  const currentPercent = (gameState.controls.YawRudderAngle / gameState.controls.maxYawRudderAngle) * 100;
-  const newPercent = currentPercent + (amount / gameState.controls.maxYawRudderAngle) * 100;
+  const currentPercent = (window.gameState.controls.YawRudderAngle / window.gameState.controls.maxYawRudderAngle) * 100;
+  const newPercent = currentPercent + (amount / window.gameState.controls.maxYawRudderAngle) * 100;
   setRudder(newPercent);
 }
 
@@ -235,8 +267,8 @@ function adjustRudder(amount) {
  * @param {number} amount - Amount to adjust by (-100 to 100)
  */
 function adjustVerticalThruster(amount) {
-  if (!gameState || !gameState.controls) return;
-  setVerticalThruster(gameState.controls.VerticalThruster + amount);
+  if (!window.gameState || !window.gameState.controls) return;
+  setVerticalThruster(window.gameState.controls.VerticalThruster + amount);
 }
 
 /**
@@ -251,17 +283,17 @@ function updateGamepadControls() {
 
   // Apply thruster values directly (bypassing the averaging in set functions)
   // Convert -1 to 1 range to actual throttle values
-  if (gameState && gameState.controls) {
-    gameState.controls.ThrottleLeft = Math.round(controls.leftThruster * gameState.controls.MaxThrottle);
-    gameState.controls.ThrottleRight = Math.round(controls.rightThruster * gameState.controls.MaxThrottle);
+  if (gameState && window.gameState.controls) {
+    window.gameState.controls.ThrottleLeft = Math.round(controls.leftThruster * window.gameState.controls.MaxThrottle);
+    window.gameState.controls.ThrottleRight = Math.round(controls.rightThruster * window.gameState.controls.MaxThrottle);
 
     // Apply rudder and elevator with light smoothing for stability
-    const targetRudder = Math.round(controls.rudder * gameState.controls.maxYawRudderAngle);
-    const targetElevator = Math.round(controls.elevator * gameState.controls.maxPitchElevatorAngle);
+    const targetRudder = Math.round(controls.rudder * window.gameState.controls.maxYawRudderAngle);
+    const targetElevator = Math.round(controls.elevator * window.gameState.controls.maxPitchElevatorAngle);
 
     // Smooth transition (70% new value, 30% old value) - less aggressive than before
-    gameState.controls.YawRudderAngle = Math.round(targetRudder * 0.7 + gameState.controls.YawRudderAngle * 0.3);
-    gameState.controls.PitchElevatorAngle = Math.round(targetElevator * 0.7 + gameState.controls.PitchElevatorAngle * 0.3);
+    window.gameState.controls.YawRudderAngle = Math.round(targetRudder * 0.7 + window.gameState.controls.YawRudderAngle * 0.3);
+    window.gameState.controls.PitchElevatorAngle = Math.round(targetElevator * 0.7 + window.gameState.controls.PitchElevatorAngle * 0.3);
   }
 
   // Handle emergency controls
@@ -282,15 +314,15 @@ function updateGamepadControls() {
  * Emergency procedure to rapidly rise to the surface NOT CURRENTLY USED
  */
 function emergencyBlowTanks() {
-  if (Date.now() - gameState.controls.BlowTanksLastUsedTime < 5000) return; // debounce physical buttons
+  if (Date.now() - window.gameState.controls.BlowTanksLastUsedTime < 5000) return; // debounce physical buttons
 
   console.log("EMERGENCY: Blowing tanks!");
 
   // Set full upward pitch
-  setElevator(gameState.controls.maxPitchElevatorAngle);
+  setElevator(window.gameState.controls.maxPitchElevatorAngle);
 
   // Set full upward aft thruster
-  setVerticalThruster(gameState.controls.MaxVerticalThruster);
+  setVerticalThruster(window.gameState.controls.MaxVerticalThruster);
   //this is not working as it is overwritten by joystick
 }
 
@@ -360,28 +392,38 @@ function grabTarget() {
  * Emergency all stop - zeros all controls
  */
 function emergencyAllStop() {
-  if (Date.now() - gameState.controls.AllStopLastUsedTime < 3000) return; // debounce physical buttons
+  if (Date.now() - window.gameState.controls.AllStopLastUsedTime < 3000) return; // debounce physical buttons
 
   console.log("EMERGENCY ALL STOP");
-  gameState.controls.ThrottleLeft = 0;
-  gameState.controls.ThrottleRight = 0;
-  gameState.controls.VerticalThruster = 0;
-  gameState.controls.PitchElevatorAngle = 0;
-  gameState.controls.YawRudderAngle = 0;
+  window.gameState.controls.ThrottleLeft = 0;
+  window.gameState.controls.ThrottleRight = 0;
+  window.gameState.controls.VerticalThruster = 0;
+  window.gameState.controls.PitchElevatorAngle = 0;
+  window.gameState.controls.YawRudderAngle = 0;
 
   // Immediately stop all rotation
-  gameState.angularVelocity.x = 0; // Stop pitch rotation
-  gameState.angularVelocity.y = 0; // Stop yaw rotation
-  gameState.angularVelocity.z = 0; // Stop roll rotation
+  window.gameState.angularVelocity.x = 0; // Stop pitch rotation
+  window.gameState.angularVelocity.y = 0; // Stop yaw rotation
+  window.gameState.angularVelocity.z = 0; // Stop roll rotation
 
   // Immediately stop all velocity
-  gameState.velocity.x = 0;
-  gameState.velocity.y = 0;
-  gameState.velocity.z = 0;
+  window.gameState.velocity.x = 0;
+  window.gameState.velocity.y = 0;
+  window.gameState.velocity.z = 0;
 }
 
 // Initialize keyboard controls when the window loads
-window.addEventListener("load", setupKeyboardControls, { once: true });
+window.addEventListener(
+  "load",
+  function () {
+    // Wait a bit for all scripts to finish loading (especially in file:// mode)
+    setTimeout(setupKeyboardControls, 100);
+  },
+  { once: true }
+);
+
+// Expose handleKeyPress globally for cross-window communication
+window.handleKeyPress = handleKeyPress;
 
 // ================ EXPORTED CONTROL API ================
 

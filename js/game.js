@@ -93,12 +93,19 @@ Object.keys(gameState_original).forEach((key) => {
   }
 });
 
+// Make gameState globally accessible for file:// protocol compatibility
+window.gameState = gameState;
+// console.log("game.js loaded: window.gameState assigned", {  hasControls: !!window.gameState.controls, throttleLeft: window.gameState.controls?.ThrottleLeft, throttleRight: window.gameState.controls?.ThrottleRight });
+
+// Make game functions globally accessible for file:// protocol compatibility
+// These will be assigned after the functions are declared below
+
 // Debug: Verify gameState is properly initialized
 // console.log("gameState initialized:", {
-//   hasStatus: !!gameState.status,
-//   oxygenLevel: gameState.status?.oxygenLevel,
-//   hasPosition: !!gameState.position,
-//   hasRotation: !!gameState.rotation
+//   hasStatus: !!window.gameState.status,
+//   oxygenLevel: window.gameState.status?.oxygenLevel,
+//   hasPosition: !!window.gameState.position,
+//   hasRotation: !!window.gameState.rotation
 // });
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -107,7 +114,8 @@ Object.keys(gameState_original).forEach((key) => {
 function startGame() {
   // console.log("startGame called, isGameRunning =", isGameRunning);
   if (!isGameRunning) {
-    console.log("Starting game with difficulty:", window.gameDifficulty);
+    // console.log("Starting game with difficulty:", window.gameDifficulty);
+    // console.log("Initial throttle values - Left:", window.gameState.controls.ThrottleLeft, "Right:", window.gameState.controls.ThrottleRight);
 
     // Reinitialize scene with the selected difficulty
     if (typeof reinitSceneForDifficulty === "function") {
@@ -118,9 +126,13 @@ function startGame() {
     lastFrameTime = 0; // Reset the time tracker
 
     // Hide the win overlay in whichever window it's in
-    const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
-    const winOverlay = doc.getElementById("win-overlay");
-    if (winOverlay) winOverlay.style.display = "none";
+    try {
+      const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
+      const winOverlay = doc.getElementById("win-overlay");
+      if (winOverlay) winOverlay.style.display = "none";
+    } catch (e) {
+      // Cross-origin access blocked in file:// mode - safe to ignore
+    }
 
     animationFrameId = requestAnimationFrame(gameLoop);
   } else {
@@ -166,13 +178,23 @@ function restartGame() {
   });
 
   // Clear sub-data text in whichever window it's in
-  const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
-  const subDataText = doc.getElementById("sub-data-text");
-  if (subDataText) subDataText.textContent = "";
+  try {
+    const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
+    const subDataText = doc.getElementById("sub-data-text");
+    if (subDataText) subDataText.textContent = "";
+  } catch (e) {
+    // Cross-origin access blocked in file:// mode - safe to ignore
+  }
 
   // Restart the game loop
   setTimeout(startGame, 500);
 }
+
+// Make game control functions globally accessible for file:// protocol compatibility
+window.startGame = startGame;
+window.stopGame = stopGame;
+window.restartGame = restartGame;
+// console.log("game.js: game control functions exposed globally");
 
 // Start the game after everything else is loaded
 // But only if the welcome screen is not showing (i.e., game was already started)
@@ -199,42 +221,42 @@ function updateSubmarineState(deltaTime) {
   }
 
   // Update time
-  gameState.time.deltaTime = deltaTime;
-  gameState.time.elapsed += deltaTime;
-  gameState.time.logTimeCounter += deltaTime;
+  window.gameState.time.deltaTime = deltaTime;
+  window.gameState.time.elapsed += deltaTime;
+  window.gameState.time.logTimeCounter += deltaTime;
 
   // Update oxygen based on elapsed time (skip for easy mode)
   const difficulty = window.gameDifficulty || "hard";
   if (difficulty !== "easy") {
-    gameState.status.oxygenLevel = Math.max(
+    window.gameState.status.oxygenLevel = Math.max(
       0,
-      Math.ceil(((gameState.constants.maxOxygenTime - gameState.time.elapsed) / gameState.constants.maxOxygenTime) * 100)
+      Math.ceil(((window.gameState.constants.maxOxygenTime - window.gameState.time.elapsed) / window.gameState.constants.maxOxygenTime) * 100)
     );
   } else {
     // Easy mode: oxygen stays at 100%
-    gameState.status.oxygenLevel = 100;
+    window.gameState.status.oxygenLevel = 100;
   }
 
   // Calculate engine RPM based on thruster values
   // Average the absolute values of both thrusters to get overall engine load
-  const avgThrottle = (Math.abs(gameState.controls.ThrottleLeft) + Math.abs(gameState.controls.ThrottleRight)) / 2;
-  gameState.status.engineRPM = avgThrottle;
+  const avgThrottle = (Math.abs(window.gameState.controls.ThrottleLeft) + Math.abs(window.gameState.controls.ThrottleRight)) / 2;
+  window.gameState.status.engineRPM = avgThrottle;
 
   // Update battery based on engine usage and aft thruster (skip for easy mode)
   if (difficulty !== "easy") {
-    const mainPowerDrain = (avgThrottle * deltaTime) / gameState.constants.maxBatteryTime;
+    const mainPowerDrain = (avgThrottle * deltaTime) / window.gameState.constants.maxBatteryTime;
     // Aft thrusters also use some power, but less than main thrusters
-    const aftPowerDrain = (Math.abs(gameState.controls.VerticalThruster) * 0.3 * deltaTime) / gameState.constants.maxBatteryTime;
+    const aftPowerDrain = (Math.abs(window.gameState.controls.VerticalThruster) * 0.3 * deltaTime) / window.gameState.constants.maxBatteryTime;
     const totalPowerDrain = mainPowerDrain + aftPowerDrain;
 
-    gameState.status.batteryLevel = Math.max(0, gameState.status.batteryLevel - totalPowerDrain);
+    window.gameState.status.batteryLevel = Math.max(0, window.gameState.status.batteryLevel - totalPowerDrain);
 
     // Battery warnings when crossing below 10% thresholds (90, 80, 70, etc.)
-    const currentThreshold = Math.floor(gameState.status.batteryLevel / 10) * 10;
-    const previousThreshold = Math.floor(gameState.status.lastBatteryWarning / 10) * 10;
+    const currentThreshold = Math.floor(window.gameState.status.batteryLevel / 10) * 10;
+    const previousThreshold = Math.floor(window.gameState.status.lastBatteryWarning / 10) * 10;
     // Only warn when crossing into a new lower threshold
-    if (currentThreshold < previousThreshold && gameState.status.batteryLevel > 0) {
-      gameState.status.lastBatteryWarning = currentThreshold;
+    if (currentThreshold < previousThreshold && window.gameState.status.batteryLevel > 0) {
+      window.gameState.status.lastBatteryWarning = currentThreshold;
       if (currentThreshold === 0) {
         appendInstrumentConsoleMessage("BATTERY DEPLETED! Thrusters offline!");
       } else {
@@ -243,25 +265,25 @@ function updateSubmarineState(deltaTime) {
     }
   } else {
     // Easy mode: battery stays at 100%
-    gameState.status.batteryLevel = 100;
+    window.gameState.status.batteryLevel = 100;
   }
 
   // Calculate forward thrust vector based on submarine orientation
   // Get orientation angles in radians (for Three.js coordinates)
-  const pitch = THREE.MathUtils.degToRad(gameState.rotation.x);
-  const yaw = THREE.MathUtils.degToRad(gameState.rotation.y);
-  const roll = 0; //THREE.MathUtils.degToRad(gameState.rotation.z);
+  const pitch = THREE.MathUtils.degToRad(window.gameState.rotation.x);
+  const yaw = THREE.MathUtils.degToRad(window.gameState.rotation.y);
+  const roll = 0; //THREE.MathUtils.degToRad(window.gameState.rotation.z);
 
   // Calculate thrust based on thruster values
-  if (gameState.status.batteryLevel > 0) {
+  if (window.gameState.status.batteryLevel > 0) {
     // Calculate thrust factor
-    const thrustFactor = gameState.constants.maxSpeed / 100;
+    const thrustFactor = window.gameState.constants.maxSpeed / 100;
 
     // Calculate net forward thrust from both thrusters
-    const netThrust = (gameState.controls.ThrottleLeft + gameState.controls.ThrottleRight) / 2;
+    const netThrust = (window.gameState.controls.ThrottleLeft + window.gameState.controls.ThrottleRight) / 2;
 
     // Calculate turning effect from differential thrust
-    const diffThrust = (gameState.controls.ThrottleLeft - gameState.controls.ThrottleRight) / 2;
+    const diffThrust = (window.gameState.controls.ThrottleLeft - window.gameState.controls.ThrottleRight) / 2;
 
     // Apply thrust vectors using Three.js coordinates
     // Forward thrust: -Z direction (Three.js forward is -Z)
@@ -278,23 +300,27 @@ function updateSubmarineState(deltaTime) {
     thrustVector.applyQuaternion(quaternion);
 
     // Apply to velocity
-    gameState.velocity.x += thrustVector.x;
-    gameState.velocity.y += thrustVector.y;
-    gameState.velocity.z += thrustVector.z;
+    window.gameState.velocity.x += thrustVector.x;
+    window.gameState.velocity.y += thrustVector.y;
+    window.gameState.velocity.z += thrustVector.z;
 
     // Apply turning effect from differential thrust
-    gameState.angularVelocity.y -= diffThrust * 0.5 * deltaTime;
+    window.gameState.angularVelocity.y -= diffThrust * 0.5 * deltaTime;
 
     // Apply rudder effect (yaw control)
-    const forwardSpeed = Math.abs(gameState.velocity.z);
-    const rudderEffect = (gameState.controls.YawRudderAngle / 100) * (forwardSpeed / gameState.constants.maxSpeed) * gameState.constants.maxYawRate * deltaTime;
-    gameState.angularVelocity.y += rudderEffect;
+    const forwardSpeed = Math.abs(window.gameState.velocity.z);
+    const rudderEffect =
+      (window.gameState.controls.YawRudderAngle / 100) *
+      (forwardSpeed / window.gameState.constants.maxSpeed) *
+      window.gameState.constants.maxYawRate *
+      deltaTime;
+    window.gameState.angularVelocity.y += rudderEffect;
 
     // Apply elevator effect (pitch control)
-    gameState.angularVelocity.x +=
-      (gameState.controls.PitchElevatorAngle / 100) *
-      (forwardSpeed / gameState.constants.maxSpeed) *
-      gameState.controls.maxPitchElevatorAngle *
+    window.gameState.angularVelocity.x +=
+      (window.gameState.controls.PitchElevatorAngle / 100) *
+      (forwardSpeed / window.gameState.constants.maxSpeed) *
+      window.gameState.controls.maxPitchElevatorAngle *
       0.5 *
       deltaTime;
 
@@ -302,8 +328,8 @@ function updateSubmarineState(deltaTime) {
 
     // Apply vertical thrusters (direct up/down movement)
     const verticalThrustFactor = 1.0; // Adjust this value to control vertical thrust power
-    const verticalEffect = (gameState.controls.VerticalThruster / 100) * verticalThrustFactor * deltaTime;
-    gameState.velocity.y += verticalEffect; // Direct vertical movement instead of rotation
+    const verticalEffect = (window.gameState.controls.VerticalThruster / 100) * verticalThrustFactor * deltaTime;
+    window.gameState.velocity.y += verticalEffect; // Direct vertical movement instead of rotation
   }
 
   // ENHANCED: Aggressively counter any roll to maintain vertical orientation
@@ -312,117 +338,117 @@ function updateSubmarineState(deltaTime) {
   const rollResetRate = 8; // Increased from 0.95 - faster return to zero
 
   // Apply strong damping to roll velocity
-  gameState.angularVelocity.z *= 1 - rollStabilizationRate * deltaTime;
+  window.gameState.angularVelocity.z *= 1 - rollStabilizationRate * deltaTime;
 
   // Actively push roll back to zero with a force proportional to current roll
-  const rollCorrection = -gameState.rotation.z * rollResetRate * deltaTime;
-  gameState.angularVelocity.z += rollCorrection;
+  const rollCorrection = -window.gameState.rotation.z * rollResetRate * deltaTime;
+  window.gameState.angularVelocity.z += rollCorrection;
 
   // For extreme roll values, apply even stronger correction
-  if (Math.abs(gameState.rotation.z) > 15) {
-    const emergencyCorrection = -Math.sign(gameState.rotation.z) * 3 * deltaTime;
-    gameState.angularVelocity.z += emergencyCorrection;
+  if (Math.abs(window.gameState.rotation.z) > 15) {
+    const emergencyCorrection = -Math.sign(window.gameState.rotation.z) * 3 * deltaTime;
+    window.gameState.angularVelocity.z += emergencyCorrection;
   }
 
   // Additional anti-roll logic when using rudder
   // This counteracts the natural tendency to roll when turning
-  if (Math.abs(gameState.controls.YawRudderAngle) > 10) {
+  if (Math.abs(window.gameState.controls.YawRudderAngle) > 10) {
     // Calculate anti-roll force when rudder is used
-    const yawRate = gameState.angularVelocity.y;
+    const yawRate = window.gameState.angularVelocity.y;
     const antiRollForce = -yawRate * 0.3 * deltaTime;
-    gameState.angularVelocity.z += antiRollForce;
+    window.gameState.angularVelocity.z += antiRollForce;
   }
 
   // YAW CENTERING: Stop turning when rudder is neutral (like a car steering wheel)
   // This makes the submarine feel more natural and controllable
   const rudderDeadZone = 5; // Small dead zone for neutral rudder
-  if (Math.abs(gameState.controls.YawRudderAngle) <= rudderDeadZone) {
+  if (Math.abs(window.gameState.controls.YawRudderAngle) <= rudderDeadZone) {
     // Rudder is neutral - apply strong yaw damping to stop turning
     const yawCenteringStrength = 4.0; // How quickly it stops turning
-    gameState.angularVelocity.y *= Math.max(0.1, 1 - yawCenteringStrength * deltaTime);
+    window.gameState.angularVelocity.y *= Math.max(0.1, 1 - yawCenteringStrength * deltaTime);
 
     // For very slow turning, stop it completely
-    if (Math.abs(gameState.angularVelocity.y) < 0.5) {
-      gameState.angularVelocity.y *= 0.7;
+    if (Math.abs(window.gameState.angularVelocity.y) < 0.5) {
+      window.gameState.angularVelocity.y *= 0.7;
     }
   } else {
     // Rudder is active - apply normal but lighter yaw damping
     const normalYawDamping = 0.98;
-    gameState.angularVelocity.y *= normalYawDamping;
+    window.gameState.angularVelocity.y *= normalYawDamping;
   }
 
   // PITCH CENTERING: Stop turning when elevator is neutral
   // This makes the submarine feel more natural and controllable
   const elevatorDeadZone = 5; // Small dead zone for neutral rudder
-  if (Math.abs(gameState.controls.PitchElevatorAngle) <= elevatorDeadZone) {
+  if (Math.abs(window.gameState.controls.PitchElevatorAngle) <= elevatorDeadZone) {
     // elevator is neutral - apply strong pitch damping to stop turning
     const pitchCenteringStrength = 4.0; // How quickly it stops turning
-    gameState.angularVelocity.x *= Math.max(0.1, 1 - pitchCenteringStrength * deltaTime);
+    window.gameState.angularVelocity.x *= Math.max(0.1, 1 - pitchCenteringStrength * deltaTime);
 
     // For very slow pitching, stop it completely
-    if (Math.abs(gameState.angularVelocity.x) < 0.5) {
-      gameState.angularVelocity.x *= 0.7;
+    if (Math.abs(window.gameState.angularVelocity.x) < 0.5) {
+      window.gameState.angularVelocity.x *= 0.7;
     }
   } else {
     // Elevator is active - apply normal but lighter pitch damping
     const normalPitchDamping = 0.98;
-    gameState.angularVelocity.x *= normalPitchDamping;
+    window.gameState.angularVelocity.x *= normalPitchDamping;
   }
 
   // Apply drag to velocities
-  const drag = gameState.constants.dragCoefficient;
-  gameState.velocity.x *= 1 - drag * deltaTime;
-  gameState.velocity.y *= 1 - drag * deltaTime;
-  gameState.velocity.z *= 1 - drag * deltaTime;
+  const drag = window.gameState.constants.dragCoefficient;
+  window.gameState.velocity.x *= 1 - drag * deltaTime;
+  window.gameState.velocity.y *= 1 - drag * deltaTime;
+  window.gameState.velocity.z *= 1 - drag * deltaTime;
 
   // DIRECTIONAL DRAG: Much higher resistance when moving sideways/backward
   // This makes turns feel realistic - submarine naturally aligns with velocity
-  const yawRad = THREE.MathUtils.degToRad(gameState.rotation.y);
-  const pitchRad = THREE.MathUtils.degToRad(gameState.rotation.x);
+  const yawRad = THREE.MathUtils.degToRad(window.gameState.rotation.y);
+  const pitchRad = THREE.MathUtils.degToRad(window.gameState.rotation.x);
 
   // Calculate submarine's forward direction vector
   const forwardX = Math.sin(yawRad) * Math.cos(pitchRad);
   const forwardZ = -Math.cos(yawRad) * Math.cos(pitchRad);
 
   // Calculate speed and direction of movement
-  const speed = Math.sqrt(gameState.velocity.x ** 2 + gameState.velocity.z ** 2);
+  const speed = Math.sqrt(window.gameState.velocity.x ** 2 + window.gameState.velocity.z ** 2);
 
   if (speed > 0.01) {
     // Calculate how much velocity aligns with submarine's forward direction
-    const velocityX = gameState.velocity.x / speed;
-    const velocityZ = gameState.velocity.z / speed;
+    const velocityX = window.gameState.velocity.x / speed;
+    const velocityZ = window.gameState.velocity.z / speed;
     const alignment = velocityX * forwardX + velocityZ * forwardZ; // -1 to 1
 
     // Apply extra drag to sideways/backward motion (perpendicular to forward)
     const lateralDragFactor = 3.0; // Sideways drag is 3x stronger than forward
     const lateralDrag = (1 - Math.abs(alignment)) * lateralDragFactor * drag * deltaTime;
 
-    gameState.velocity.x *= 1 - lateralDrag;
-    gameState.velocity.z *= 1 - lateralDrag;
+    window.gameState.velocity.x *= 1 - lateralDrag;
+    window.gameState.velocity.z *= 1 - lateralDrag;
   }
 
   // Apply drag to angular velocities
-  gameState.angularVelocity.x *= 1 - drag * 4 * deltaTime;
-  gameState.angularVelocity.y *= 1 - drag * 4 * deltaTime;
-  gameState.angularVelocity.z *= 1 - drag * 2 * deltaTime;
+  window.gameState.angularVelocity.x *= 1 - drag * 4 * deltaTime;
+  window.gameState.angularVelocity.y *= 1 - drag * 4 * deltaTime;
+  window.gameState.angularVelocity.z *= 1 - drag * 2 * deltaTime;
 
   // Limit maximum pitch angle
-  const maxPitch = gameState.controls.maxPitchElevatorAngle;
-  gameState.rotation.x = Math.max(-maxPitch, Math.min(maxPitch, gameState.rotation.x));
+  const maxPitch = window.gameState.controls.maxPitchElevatorAngle;
+  window.gameState.rotation.x = Math.max(-maxPitch, Math.min(maxPitch, window.gameState.rotation.x));
 
   // Update position based on velocity
-  gameState.position.x += gameState.velocity.x * deltaTime;
-  gameState.position.y += gameState.velocity.y * deltaTime;
-  gameState.position.z += gameState.velocity.z * deltaTime;
+  window.gameState.position.x += window.gameState.velocity.x * deltaTime;
+  window.gameState.position.y += window.gameState.velocity.y * deltaTime;
+  window.gameState.position.z += window.gameState.velocity.z * deltaTime;
 
   // Update rotation based on angular velocity
-  gameState.rotation.x += gameState.angularVelocity.x * deltaTime;
-  gameState.rotation.y += gameState.angularVelocity.y * deltaTime;
-  gameState.rotation.z += gameState.angularVelocity.z * deltaTime;
+  window.gameState.rotation.x += window.gameState.angularVelocity.x * deltaTime;
+  window.gameState.rotation.y += window.gameState.angularVelocity.y * deltaTime;
+  window.gameState.rotation.z += window.gameState.angularVelocity.z * deltaTime;
 
   // Hard clamp roll to prevent excessive banking - keeps submarine feeling upright
   const maxRoll = 5; // Allow only ±5° of roll (barely noticeable)
-  gameState.rotation.z = Math.max(-maxRoll, Math.min(maxRoll, gameState.rotation.z));
+  window.gameState.rotation.z = Math.max(-maxRoll, Math.min(maxRoll, window.gameState.rotation.z));
 
   // Apply boundary constraints
   applyBoundaryConstraints();
@@ -436,8 +462,8 @@ function updateSubmarineState(deltaTime) {
   updateDerivedValues();
 
   // run this every so often to update instruments, etc
-  if (gameState.time.logTimeCounter > gameState.time.logTimeCounterLengthMS) {
-    gameState.time.logTimeCounter = 0;
+  if (window.gameState.time.logTimeCounter > window.gameState.time.logTimeCounterLengthMS) {
+    window.gameState.time.logTimeCounter = 0;
 
     updateUI();
   }
@@ -449,26 +475,26 @@ function updateSubmarineState(deltaTime) {
 
 // Helper function to reset velocities when hitting boundaries
 function resetVelocities() {
-  gameState.velocity.x = 0;
-  gameState.velocity.y = 0;
-  gameState.velocity.z = 0;
-  gameState.angularVelocity.x = 0;
-  gameState.angularVelocity.y = 0;
-  gameState.angularVelocity.z = 0;
+  window.gameState.velocity.x = 0;
+  window.gameState.velocity.y = 0;
+  window.gameState.velocity.z = 0;
+  window.gameState.angularVelocity.x = 0;
+  window.gameState.angularVelocity.y = 0;
+  window.gameState.angularVelocity.z = 0;
 }
 
 function applyBoundaryConstraints() {
   // Get current position
-  const { x, y, z } = gameState.position;
+  const { x, y, z } = window.gameState.position;
 
   // Get boundary constants
-  const worldBoundary = gameState.constants.worldBoundary;
+  const worldBoundary = window.gameState.constants.worldBoundary;
 
   // CRITICAL FIX: Properly define the valid Y range in Three.js coordinates
   // In Three.js: Y-up means higher Y values are toward water surface
 
-  const threeJsSeabedY = gameState.constants.seabedDepth; // Bottom of the world
-  const threeJsWaterSurfaceY = gameState.constants.waterSurface; // Water surface
+  const threeJsSeabedY = window.gameState.constants.seabedDepth; // Bottom of the world
+  const threeJsWaterSurfaceY = window.gameState.constants.waterSurface; // Water surface
 
   // Console log the current position for debugging
   //console.log(`Position before bounds check: x=${x.toFixed(2)}, y=${y.toFixed(2)}, z=${z.toFixed(2)}`);
@@ -478,16 +504,16 @@ function applyBoundaryConstraints() {
 
   // Reset velocity helper function
   const resetVelocities = () => {
-    gameState.velocity.x = 0;
-    gameState.velocity.y = 0;
-    gameState.velocity.z = 0;
-    gameState.angularVelocity.x = 0;
-    gameState.angularVelocity.y = 0;
-    gameState.angularVelocity.z = 0;
-    gameState.controls.ThrottleLeft = 0;
-    gameState.controls.ThrottleRight = 0;
-    gameState.controls.PitchElevatorAngle = 0;
-    gameState.controls.YawRudderAngle = 0;
+    window.gameState.velocity.x = 0;
+    window.gameState.velocity.y = 0;
+    window.gameState.velocity.z = 0;
+    window.gameState.angularVelocity.x = 0;
+    window.gameState.angularVelocity.y = 0;
+    window.gameState.angularVelocity.z = 0;
+    window.gameState.controls.ThrottleLeft = 0;
+    window.gameState.controls.ThrottleRight = 0;
+    window.gameState.controls.PitchElevatorAngle = 0;
+    window.gameState.controls.YawRudderAngle = 0;
   };
 
   // Make a copy of the position to track changes
@@ -510,15 +536,15 @@ function applyBoundaryConstraints() {
     appendInstrumentConsoleMessage("Hit seabed - stopping submarine");
 
     // Drop the target if it was grabbed!
-    if (gameState.navigation.targetGrabbed) {
-      gameState.navigation.targetGrabbed = false;
-      gameState.navigation.targetFallVelocity = -20; // Start falling
+    if (window.gameState.navigation.targetGrabbed) {
+      window.gameState.navigation.targetGrabbed = false;
+      window.gameState.navigation.targetFallVelocity = -20; // Start falling
       appendInstrumentConsoleMessage("💎 You dropped the target! It's falling!");
     }
 
     // Auto-level the submarine to prevent driving back into floor
-    gameState.rotation.x = 0; // Level pitch
-    gameState.rotation.z = 0; // Level roll
+    window.gameState.rotation.x = 0; // Level pitch
+    window.gameState.rotation.z = 0; // Level roll
   } else if (y > threeJsWaterSurfaceY) {
     // Above water surface
     newPosition.y = threeJsWaterSurfaceY - 10;
@@ -527,14 +553,14 @@ function applyBoundaryConstraints() {
     appendInstrumentConsoleMessage("Hit Cave ceiling  - stopping submarine");
 
     // Drop the target if it was grabbed!
-    if (gameState.navigation.targetGrabbed) {
-      gameState.navigation.targetGrabbed = false;
-      gameState.navigation.targetFallVelocity = -20; // Start falling
+    if (window.gameState.navigation.targetGrabbed) {
+      window.gameState.navigation.targetGrabbed = false;
+      window.gameState.navigation.targetFallVelocity = -20; // Start falling
       appendInstrumentConsoleMessage("💎 You dropped the target! It's falling!");
     }
     // Auto-level the submarine to prevent driving back into ceiling
-    gameState.rotation.x = 0; // Level pitch
-    gameState.rotation.z = 0; // Level roll
+    window.gameState.rotation.x = 0; // Level pitch
+    window.gameState.rotation.z = 0; // Level roll
   }
 
   // Z boundary (forward/backward)
@@ -546,15 +572,15 @@ function applyBoundaryConstraints() {
   }
 
   // Update position with corrected values
-  gameState.position.x = newPosition.x;
-  gameState.position.y = newPosition.y;
-  gameState.position.z = newPosition.z;
+  window.gameState.position.x = newPosition.x;
+  window.gameState.position.y = newPosition.y;
+  window.gameState.position.z = newPosition.z;
 
   // Set boundary warning flag
   const boundaryWarningThreshold = worldBoundary * 0.9;
   const depthWarningThreshold = 5;
 
-  gameState.status.boundaryWarning =
+  window.gameState.status.boundaryWarning =
     Math.abs(x) > boundaryWarningThreshold ||
     Math.abs(z) > boundaryWarningThreshold ||
     y < threeJsSeabedY + depthWarningThreshold ||
@@ -567,23 +593,23 @@ function applyBoundaryConstraints() {
 
 function updateUI() {
   // Win condition: Must have grabbed target AND returned to the starting hole at surface
-  const atSurface = gameState.position.y >= gameState.constants.waterSurface - 5; // Near surface
+  const atSurface = window.gameState.position.y >= window.gameState.constants.waterSurface - 5; // Near surface
 
   // Check if within radius of starting position (the hole) - starting position is x:0, z:0
-  const dx = gameState.position.x - 0;
-  const dz = gameState.position.z - 0;
+  const dx = window.gameState.position.x - 0;
+  const dz = window.gameState.position.z - 0;
   const distanceFromHole = Math.sqrt(dx * dx + dz * dz);
   const inHoleRadius = distanceFromHole < 50; // Within 50 units of the hole
 
-  if (gameState.navigation.targetGrabbed && atSurface && inHoleRadius) {
+  if (window.gameState.navigation.targetGrabbed && atSurface && inHoleRadius) {
     appendInstrumentConsoleMessage("🏆 MISSION COMPLETE! You found the target and returned to the surface!");
     showWinScreen();
     stopGame();
   }
 
   // oxygen level
-  if (gameState.status.oxygenLevel <= 0) {
-    console.log("GAME OVER: Oxygen depleted, level =", gameState.status.oxygenLevel);
+  if (window.gameState.status.oxygenLevel <= 0) {
+    console.log("GAME OVER: Oxygen depleted, level =", window.gameState.status.oxygenLevel);
     appendInstrumentConsoleMessage("CRITICAL: Oxygen depleted!");
     showGameOverScreen();
     stopGame();
@@ -597,24 +623,24 @@ function updateUI() {
   // let overlayText =
   //   //    `Welcome to the Tangible Interfaces Class Submarine Design Project Simulator. ` +
   //   //   `<a href="https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main?tab=readme-ov-file#tangible-interfaces-submarine-design-project" target="new" style="color:white">Read Me for details</a>` +
-  //   //`Position(${gameState.position.x.toFixed(2)},${gameState.position.y.toFixed(2)},${gameState.position.z.toFixed(2)}) | ` +
-  //   `\nCompass: ${Math.round(gameState.navigation.compassHeading)}° ` +
-  //   `\nSpeed: ${Math.round(gameState.navigation.currentSpeedAsPercentage)}% ` +
-  //   `\nDepth: ${gameState.status.depth.toFixed(2)}m ` +
-  //   `\nPitch: ${Math.round(gameState.rotation.x)}°` +
+  //   //`Position(${window.gameState.position.x.toFixed(2)},${window.gameState.position.y.toFixed(2)},${window.gameState.position.z.toFixed(2)}) | ` +
+  //   `\nCompass: ${Math.round(window.gameState.navigation.compassHeading)}° ` +
+  //   `\nSpeed: ${Math.round(window.gameState.navigation.currentSpeedAsPercentage)}% ` +
+  //   `\nDepth: ${window.gameState.status.depth.toFixed(2)}m ` +
+  //   `\nPitch: ${Math.round(window.gameState.rotation.x)}°` +
   //   `\n` +
-  //   `\nOxygen: ${gameState.status.oxygenLevel}% ` +
-  //   `\nBattery: ${gameState.status.batteryLevel.toFixed(1)}% ` +
-  //   `\nTarget: ${gameState.navigation.distanceToTarget.toFixed(2)}m` +
+  //   `\nOxygen: ${window.gameState.status.oxygenLevel}% ` +
+  //   `\nBattery: ${window.gameState.status.batteryLevel.toFixed(1)}% ` +
+  //   `\nTarget: ${window.gameState.navigation.distanceToTarget.toFixed(2)}m` +
   //   `\n` +
-  //   `\nLeftThrust: ${gameState.controls.ThrottleLeft}% ` +
-  //   `\nRightThrust: ${gameState.controls.ThrottleRight}% ` +
-  //   `\nRudder: ${gameState.controls.YawRudderAngle.toFixed(1)}% ` +
-  //   `\nElevator: ${gameState.controls.PitchElevatorAngle.toFixed(1)}% ` +
-  //   `\nVerticalThruster: ${gameState.controls.VerticalThruster}%`;
+  //   `\nLeftThrust: ${window.gameState.controls.ThrottleLeft}% ` +
+  //   `\nRightThrust: ${window.gameState.controls.ThrottleRight}% ` +
+  //   `\nRudder: ${window.gameState.controls.YawRudderAngle.toFixed(1)}% ` +
+  //   `\nElevator: ${window.gameState.controls.PitchElevatorAngle.toFixed(1)}% ` +
+  //   `\nVerticalThruster: ${window.gameState.controls.VerticalThruster}%`;
 
   // // Add boundary warning if needed
-  // if (gameState.status.boundaryWarning) {
+  // if (window.gameState.status.boundaryWarning) {
   //   overlayText += `\n\n⚠️ Approaching boundary!`;
   // }
 
@@ -633,13 +659,15 @@ function updateUI() {
 
 function appendInstrumentConsoleMessage(message) {
   //add a line to sub-data-text
-
-  const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
-  const subDataText = doc.getElementById("sub-data-text");
-  if (subDataText) {
-    subDataText.textContent += "\n" + message + "\n";
-  } else {
-    console.log("sub-data-text element not found in", window.instrumentsWindow ? "instruments window" : "main window");
+  try {
+    const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
+    const subDataText = doc.getElementById("sub-data-text");
+    if (subDataText) {
+      subDataText.textContent += "\n" + message + "\n";
+    }
+  } catch (e) {
+    // Cross-origin access blocked in file:// mode - log to main console instead
+    console.log("Instrument message:", message);
   }
 }
 
@@ -648,33 +676,35 @@ function appendInstrumentConsoleMessage(message) {
 
 function updateDerivedValues() {
   // Calculate distance to target
-  const dx = gameState.navigation.targetPosition.x - gameState.position.x;
-  const dy = gameState.navigation.targetPosition.y - gameState.position.y;
-  const dz = gameState.navigation.targetPosition.z - gameState.position.z;
+  const dx = window.gameState.navigation.targetPosition.x - window.gameState.position.x;
+  const dy = window.gameState.navigation.targetPosition.y - window.gameState.position.y;
+  const dz = window.gameState.navigation.targetPosition.z - window.gameState.position.z;
   const distanceToTargetRaw = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
   // Scale distance to 0-100% based on maximum possible world distance
   // This gives a consistent reference frame: 0% = at target, 100% = at opposite corner of world
   // maxWorldDistance ≈ 2840 units (diagonal across entire world)
-  gameState.navigation.distanceToTarget = Math.min(100, (distanceToTargetRaw / gameState.constants.maxWorldDistance) * 100);
+  window.gameState.navigation.distanceToTarget = Math.min(100, (distanceToTargetRaw / window.gameState.constants.maxWorldDistance) * 100);
 
   // Calculate compass heading (in XZ plane)
-  gameState.navigation.headingToTarget = ((Math.atan2(dx, -dz) * 180) / Math.PI + 360) % 360;
+  window.gameState.navigation.headingToTarget = ((Math.atan2(dx, -dz) * 180) / Math.PI + 360) % 360;
 
   // Use raw yaw value for compass heading
-  gameState.navigation.compassHeading = ((gameState.rotation.y % 360) + 360) % 360;
+  window.gameState.navigation.compassHeading = ((window.gameState.rotation.y % 360) + 360) % 360;
 
   // Calculate current speed as percentage of max
   const speed = Math.sqrt(
-    gameState.velocity.x * gameState.velocity.x + gameState.velocity.y * gameState.velocity.y + gameState.velocity.z * gameState.velocity.z
+    window.gameState.velocity.x * window.gameState.velocity.x +
+      window.gameState.velocity.y * window.gameState.velocity.y +
+      window.gameState.velocity.z * window.gameState.velocity.z
   );
-  gameState.navigation.currentSpeedAsPercentage = Math.min(100, (speed / gameState.constants.maxSpeed) * 100);
+  window.gameState.navigation.currentSpeedAsPercentage = Math.min(100, (speed / window.gameState.constants.maxSpeed) * 100);
 
   // Convert depth to positive number for display (Y is up, so negative Y is depth)
-  const maxDepth = gameState.constants.waterSurface - gameState.constants.seabedDepth;
-  gameState.status.depth = Math.min(maxDepth, -gameState.position.y + gameState.constants.waterSurface);
+  const maxDepth = window.gameState.constants.waterSurface - window.gameState.constants.seabedDepth;
+  window.gameState.status.depth = Math.min(maxDepth, -window.gameState.position.y + window.gameState.constants.waterSurface);
 
-  //  gameState.status.depth = Math.min(maxDepth, 100 - gameState.position.y);
+  //  window.gameState.status.depth = Math.min(maxDepth, 100 - window.gameState.position.y);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -714,8 +744,8 @@ function gameLoop(currentTime) {
 
 function showWinScreen() {
   // Format time from seconds to MM:SS
-  const minutes = Math.floor(gameState.time.elapsed / 60);
-  const seconds = Math.floor(gameState.time.elapsed % 60);
+  const minutes = Math.floor(window.gameState.time.elapsed / 60);
+  const seconds = Math.floor(window.gameState.time.elapsed % 60);
   const timeString = minutes + ":" + String(seconds).padStart(2, "0");
 
   // Show win overlay in the main window (where the canvas is)
@@ -725,8 +755,8 @@ function showWinScreen() {
   const winOverlay = document.getElementById("win-overlay");
 
   if (finalTime) finalTime.textContent = timeString;
-  if (finalOxygen) finalOxygen.textContent = Math.round(gameState.status.oxygenLevel) + "%";
-  if (finalBattery) finalBattery.textContent = Math.round(gameState.status.batteryLevel) + "%";
+  if (finalOxygen) finalOxygen.textContent = Math.round(window.gameState.status.oxygenLevel) + "%";
+  if (finalBattery) finalBattery.textContent = Math.round(window.gameState.status.batteryLevel) + "%";
 
   // Show the win overlay in main window
   if (winOverlay) winOverlay.style.display = "flex";
@@ -734,8 +764,8 @@ function showWinScreen() {
 
 function showGameOverScreen() {
   // Format time from seconds to MM:SS
-  const minutes = Math.floor(gameState.time.elapsed / 60);
-  const seconds = Math.floor(gameState.time.elapsed % 60);
+  const minutes = Math.floor(window.gameState.time.elapsed / 60);
+  const seconds = Math.floor(window.gameState.time.elapsed % 60);
   const timeString = minutes + ":" + String(seconds).padStart(2, "0");
 
   // Show game over overlay in the main window

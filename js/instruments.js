@@ -2,12 +2,12 @@
 
 /*
 Instrument values in the game
-gameState.status.oxygenLevel
-gameState.status.batteryLevel
-gameState.status.depth
-gameState.navigation.distanceToTarget
-gameState.navigation.compassHeading
-gameState.navigation.currentSpeed
+window.gameState.status.oxygenLevel
+window.gameState.status.batteryLevel
+window.gameState.status.depth
+window.gameState.navigation.distanceToTarget
+window.gameState.navigation.compassHeading
+window.gameState.navigation.currentSpeed
  */
 
 // ========================================
@@ -15,12 +15,17 @@ gameState.navigation.currentSpeed
 // ========================================
 function getSVGContentDocument(svgElementId) {
   // Check if instruments are in a separate window
-  const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
-
-  const svgObject = doc.getElementById(svgElementId);
-  if (!svgObject || !svgObject.contentDocument) return null;
-
-  return svgObject.contentDocument;
+  try {
+    const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
+    const svgObject = doc.getElementById(svgElementId);
+    if (!svgObject || !svgObject.contentDocument) return null;
+    return svgObject.contentDocument;
+  } catch (e) {
+    // Cross-origin access blocked in file:// mode - try main document
+    const svgObject = document.getElementById(svgElementId);
+    if (!svgObject || !svgObject.contentDocument) return null;
+    return svgObject.contentDocument;
+  }
 }
 
 // ========================================
@@ -29,7 +34,7 @@ function getSVGContentDocument(svgElementId) {
 // ========================================
 
 function updateInstruments_Oxygen() {
-  const oxygenLevel = gameState.status.oxygenLevel;
+  const oxygenLevel = window.gameState.status.oxygenLevel;
 
   // Get the SVG's content document
   const svgDoc = getSVGContentDocument("oxygenGauge");
@@ -43,7 +48,7 @@ function updateInstruments_Oxygen() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_Battery() {
-  const batteryLevel = gameState.status.batteryLevel;
+  const batteryLevel = window.gameState.status.batteryLevel;
 
   // Get the SVG's content document
   const svgDoc = getSVGContentDocument("batteryGauge");
@@ -57,10 +62,10 @@ function updateInstruments_Battery() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_depth() {
-  if (!gameState || !gameState.status) return;
-  const depth = ((gameState.constants.waterSurface - gameState.position.y) / gameState.constants.waterSurface) * 100;
+  if (!gameState || !window.gameState.status) return;
+  const depth = ((window.gameState.constants.waterSurface - window.gameState.position.y) / window.gameState.constants.waterSurface) * 100;
 
-  // console.log("depth:" + Math.round(depth) + " Y:" + Math.round(gameState.position.y));
+  // console.log("depth:" + Math.round(depth) + " Y:" + Math.round(window.gameState.position.y));
   // Get the SVG's content document
   const svgDoc = getSVGContentDocument("depthGauge");
   if (!svgDoc) return;
@@ -73,8 +78,8 @@ function updateInstruments_depth() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_distanceToTarget() {
-  if (!gameState || !gameState.navigation) return;
-  const distanceToTarget = gameState.navigation.distanceToTarget;
+  if (!gameState || !window.gameState.navigation) return;
+  const distanceToTarget = window.gameState.navigation.distanceToTarget;
 
   const svgDoc = getSVGContentDocument("targetGauge");
   if (!svgDoc) return;
@@ -86,7 +91,7 @@ function updateInstruments_distanceToTarget() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_compassHeading() {
-  const compassHeading = gameState.navigation.compassHeading;
+  const compassHeading = window.gameState.navigation.compassHeading;
 
   const svgDoc = getSVGContentDocument("compassGauge");
   if (!svgDoc) return;
@@ -98,24 +103,24 @@ function updateInstruments_compassHeading() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_currentSpeed() {
-  if (!gameState || !gameState.navigation) return;
+  if (!gameState || !window.gameState.navigation) return;
 
-  // console.log("currentSpeed:" + Math.round(gameState.navigation.currentSpeedAsPercentage) + "%");
+  // console.log("currentSpeed:" + Math.round(window.gameState.navigation.currentSpeedAsPercentage) + "%");
   const svgDoc = getSVGContentDocument("speedGauge");
   if (!svgDoc) return;
 
   if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
-    svgDoc.defaultView.updateInstrument(gameState.navigation.currentSpeedAsPercentage);
+    svgDoc.defaultView.updateInstrument(window.gameState.navigation.currentSpeedAsPercentage);
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_pitch() {
-  if (!gameState || !gameState.rotation) return;
-  const pitch = gameState.rotation.x;
+  if (!gameState || !window.gameState.rotation) return;
+  const pitch = window.gameState.rotation.x;
 
   // Convert pitch to percentage (-100% to +100%), then map to SVG's -25 to +25 degree display range
-  const pitchPercent = (pitch / gameState.controls.maxPitchElevatorAngle) * 100;
+  const pitchPercent = (pitch / window.gameState.controls.maxPitchElevatorAngle) * 100;
   const pitchForDisplay = (pitchPercent / 100) * 25; // Map percentage to ±25 degrees for display
 
   const svgDoc = getSVGContentDocument("pitchGauge");
@@ -129,7 +134,7 @@ function updateInstruments_pitch() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_leftThrust() {
-  const leftThrust = gameState.controls.ThrottleLeft;
+  const leftThrust = window.gameState.controls.ThrottleLeft;
 
   const svgDoc = getSVGContentDocument("leftThrustGauge");
   if (!svgDoc) return;
@@ -141,7 +146,7 @@ function updateInstruments_leftThrust() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_rightThrust() {
-  const rightThrust = gameState.controls.ThrottleRight;
+  const rightThrust = window.gameState.controls.ThrottleRight;
 
   const svgDoc = getSVGContentDocument("rightThrustGauge");
   if (!svgDoc) return;
@@ -153,11 +158,11 @@ function updateInstruments_rightThrust() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_rudder() {
-  if (!gameState || !gameState.controls) return;
-  const rudder = gameState.controls.YawRudderAngle;
+  if (!gameState || !window.gameState.controls) return;
+  const rudder = window.gameState.controls.YawRudderAngle;
 
   // Convert rudder angle to percentage (-100% to +100%)
-  const rudderPercent = (rudder / gameState.controls.maxYawRudderAngle) * 100;
+  const rudderPercent = (rudder / window.gameState.controls.maxYawRudderAngle) * 100;
 
   const svgDoc = getSVGContentDocument("rudderGauge");
   if (!svgDoc) return;
@@ -170,11 +175,11 @@ function updateInstruments_rudder() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_elevator() {
-  if (!gameState || !gameState.controls) return;
-  const elevator = gameState.controls.PitchElevatorAngle;
+  if (!gameState || !window.gameState.controls) return;
+  const elevator = window.gameState.controls.PitchElevatorAngle;
 
   // Convert elevator angle to percentage (-100% to +100%)
-  const elevatorPercent = (elevator / gameState.controls.maxPitchElevatorAngle) * 100;
+  const elevatorPercent = (elevator / window.gameState.controls.maxPitchElevatorAngle) * 100;
 
   const svgDoc = getSVGContentDocument("elevatorGauge");
   if (!svgDoc) return;
@@ -187,7 +192,7 @@ function updateInstruments_elevator() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_verticalThruster() {
-  const verticalThruster = gameState.controls.VerticalThruster;
+  const verticalThruster = window.gameState.controls.VerticalThruster;
 
   const svgDoc = getSVGContentDocument("verticalThrusterGauge");
   if (!svgDoc) return;
@@ -209,11 +214,18 @@ window.addEventListener(
   () => {
     // Wait a bit for instruments window to open
     setTimeout(() => {
-      // Check if instruments are in a separate window
-      const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
-
       // Set initial state
-      if (gameState && gameState.status) updateInstruments();
+      if (window.gameState && window.gameState.status) updateInstruments();
+
+      // Check if instruments are in a separate window
+      let doc = document;
+      try {
+        if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
+          doc = window.instrumentsWindow.document;
+        }
+      } catch (e) {
+        // Cross-origin access blocked in file:// mode - use main document
+      }
 
       // Only set up restart button and microbit if instruments exist in main window
       // (instruments.html has its own restart button)
@@ -249,7 +261,7 @@ window.addEventListener(
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 function updateInstruments() {
-  if (gameState && gameState.status) {
+  if (gameState && window.gameState.status) {
     updateInstruments_Oxygen();
     updateInstruments_Battery();
     updateInstruments_depth();

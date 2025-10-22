@@ -189,8 +189,8 @@ function setupLighting() {
 // Replace the existing createSeabed function with this version
 function createSeabed() {
   // Create a circular plane for the seabed using CircleBufferGeometry
-  // The radius is half of gameState.constants.worldBoundaryVisible to match the diameter with the world boundary
-  const radius = gameState.constants.worldBoundaryVisible / 2;
+  // The radius is half of window.gameState.constants.worldBoundaryVisible to match the diameter with the world boundary
+  const radius = window.gameState.constants.worldBoundaryVisible / 2;
   const segments = 40; // Moderate value for smoother circle
   const seabedGeometry = new THREE.CircleBufferGeometry(radius, segments);
 
@@ -206,6 +206,9 @@ function createSeabed() {
   });
 
   // Try to load texture, but have fallback
+  // NOTE: When running from file:// protocol (without web server), texture loading
+  // will fail due to CORS restrictions. The game will use the fallback color instead.
+  // This is expected behavior and does not affect gameplay.
   textureLoader.load(
     "artwork/sand_texture.jpg",
     function (texture) {
@@ -218,14 +221,14 @@ function createSeabed() {
     undefined,
     function (err) {
       // Error callback - already using fallback color
-      console.log("Using fallback sand color (texture failed to load)");
+      console.log("Using fallback sand color (texture failed to load - this is expected when running from file://)");
     }
   );
 
   // Create seabed mesh and position it
   seabed = new THREE.Mesh(seabedGeometry, seabedMaterial);
   seabed.rotation.x = -Math.PI / 2; // Rotate to horizontal
-  seabed.position.y = gameState.constants.seabedDepth;
+  seabed.position.y = window.gameState.constants.seabedDepth;
 
   scene.add(seabed);
 
@@ -272,7 +275,7 @@ function createSeabedEdge(radius) {
 
   const edge = new THREE.Mesh(edgeGeometry, edgeMaterial);
   edge.rotation.x = -Math.PI / 2; // Rotate to horizontal
-  edge.position.y = gameState.constants.seabedDepth - 5; // Position slightly below the seabed
+  edge.position.y = window.gameState.constants.seabedDepth - 5; // Position slightly below the seabed
 
   scene.add(edge);
 
@@ -314,7 +317,7 @@ function createCoralReef() {
   ];
 
   // Calculate the full height from seabed to water surface
-  const fullHeight = gameState.constants.waterSurface - gameState.constants.seabedDepth;
+  const fullHeight = window.gameState.constants.waterSurface - window.gameState.constants.seabedDepth;
   // console.log(`Creating coral structures with height: ${fullHeight} units`);
 
   // Create fewer but much larger formations
@@ -328,8 +331,8 @@ function createCoralReef() {
 
     // Try to find a position that doesn't overlap with existing coral
     do {
-      const x = (Math.random() - 0.5) * gameState.constants.worldBoundaryVisible * 0.6;
-      const z = (Math.random() - 0.5) * gameState.constants.worldBoundaryVisible * 0.6;
+      const x = (Math.random() - 0.5) * window.gameState.constants.worldBoundaryVisible * 0.6;
+      const z = (Math.random() - 0.5) * window.gameState.constants.worldBoundaryVisible * 0.6;
       position = { x, z };
       attempts++;
     } while (attempts < maxAttempts && isTooCloseToExisting(position, minDistance));
@@ -342,13 +345,13 @@ function createCoralReef() {
     const coralStructure = createMassiveCoralStructure(coralColors, coralHeight);
 
     // Position the coral at seabed level
-    coralStructure.position.set(position.x, gameState.constants.seabedDepth, position.z);
+    coralStructure.position.set(position.x, window.gameState.constants.seabedDepth, position.z);
     reefGroup.add(coralStructure);
 
     // Add to collision detection array with much larger radius
     const collisionRadius = Math.random() * 40 + 60; // Radius between 60-100
     coralObstacles.push({
-      position: { x: position.x, y: gameState.constants.seabedDepth + fullHeight / 2, z: position.z },
+      position: { x: position.x, y: window.gameState.constants.seabedDepth + fullHeight / 2, z: position.z },
       radius: collisionRadius,
       mesh: coralStructure,
       originalEmissiveIntensity: 0.2,
@@ -513,7 +516,7 @@ function createComplexCoralPlane(baseColor, fullHeight) {
 
 // Enhanced collision detection for larger obstacles
 function checkCoralCollisions() {
-  const submarinePos = gameState.position;
+  const submarinePos = window.gameState.position;
   const submarineRadius = 12; // Slightly larger submarine collision radius
 
   for (let obstacle of coralObstacles) {
@@ -536,56 +539,56 @@ function handleCoralCollision(obstacle) {
   appendInstrumentConsoleMessage("Collision with massive coral structure!");
 
   // Drop the target if it was grabbed!
-  if (gameState.navigation.targetGrabbed) {
-    gameState.navigation.targetGrabbed = false;
-    gameState.navigation.targetFallVelocity = -20; // Start falling
+  if (window.gameState.navigation.targetGrabbed) {
+    window.gameState.navigation.targetGrabbed = false;
+    window.gameState.navigation.targetFallVelocity = -20; // Start falling
     appendInstrumentConsoleMessage("💎 You dropped the target! It's falling!");
   }
 
   // Stop the submarine (similar to boundary collision)
-  gameState.velocity.x = 0;
-  gameState.velocity.y = 0;
-  gameState.velocity.z = 0;
-  gameState.angularVelocity.x = 0;
-  gameState.angularVelocity.y = 0;
-  gameState.angularVelocity.z = 0;
-  gameState.rotation.z = 0; // Level roll after collision
+  window.gameState.velocity.x = 0;
+  window.gameState.velocity.y = 0;
+  window.gameState.velocity.z = 0;
+  window.gameState.angularVelocity.x = 0;
+  window.gameState.angularVelocity.y = 0;
+  window.gameState.angularVelocity.z = 0;
+  window.gameState.rotation.z = 0; // Level roll after collision
 
   // Reset control surfaces to prevent unexpected behavior after collision
-  gameState.controls.PitchElevatorAngle = 0;
-  gameState.controls.YawRudderAngle = 0;
+  window.gameState.controls.PitchElevatorAngle = 0;
+  window.gameState.controls.YawRudderAngle = 0;
 
   // Larger penalty for hitting these massive structures
-  gameState.status.oxygenLevel = Math.max(0, gameState.status.oxygenLevel - 3);
-  gameState.status.batteryLevel = Math.max(0, gameState.status.batteryLevel - 8);
+  window.gameState.status.oxygenLevel = Math.max(0, window.gameState.status.oxygenLevel - 3);
+  window.gameState.status.batteryLevel = Math.max(0, window.gameState.status.batteryLevel - 8);
 
   // Push submarine back further from these larger obstacles
-  const dx = gameState.position.x - obstacle.position.x;
-  const dy = gameState.position.y - obstacle.position.y;
-  const dz = gameState.position.z - obstacle.position.z;
+  const dx = window.gameState.position.x - obstacle.position.x;
+  const dy = window.gameState.position.y - obstacle.position.y;
+  const dz = window.gameState.position.z - obstacle.position.z;
   const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
   if (distance > 0) {
     // Much larger push distance to ensure submarine gets completely clear
     const pushDistance = obstacle.radius + 30; // Push beyond collision radius + extra buffer
-    gameState.position.x = obstacle.position.x + (dx / distance) * pushDistance;
-    gameState.position.y = obstacle.position.y + (dy / distance) * pushDistance;
-    gameState.position.z = obstacle.position.z + (dz / distance) * pushDistance;
+    window.gameState.position.x = obstacle.position.x + (dx / distance) * pushDistance;
+    window.gameState.position.y = obstacle.position.y + (dy / distance) * pushDistance;
+    window.gameState.position.z = obstacle.position.z + (dz / distance) * pushDistance;
   }
 }
 
 // Add this function to create a simple extended seabed
 function createSimpleExtendedSeabed() {
   // Get the current world size
-  const currentWorldSize = gameState.constants.worldBoundary * 2;
+  const currentWorldSize = window.gameState.constants.worldBoundary * 2;
 
   // Define how much larger the extension should be (e.g., 3x the current world size)
   const extensionSize = currentWorldSize * 3;
 
   // Create a simple flat plane geometry for the extension
   const extendedSeabedGeometry = new THREE.PlaneBufferGeometry(
-    gameState.constants.worldBoundary * 1, // Width
-    gameState.constants.worldBoundary * 1, // Height
+    window.gameState.constants.worldBoundary * 1, // Width
+    window.gameState.constants.worldBoundary * 1, // Height
     1, // Width segments (minimal)
     1 // Height segments (minimal)
   );
@@ -602,7 +605,7 @@ function createSimpleExtendedSeabed() {
 
   // Position it at the same depth as the main seabed, but ensure it's slightly lower
   // to prevent z-fighting with the main seabed
-  extendedSeabed.position.y = gameState.constants.seabedDepth - 0.1;
+  extendedSeabed.position.y = window.gameState.constants.seabedDepth - 0.1;
 
   // Rotate to horizontal
   extendedSeabed.rotation.x = -Math.PI / 2;
@@ -667,26 +670,26 @@ function createSimpleExtendedSeabed() {
 //   // Create four walls (North, South, East, West)
 
 //   //// North wall - at negative Z boundary (north is -Z in Three.js)
-//   const northWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
-//   northWall.position.set(0, gameState.constants.seabedDepth + WALL_HEIGHT / 2, -gameState.constants.worldBoundaryVisible / 2);
+//   const northWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(window.gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
+//   northWall.position.set(0, window.gameState.constants.seabedDepth + WALL_HEIGHT / 2, -window.gameState.constants.worldBoundaryVisible / 2);
 //   northWall.rotation.y = 0; // No rotation needed, default orientation faces -Z
 //   wallsGroup.add(northWall);
 
 //   // South wall - at positive Z boundary
-//   const southWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
-//   southWall.position.set(0, gameState.constants.seabedDepth + WALL_HEIGHT / 2, gameState.constants.worldBoundaryVisible / 2);
+//   const southWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(window.gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
+//   southWall.position.set(0, window.gameState.constants.seabedDepth + WALL_HEIGHT / 2, window.gameState.constants.worldBoundaryVisible / 2);
 //   southWall.rotation.y = Math.PI; // Rotate to face the -Z direction (inward)
 //   wallsGroup.add(southWall);
 
 //   // East wall - at positive X boundary
-//   const eastWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
-//   eastWall.position.set(gameState.constants.worldBoundaryVisible / 2, gameState.constants.seabedDepth + WALL_HEIGHT / 2, 0);
+//   const eastWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(window.gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
+//   eastWall.position.set(window.gameState.constants.worldBoundaryVisible / 2, window.gameState.constants.seabedDepth + WALL_HEIGHT / 2, 0);
 //   eastWall.rotation.y = -Math.PI / 2; // Rotate to face the -X direction (inward)
 //   wallsGroup.add(eastWall);
 
 //   // West wall - at negative X boundary
-//   const westWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
-//   westWall.position.set(-gameState.constants.worldBoundaryVisible / 2, gameState.constants.seabedDepth + WALL_HEIGHT / 2, 0);
+//   const westWall = new THREE.Mesh(new THREE.PlaneBufferGeometry(window.gameState.constants.worldBoundaryVisible, WALL_HEIGHT, 16, 8), rockMaterial);
+//   westWall.position.set(-window.gameState.constants.worldBoundaryVisible / 2, window.gameState.constants.seabedDepth + WALL_HEIGHT / 2, 0);
 //   westWall.rotation.y = Math.PI / 2; // Rotate to face the +X direction (inward)
 //   wallsGroup.add(westWall);
 
@@ -800,7 +803,7 @@ function createWaterSurfaceBoundary() {
   // console.log(`Creating escape hole at start position: X=${startX}, Z=${startZ}, radius=${holeRadius}`);
 
   // Create a ring-shaped ceiling (donut) instead of a full plane
-  const outerRadius = gameState.constants.worldBoundaryVisible / 2;
+  const outerRadius = window.gameState.constants.worldBoundaryVisible / 2;
   const innerRadius = holeRadius;
 
   // Create the ring geometry for the main ceiling
@@ -846,7 +849,7 @@ function createWaterSurfaceBoundary() {
 
   // Rotate to horizontal and position slightly above water surface to prevent viewing above it
   // The ring is centered at 0,0 so we need to offset it to center on startX, startZ
-  const ceilingHeight = gameState.constants.waterSurface + 10; // 10 units above surface
+  const ceilingHeight = window.gameState.constants.waterSurface + 10; // 10 units above surface
   ceilingPlane.rotation.x = -Math.PI / 2;
   ceilingPlane.position.set(startX, ceilingHeight, startZ);
 
@@ -865,7 +868,7 @@ function createWaterSurfaceBoundary() {
 
   scene.add(caveCeilingGroup);
 
-  // console.log(`Created cave ceiling with escape hole at Y=${gameState.constants.waterSurface}`);
+  // console.log(`Created cave ceiling with escape hole at Y=${window.gameState.constants.waterSurface}`);
   // console.log(`Start position: X=${startX}, Y=${gameState_original.position.y}, Z=${startZ}`);
 }
 
@@ -925,7 +928,7 @@ function createCaveCeilingFormation(caveColors) {
 
 function createWaterEffects() {
   // Create water surface with improved texture and ripple effect
-  const waterGeometry = new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, gameState.constants.worldBoundaryVisible, 32, 32);
+  const waterGeometry = new THREE.PlaneBufferGeometry(window.gameState.constants.worldBoundaryVisible, window.gameState.constants.worldBoundaryVisible, 32, 32);
 
   // Create better material for water with updated properties for lighter appearance from below
   // Make it much more visible with brighter color and higher opacity
@@ -982,7 +985,7 @@ function createWaterEffects() {
   // Create water mesh
   water = new THREE.Mesh(waterGeometry, waterMaterial);
   water.rotation.x = Math.PI / 2;
-  water.position.y = gameState.constants.waterSurface;
+  water.position.y = window.gameState.constants.waterSurface;
   scene.add(water);
 
   // Add underwater particles for better depth perception
@@ -995,7 +998,12 @@ function createWaterEffects() {
 // NEW: Function to add water caustics effect to the scene
 function addCausticsEffect() {
   // Create caustics texture plane for the seabed
-  const causticsGeometry = new THREE.PlaneBufferGeometry(gameState.constants.worldBoundaryVisible, gameState.constants.worldBoundaryVisible, 1, 1);
+  const causticsGeometry = new THREE.PlaneBufferGeometry(
+    window.gameState.constants.worldBoundaryVisible,
+    window.gameState.constants.worldBoundaryVisible,
+    1,
+    1
+  );
 
   // Create caustics material
   const causticsMaterial = new THREE.MeshBasicMaterial({
@@ -1058,7 +1066,7 @@ function addCausticsEffect() {
   // Create the caustics plane
   const causticsPlane = new THREE.Mesh(causticsGeometry, causticsMaterial);
   causticsPlane.rotation.x = -Math.PI / 2; // Align with seabed
-  causticsPlane.position.y = gameState.constants.seabedDepth + 0.1; // Slightly above seabed
+  causticsPlane.position.y = window.gameState.constants.seabedDepth + 0.1; // Slightly above seabed
   scene.add(causticsPlane);
 
   // Animate the caustics
@@ -1169,9 +1177,9 @@ function addUnderwaterParticles() {
   // Animate particles in render loop
   function animateParticles() {
     // Make particles slowly drift
-    particlesGroup.position.x = gameState.position.x;
-    particlesGroup.position.y = gameState.position.y;
-    particlesGroup.position.z = gameState.position.z;
+    particlesGroup.position.x = window.gameState.position.x;
+    particlesGroup.position.y = window.gameState.position.y;
+    particlesGroup.position.z = window.gameState.position.z;
 
     const positions = particleGeometry.attributes.position.array;
     const dustPos = dustGeometry.attributes.position.array;
@@ -1238,21 +1246,21 @@ function addUnderwaterParticles() {
 // Update camera position for first-person view
 function updateCameraPosition() {
   // Defensive check - ensure gameState is initialized
-  if (!gameState || !gameState.position || !gameState.rotation) {
+  if (!gameState || !window.gameState.position || !window.gameState.rotation) {
     console.warn("updateCameraPosition: gameState not fully initialized yet");
     return;
   }
 
   // Position camera at submarine position
-  camera.position.copy(gameState.position);
+  camera.position.copy(window.gameState.position);
 
   // Create quaternion from Euler angles
   const quaternion = new THREE.Quaternion();
   quaternion.setFromEuler(
     new THREE.Euler(
-      THREE.MathUtils.degToRad(gameState.rotation.x),
-      THREE.MathUtils.degToRad(gameState.rotation.y),
-      THREE.MathUtils.degToRad(gameState.rotation.z),
+      THREE.MathUtils.degToRad(window.gameState.rotation.x),
+      THREE.MathUtils.degToRad(window.gameState.rotation.y),
+      THREE.MathUtils.degToRad(window.gameState.rotation.z),
       "XYZ"
     )
   );
@@ -1267,7 +1275,7 @@ function updateCameraPosition() {
 // Adjust fog based on water depth
 function updateFogWithDepth() {
   // Defensive check - ensure gameState is initialized
-  if (!gameState || !gameState.position || !gameState.constants) {
+  if (!gameState || !window.gameState.position || !window.gameState.constants) {
     return;
   }
 
@@ -1277,10 +1285,10 @@ function updateFogWithDepth() {
   }
 
   // Get current depth (in Three.js, depth is negative Y from water surface)
-  const depth = Math.max(0, -gameState.position.y + gameState.constants.waterSurface);
+  const depth = Math.max(0, -window.gameState.position.y + window.gameState.constants.waterSurface);
 
   // Make water get darker and visibility decrease with depth
-  const maxDepth = gameState.constants.waterSurface - gameState.constants.seabedDepth;
+  const maxDepth = window.gameState.constants.waterSurface - window.gameState.constants.seabedDepth;
   const depthFactor = Math.min(1, depth / maxDepth);
 
   // Blend from surface color to deep color using the corrected depthFactor
@@ -1328,13 +1336,13 @@ function onWindowResize() {
 // Update scene elements based on game state
 function updateScene() {
   // Defensive check - ensure gameState is initialized
-  if (!gameState || !gameState.navigation || !gameState.constants || !gameState.time) {
+  if (!gameState || !window.gameState.navigation || !window.gameState.constants || !window.gameState.time) {
     console.warn("updateScene: gameState not fully initialized yet");
     return;
   }
 
   // Update target position - if grabbed, follow camera, otherwise stay at fixed position
-  if (gameState.navigation.targetGrabbed) {
+  if (window.gameState.navigation.targetGrabbed) {
     // Position target in front of camera when grabbed
     const grabDistance = 8; // Distance in front of camera
     const targetPos = new THREE.Vector3(0, 0, -grabDistance);
@@ -1343,21 +1351,25 @@ function updateScene() {
 
     targetSphere.position.copy(targetPos);
     // Also update the gameState position so distance calculations work
-    gameState.navigation.targetPosition.x = targetPos.x;
-    gameState.navigation.targetPosition.y = targetPos.y;
-    gameState.navigation.targetPosition.z = targetPos.z;
+    window.gameState.navigation.targetPosition.x = targetPos.x;
+    window.gameState.navigation.targetPosition.y = targetPos.y;
+    window.gameState.navigation.targetPosition.z = targetPos.z;
   } else {
     // Apply falling physics if target is falling
-    if (gameState.navigation.targetFallVelocity < 0) {
-      gameState.navigation.targetPosition.y += gameState.navigation.targetFallVelocity * gameState.time.deltaTime;
+    if (window.gameState.navigation.targetFallVelocity < 0) {
+      window.gameState.navigation.targetPosition.y += window.gameState.navigation.targetFallVelocity * window.gameState.time.deltaTime;
       // Stop at seabed
-      if (gameState.navigation.targetPosition.y <= gameState.constants.seabedDepth + 10) {
-        gameState.navigation.targetPosition.y = gameState.constants.seabedDepth + 10;
-        gameState.navigation.targetFallVelocity = 0;
+      if (window.gameState.navigation.targetPosition.y <= window.gameState.constants.seabedDepth + 10) {
+        window.gameState.navigation.targetPosition.y = window.gameState.constants.seabedDepth + 10;
+        window.gameState.navigation.targetFallVelocity = 0;
       }
     }
     // Normal fixed position
-    targetSphere.position.set(gameState.navigation.targetPosition.x, gameState.navigation.targetPosition.y, gameState.navigation.targetPosition.z);
+    targetSphere.position.set(
+      window.gameState.navigation.targetPosition.x,
+      window.gameState.navigation.targetPosition.y,
+      window.gameState.navigation.targetPosition.z
+    );
   }
 
   // Make target pulse for visibility and rotate to show facets
@@ -1379,7 +1391,7 @@ function updateScene() {
   // Create gentle water surface movement with enhanced effect
   if (water) {
     // Animate water around the water surface constant with more pronounced movement
-    water.position.y = gameState.constants.waterSurface + Math.sin(time * 0.2) * 0.8;
+    water.position.y = window.gameState.constants.waterSurface + Math.sin(time * 0.2) * 0.8;
 
     // Animate water texture if normal map is loaded with more dramatic rippling
     if (water.material && water.material.normalMap) {

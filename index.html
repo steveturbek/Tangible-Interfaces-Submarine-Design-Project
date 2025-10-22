@@ -417,12 +417,104 @@
         // Start the game after a short delay to ensure instruments window is ready
         // This works whether it's a new window or reusing an existing one
         setTimeout(() => {
+          // Refocus the main window so keyboard events work here
+          window.focus();
+
           // Start the game loop from game.js (renderer already initialized)
           if (typeof startGame === "function") {
             startGame();
           }
         }, 500);
       }
+
+      // Listen for messages from instruments window (via postMessage API)
+      // This allows communication between windows using file:// protocol
+      window.addEventListener("message", function (event) {
+        // Accept messages from any origin (needed for file:// protocol)
+        if (!event.data) return;
+
+        // Handle keyboard events forwarded from instruments window
+        if (event.data.type === "keydown" || event.data.type === "keyup") {
+          // Create and dispatch a keyboard event on the document
+          try {
+            const keyEvent = new KeyboardEvent(event.data.type, {
+              key: event.data.key,
+              code: event.data.code,
+              keyCode: event.data.keyCode,
+              which: event.data.which,
+              shiftKey: event.data.shiftKey,
+              ctrlKey: event.data.ctrlKey,
+              altKey: event.data.altKey,
+              metaKey: event.data.metaKey,
+              repeat: event.data.repeat,
+              bubbles: true,
+              cancelable: true,
+            });
+
+            // Dispatch the event
+            document.dispatchEvent(keyEvent);
+
+            // If the event didn't trigger (synthetic events sometimes don't work),
+            // manually trigger the handler if it exists
+            if (typeof handleKeyPress === "function" && event.data.type === "keydown") {
+              handleKeyPress(keyEvent);
+            }
+          } catch (error) {
+            console.error("Error creating keyboard event:", error);
+          }
+        }
+
+        // Handle restart game request from instruments window
+        if (event.data.type === "restartGame") {
+          restartGame();
+        }
+
+        // Handle microbit connection requests from instruments window
+        if (event.data.type === "microbitConnect") {
+          if (typeof connectToMicrobit === "function") {
+            connectToMicrobit().then(() => {
+              // Send status back to instruments window
+              if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
+                window.instrumentsWindow.postMessage({ type: "microbitStatus", connected: true }, "*");
+              }
+            }).catch((error) => {
+              console.log("Microbit connect error:", error);
+              if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
+                window.instrumentsWindow.postMessage({ type: "microbitStatus", connected: false }, "*");
+              }
+            });
+          }
+        }
+
+        if (event.data.type === "microbitDisconnect") {
+          if (typeof disconnectFromMicrobit === "function") {
+            disconnectFromMicrobit().then(() => {
+              // Send status back to instruments window
+              if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
+                window.instrumentsWindow.postMessage({ type: "microbitStatus", connected: false }, "*");
+              }
+            }).catch((error) => {
+              console.log("Microbit disconnect error:", error);
+            });
+          }
+        }
+
+        if (event.data.type === "microbitAutoConnect") {
+          if (typeof autoConnectToMicrobit === "function") {
+            autoConnectToMicrobit().then((connected) => {
+              // Send status back to instruments window
+              if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
+                window.instrumentsWindow.postMessage({ type: "microbitStatus", connected: connected }, "*");
+              }
+            }).catch((error) => {
+              console.log("Microbit auto-connect failed:", error);
+              if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
+                window.instrumentsWindow.postMessage({ type: "microbitStatus", connected: false }, "*");
+              }
+            });
+          }
+        }
+      });
 
       // Fullscreen functionality for main window - keyboard shortcut 'F'
       document.addEventListener("keydown", function (e) {

@@ -1,7 +1,8 @@
 // Connect to the main game window (opener)
 function restartGame() {
-  if (window.opener && window.opener.restartGame) {
-    window.opener.restartGame();
+  if (window.opener && !window.opener.closed) {
+    // Use postMessage to communicate with main window (works with file:// protocol)
+    window.opener.postMessage({ type: "restartGame" }, "*");
   } else {
     alert("Main game window not found. Please restart from the main window.");
   }
@@ -9,10 +10,12 @@ function restartGame() {
 
 // Forward keyboard events to the main game window
 // This allows controls to work even when instruments window has focus
+// Using postMessage API to work with both file:// and https:// protocols
 window.addEventListener("keydown", (e) => {
   if (window.opener && !window.opener.closed) {
-    // Dispatch the same event to the opener window
-    const event = new KeyboardEvent("keydown", {
+    // Send keyboard event data via postMessage (works with file:// protocol)
+    window.opener.postMessage({
+      type: "keydown",
       key: e.key,
       code: e.code,
       keyCode: e.keyCode,
@@ -22,15 +25,15 @@ window.addEventListener("keydown", (e) => {
       altKey: e.altKey,
       metaKey: e.metaKey,
       repeat: e.repeat,
-    });
-    window.opener.document.dispatchEvent(event);
+    }, "*");
   }
 });
 
 window.addEventListener("keyup", (e) => {
   if (window.opener && !window.opener.closed) {
-    // Dispatch the same event to the opener window
-    const event = new KeyboardEvent("keyup", {
+    // Send keyboard event data via postMessage (works with file:// protocol)
+    window.opener.postMessage({
+      type: "keyup",
       key: e.key,
       code: e.code,
       keyCode: e.keyCode,
@@ -39,8 +42,7 @@ window.addEventListener("keyup", (e) => {
       ctrlKey: e.ctrlKey,
       altKey: e.altKey,
       metaKey: e.metaKey,
-    });
-    window.opener.document.dispatchEvent(event);
+    }, "*");
   }
 });
 
@@ -64,25 +66,25 @@ window.addEventListener("load", () => {
 
           let isConnected = false;
 
+          // Listen for microbit connection status updates from main window
+          window.addEventListener("message", (event) => {
+            if (event.data && event.data.type === "microbitStatus") {
+              isConnected = event.data.connected;
+              circuitBoard.setAttribute("fill", isConnected ? "#00ff00" : "#ffffff");
+            }
+          });
+
           // Toggle between connect and disconnect
           circuitBoard.addEventListener("click", async () => {
-            if (!window.opener) return;
+            if (!window.opener || window.opener.closed) return;
 
             try {
               if (isConnected) {
-                // Disconnect
-                if (window.opener.disconnectFromMicrobit) {
-                  await window.opener.disconnectFromMicrobit();
-                  circuitBoard.setAttribute("fill", "#ffffff");
-                  isConnected = false;
-                }
+                // Request disconnect via postMessage
+                window.opener.postMessage({ type: "microbitDisconnect" }, "*");
               } else {
-                // Connect
-                if (window.opener.connectToMicrobit) {
-                  await window.opener.connectToMicrobit();
-                  circuitBoard.setAttribute("fill", "#00ff00");
-                  isConnected = true;
-                }
+                // Request connect via postMessage
+                window.opener.postMessage({ type: "microbitConnect" }, "*");
               }
             } catch (error) {
               console.log("Microbit toggle error:", error.message);
@@ -90,18 +92,9 @@ window.addEventListener("load", () => {
           });
 
           // Try to auto-connect
-          setTimeout(async () => {
-            if (window.opener && window.opener.autoConnectToMicrobit) {
-              try {
-                const connected = await window.opener.autoConnectToMicrobit();
-                // Check if connection succeeded
-                if (connected) {
-                  circuitBoard.setAttribute("fill", "#00ff00");
-                  isConnected = true;
-                }
-              } catch (error) {
-                // Auto-connect failed, stay disconnected
-              }
+          setTimeout(() => {
+            if (window.opener && !window.opener.closed) {
+              window.opener.postMessage({ type: "microbitAutoConnect" }, "*");
             }
           }, 1000);
         } else {
