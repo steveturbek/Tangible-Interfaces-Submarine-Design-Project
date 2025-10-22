@@ -1280,7 +1280,8 @@ function updateFogWithDepth() {
   const depth = Math.max(0, -gameState.position.y + gameState.constants.waterSurface);
 
   // Make water get darker and visibility decrease with depth
-  const depthFactor = Math.min(1, depth / gameState.constants.maxDepth);
+  const maxDepth = gameState.constants.waterSurface - gameState.constants.seabedDepth;
+  const depthFactor = Math.min(1, depth / maxDepth);
 
   // Blend from surface color to deep color using the corrected depthFactor
   const r1 = (WATER_COLOR >> 16) & 255;

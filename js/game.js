@@ -34,7 +34,7 @@ const gameState_original = {
     batteryLevel: 100, // 0-100%
     lastBatteryWarning: 100, // Track last battery warning threshold
     // hullIntegrity: 100, // 0-100% (optional: damage model)
-    depth: 0, // 0 to maxDepth (positive number for UI clarity)
+    depth: 0, // 0 to (waterSurface - seabedDepth) in world units
     boundaryWarning: true, // Flag to indicate proximity to boundaries
   },
 
@@ -54,7 +54,6 @@ const gameState_original = {
   constants: {
     maxOxygenTime: 300, // 5 minutes in seconds
     maxBatteryTime: 300, // 2.5 minutes at full throttle
-    maxDepth: 100, // Maximum dive depth
     maxSpeed: 10, // Units per second at 100% throttle
     maxYawRate: 20, // Maximum yaw rate in degrees per second
     dragCoefficient: 0.05, // Water resistance factor
@@ -664,9 +663,10 @@ function updateDerivedValues() {
   gameState.navigation.currentSpeed = Math.min(100, (speed / gameState.constants.maxSpeed) * 100);
 
   // Convert depth to positive number for display (Y is up, so negative Y is depth)
-  gameState.status.depth = Math.min(gameState.constants.maxDepth, -gameState.position.y + gameState.constants.waterSurface);
+  const maxDepth = gameState.constants.waterSurface - gameState.constants.seabedDepth;
+  gameState.status.depth = Math.min(maxDepth, -gameState.position.y + gameState.constants.waterSurface);
 
-  //  gameState.status.depth = Math.min(gameState.constants.maxDepth, 100 - gameState.position.y);
+  //  gameState.status.depth = Math.min(maxDepth, 100 - gameState.position.y);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////

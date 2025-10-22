@@ -60,7 +60,7 @@ function updateInstruments_depth() {
   if (!gameState || !gameState.status) return;
   const depth = ((gameState.constants.waterSurface - gameState.position.y) / gameState.constants.waterSurface) * 100;
 
-  // console.log("depth:" + Math.round(depth) + " Y:" + Math.rounf(gameState.position.y));
+  // console.log("depth:" + Math.round(depth) + " Y:" + Math.round(gameState.position.y));
   // Get the SVG's content document
   const svgDoc = getSVGContentDocument("depthGauge");
   if (!svgDoc) return;
