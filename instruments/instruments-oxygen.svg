@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg"
-     width="400" height="400" viewBox="0 0 400 400" aria-labelledby="title desc" role="img">
+      viewBox="0 0 400 400" aria-labelledby="title desc" role="img">
   <title id="title">Oxygen Gauge (VU style, corrected)</title>
   <desc id="desc">Square retro VU-style oxygen gauge with functional needle pivoting around fixed point.</desc>
 
@@ -113,5 +113,16 @@
       const y1 = parseFloat(line.getAttribute('y1'));
       line.setAttribute('transform', `rotate(${angle}, ${x1}, ${y1})`);
     };
+
+    // Check localStorage for updates (test mode takes priority over game mode)
+    setInterval(() => {
+      const testValue = localStorage.getItem('testMode_oxygen');
+      const gameValue = localStorage.getItem('game_oxygen');
+      if (testValue !== null) {
+        window.updateInstrument(parseFloat(testValue));
+      } else if (gameValue !== null) {
+        window.updateInstrument(parseFloat(gameValue));
+      }
+    }, 50);
   ]]></script>
 </svg>

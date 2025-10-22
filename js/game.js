@@ -184,7 +184,25 @@ function restartGame() {
     if (subDataText) subDataText.textContent = "";
   } catch (e) {
     // Cross-origin access blocked in file:// mode - safe to ignore
+    // console.log("NOPE");
   }
+
+  // Clear all game data from localStorage (for file:// protocol compatibility)
+  // Set a special "clear" message to signal the instruments window to clear its console
+  localStorage.setItem("game_consoleClear", Date.now().toString());
+  localStorage.removeItem("game_consoleMessage");
+  localStorage.removeItem("game_oxygen");
+  localStorage.removeItem("game_battery");
+  localStorage.removeItem("game_compass");
+  localStorage.removeItem("game_depth");
+  localStorage.removeItem("game_speed");
+  localStorage.removeItem("game_pitch");
+  localStorage.removeItem("game_leftThrust");
+  localStorage.removeItem("game_rightThrust");
+  localStorage.removeItem("game_target");
+  localStorage.removeItem("game_rudder");
+  localStorage.removeItem("game_elevator");
+  localStorage.removeItem("game_verticalThruster");
 
   // Restart the game loop
   setTimeout(startGame, 500);
@@ -659,14 +677,21 @@ function updateUI() {
 
 function appendInstrumentConsoleMessage(message) {
   //add a line to sub-data-text
+
+  // Store message in localStorage for file:// protocol compatibility
+  const timestamp = Date.now();
+  localStorage.setItem("game_consoleMessage", JSON.stringify({ message, timestamp }));
+
   try {
     const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;
     const subDataText = doc.getElementById("sub-data-text");
     if (subDataText) {
       subDataText.textContent += "\n" + message + "\n";
+      // Auto-scroll to bottom
+      subDataText.scrollTop = subDataText.scrollHeight;
     }
   } catch (e) {
-    // Cross-origin access blocked in file:// mode - log to main console instead
+    // Cross-origin access blocked in file:// mode - message will be read from localStorage
     console.log("Instrument message:", message);
   }
 }

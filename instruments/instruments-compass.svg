@@ -65,6 +65,17 @@
       compassRotating.setAttribute('transform', `rotate(${normalizedHeading}, 256, 128)`);
     };
 
+    // Check localStorage for updates (test mode takes priority over game mode)
+    setInterval(() => {
+      const testValue = localStorage.getItem('testMode_compass');
+      const gameValue = localStorage.getItem('game_compass');
+      if (testValue !== null) {
+      window.updateInstrument(parseFloat(testValue));
+    } else if (gameValue !== null) {
+      window.updateInstrument(parseFloat(gameValue));
+    }
+    }, 50);
+
     //console.log('Compass gauge script loaded');
   </script>
 </svg>

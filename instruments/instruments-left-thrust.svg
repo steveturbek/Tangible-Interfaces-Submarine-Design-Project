@@ -38,5 +38,16 @@
       indicator.setAttribute('x1', xPosition);
       indicator.setAttribute('x2', xPosition);
     };
+
+    // Check localStorage for updates (test mode takes priority over game mode)
+    setInterval(() => {
+      const testValue = localStorage.getItem('testMode_leftThrust');
+      const gameValue = localStorage.getItem('game_leftThrust');
+      if (testValue !== null) {
+      window.updateInstrument(parseFloat(testValue));
+    } else if (gameValue !== null) {
+      window.updateInstrument(parseFloat(gameValue));
+    }
+    }, 50);
   </script>
 </svg>

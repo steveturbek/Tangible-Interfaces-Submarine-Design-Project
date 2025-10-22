@@ -122,22 +122,39 @@
               ? cyclePosition * 200  // 0 to 100 in first half
               : (1 - cyclePosition) * 200; // 100 to 0 in second half
 
-            // Update all gauges
-            gaugeIds.forEach((gaugeId) => {
-              const gaugeElement = document.getElementById(gaugeId);
-              if (gaugeElement && gaugeElement.contentDocument) {
-                const updateFn = gaugeElement.contentWindow.updateInstrument;
-                if (updateFn) {
-                  updateFn(percentage);
-                }
-              }
-            });
+            // Write test values to localStorage for each gauge
+            localStorage.setItem('testMode_oxygen', percentage.toString());
+            localStorage.setItem('testMode_battery', percentage.toString());
+            localStorage.setItem('testMode_compass', (percentage * 3.6).toString()); // 0-360 degrees
+            localStorage.setItem('testMode_depth', percentage.toString());
+            localStorage.setItem('testMode_speed', percentage.toString());
+            localStorage.setItem('testMode_pitch', percentage.toString());
+            localStorage.setItem('testMode_leftThrust', percentage.toString());
+            localStorage.setItem('testMode_rightThrust', percentage.toString());
+            localStorage.setItem('testMode_target', percentage.toString());
+            localStorage.setItem('testMode_rudder', percentage.toString());
+            localStorage.setItem('testMode_elevator', percentage.toString());
+            localStorage.setItem('testMode_verticalThruster', percentage.toString());
           }, 50); // Update every 50ms for smooth animation
         } else {
-          // Stop test mode animation
+          // Stop test mode animation and clear localStorage
           if (testModeInterval) {
             clearInterval(testModeInterval);
             testModeInterval = null;
+
+            // Clear all test mode values from localStorage
+            localStorage.removeItem('testMode_oxygen');
+            localStorage.removeItem('testMode_battery');
+            localStorage.removeItem('testMode_compass');
+            localStorage.removeItem('testMode_depth');
+            localStorage.removeItem('testMode_speed');
+            localStorage.removeItem('testMode_pitch');
+            localStorage.removeItem('testMode_leftThrust');
+            localStorage.removeItem('testMode_rightThrust');
+            localStorage.removeItem('testMode_target');
+            localStorage.removeItem('testMode_rudder');
+            localStorage.removeItem('testMode_elevator');
+            localStorage.removeItem('testMode_verticalThruster');
           }
         }
       });

@@ -55,6 +55,17 @@
       line.setAttribute('transform', `rotate(${angle}, ${x1}, ${y1})`);
     };
 
+    // Check localStorage for updates (test mode takes priority over game mode)
+    setInterval(() => {
+      const testValue = localStorage.getItem('testMode_battery');
+      const gameValue = localStorage.getItem('game_battery');
+      if (testValue !== null) {
+      window.updateInstrument(parseFloat(testValue));
+    } else if (gameValue !== null) {
+      window.updateInstrument(parseFloat(gameValue));
+    }
+    }, 50);
+
     //console.log('Battery gauge script loaded');
   </script>
 </svg>

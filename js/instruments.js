@@ -36,7 +36,10 @@ function getSVGContentDocument(svgElementId) {
 function updateInstruments_Oxygen() {
   const oxygenLevel = window.gameState.status.oxygenLevel;
 
-  // Get the SVG's content document
+  // Write to localStorage for file:// protocol compatibility
+  localStorage.setItem('game_oxygen', oxygenLevel.toString());
+
+  // Get the SVG's content document (fallback for web server mode)
   const svgDoc = getSVGContentDocument("oxygenGauge");
   if (!svgDoc) return;
 
@@ -50,7 +53,10 @@ function updateInstruments_Oxygen() {
 function updateInstruments_Battery() {
   const batteryLevel = window.gameState.status.batteryLevel;
 
-  // Get the SVG's content document
+  // Write to localStorage for file:// protocol compatibility
+  localStorage.setItem('game_battery', batteryLevel.toString());
+
+  // Get the SVG's content document (fallback for web server mode)
   const svgDoc = getSVGContentDocument("batteryGauge");
   if (!svgDoc) return;
 
@@ -65,8 +71,11 @@ function updateInstruments_depth() {
   if (!gameState || !window.gameState.status) return;
   const depth = ((window.gameState.constants.waterSurface - window.gameState.position.y) / window.gameState.constants.waterSurface) * 100;
 
+  // Write to localStorage for file:// protocol compatibility
+  localStorage.setItem('game_depth', depth.toString());
+
   // console.log("depth:" + Math.round(depth) + " Y:" + Math.round(window.gameState.position.y));
-  // Get the SVG's content document
+  // Get the SVG's content document (fallback for web server mode)
   const svgDoc = getSVGContentDocument("depthGauge");
   if (!svgDoc) return;
 
@@ -81,6 +90,9 @@ function updateInstruments_distanceToTarget() {
   if (!gameState || !window.gameState.navigation) return;
   const distanceToTarget = window.gameState.navigation.distanceToTarget;
 
+  // Write to localStorage for file:// protocol compatibility
+  localStorage.setItem('game_target', distanceToTarget.toString());
+
   const svgDoc = getSVGContentDocument("targetGauge");
   if (!svgDoc) return;
 
@@ -93,6 +105,9 @@ function updateInstruments_distanceToTarget() {
 function updateInstruments_compassHeading() {
   const compassHeading = window.gameState.navigation.compassHeading;
 
+  // Write to localStorage for file:// protocol compatibility
+  localStorage.setItem('game_compass', compassHeading.toString());
+
   const svgDoc = getSVGContentDocument("compassGauge");
   if (!svgDoc) return;
 
@@ -104,6 +119,9 @@ function updateInstruments_compassHeading() {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_currentSpeed() {
   if (!gameState || !window.gameState.navigation) return;
+
+  // Write to localStorage for file:// protocol compatibility
+  localStorage.setItem('game_speed', window.gameState.navigation.currentSpeedAsPercentage.toString());
 
   // console.log("currentSpeed:" + Math.round(window.gameState.navigation.currentSpeedAsPercentage) + "%");
   const svgDoc = getSVGContentDocument("speedGauge");
@@ -123,6 +141,9 @@ function updateInstruments_pitch() {
   const pitchPercent = (pitch / window.gameState.controls.maxPitchElevatorAngle) * 100;
   const pitchForDisplay = (pitchPercent / 100) * 25; // Map percentage to ±25 degrees for display
 
+  // Write to localStorage for file:// protocol compatibility
+  localStorage.setItem('game_pitch', Math.round(pitchForDisplay).toString());
+
   const svgDoc = getSVGContentDocument("pitchGauge");
   if (!svgDoc) return;
 
@@ -136,6 +157,9 @@ function updateInstruments_pitch() {
 function updateInstruments_leftThrust() {
   const leftThrust = window.gameState.controls.ThrottleLeft;
 
+  // Write to localStorage for file:// protocol compatibility
+  localStorage.setItem('game_leftThrust', leftThrust.toString());
+
   const svgDoc = getSVGContentDocument("leftThrustGauge");
   if (!svgDoc) return;
 
@@ -147,6 +171,9 @@ function updateInstruments_leftThrust() {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_rightThrust() {
   const rightThrust = window.gameState.controls.ThrottleRight;
+
+  // Write to localStorage for file:// protocol compatibility
+  localStorage.setItem('game_rightThrust', rightThrust.toString());
 
   const svgDoc = getSVGContentDocument("rightThrustGauge");
   if (!svgDoc) return;
@@ -163,6 +190,9 @@ function updateInstruments_rudder() {
 
   // Convert rudder angle to percentage (-100% to +100%)
   const rudderPercent = (rudder / window.gameState.controls.maxYawRudderAngle) * 100;
+
+  // Write to localStorage for file:// protocol compatibility
+  localStorage.setItem('game_rudder', Math.round(rudderPercent).toString());
 
   const svgDoc = getSVGContentDocument("rudderGauge");
   if (!svgDoc) return;
@@ -181,6 +211,9 @@ function updateInstruments_elevator() {
   // Convert elevator angle to percentage (-100% to +100%)
   const elevatorPercent = (elevator / window.gameState.controls.maxPitchElevatorAngle) * 100;
 
+  // Write to localStorage for file:// protocol compatibility
+  localStorage.setItem('game_elevator', Math.round(elevatorPercent).toString());
+
   const svgDoc = getSVGContentDocument("elevatorGauge");
   if (!svgDoc) return;
 
@@ -193,6 +226,9 @@ function updateInstruments_elevator() {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 function updateInstruments_verticalThruster() {
   const verticalThruster = window.gameState.controls.VerticalThruster;
+
+  // Write to localStorage for file:// protocol compatibility
+  localStorage.setItem('game_verticalThruster', verticalThruster.toString());
 
   const svgDoc = getSVGContentDocument("verticalThrusterGauge");
   if (!svgDoc) return;
