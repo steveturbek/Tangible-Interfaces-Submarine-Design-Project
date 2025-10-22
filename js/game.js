@@ -229,14 +229,16 @@ function updateSubmarineState(deltaTime) {
 
     gameState.status.batteryLevel = Math.max(0, gameState.status.batteryLevel - totalPowerDrain);
 
-    // Battery warnings at every 10% threshold
+    // Battery warnings when crossing below 10% thresholds (90, 80, 70, etc.)
     const currentThreshold = Math.floor(gameState.status.batteryLevel / 10) * 10;
-    if (currentThreshold < gameState.status.lastBatteryWarning && gameState.status.batteryLevel > 0) {
+    const previousThreshold = Math.floor(gameState.status.lastBatteryWarning / 10) * 10;
+    // Only warn when crossing into a new lower threshold
+    if (currentThreshold < previousThreshold && gameState.status.batteryLevel > 0) {
       gameState.status.lastBatteryWarning = currentThreshold;
       if (currentThreshold === 0) {
         appendInstrumentConsoleMessage("BATTERY DEPLETED! Thrusters offline!");
       } else {
-        appendInstrumentConsoleMessage(`Battery at ${currentThreshold}%`);
+        appendInstrumentConsoleMessage(`Battery at ${previousThreshold}%`);
       }
     }
   } else {
