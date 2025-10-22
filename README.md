@@ -248,6 +248,8 @@ http-server -p 8080
 
 ### Set up
 
+#### Mac Setup
+
 1. [Download this repo zip](https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/archive/refs/heads/main.zip)
 1. Unzip, move folder to your Documents folder (~/Documents)
 1. Open Terminal.app
@@ -256,6 +258,19 @@ http-server -p 8080
    1. (you may occasionally need to re-do this, like after a computer restart).
    1. Leave this window running, you can hide it.
    1. To stop the web server `lsof -ti:8080 | xargs kill`
+1. Open Chrome, go to `http://localhost:8080/`
+
+#### Windows Setup
+
+1. [Download this repo zip](https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/archive/refs/heads/main.zip)
+1. Unzip, move folder to your Documents folder (e.g., `C:\Users\YourUsername\Documents\`)
+1. Open Command Prompt (search for "cmd" in Start menu) or PowerShell
+1. Go to the project directory, type `cd %USERPROFILE%\Documents\Tangible-Interfaces-Submarine-Design-Project`
+1. Start web server just on your computer, type `python -m http.server 8080`
+   1. If Python is not installed, download it from [python.org](https://www.python.org/downloads/) (check "Add Python to PATH" during installation)
+   1. (you may occasionally need to re-do this, like after a computer restart).
+   1. Leave this window running, you can minimize it.
+   1. To stop the web server, press `Ctrl + C` in the Command Prompt window, or run `netstat -ano | findstr :8080` to find the process ID, then `taskkill /PID <process_id> /F`
 1. Open Chrome, go to `http://localhost:8080/`
 
 ### Development Workflow

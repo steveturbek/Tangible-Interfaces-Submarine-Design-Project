@@ -6,6 +6,7 @@
     "arrowup",
     "clearcoat",
     "Deadzone",
+    "findstr",
     "gameover",
     "gamepadconnected",
     "gamepaddisconnected",
@@ -18,7 +19,9 @@
     "Seamagine",
     "skool",
     "sunrays",
+    "taskkill",
     "Thunderstick",
+    "USERPROFILE",
     "Worx"
   ]
 }
