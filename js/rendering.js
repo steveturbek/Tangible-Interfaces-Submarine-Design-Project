@@ -989,7 +989,7 @@ function createWaterEffects() {
   addUnderwaterParticles();
 
   // NEW: Add caustics effect to the seabed
-  addCausticsEffect();
+  //addCausticsEffect();
 }
 
 // NEW: Function to add water caustics effect to the scene

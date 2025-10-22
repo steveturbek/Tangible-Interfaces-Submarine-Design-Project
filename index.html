@@ -394,23 +394,11 @@
         // Store difficulty level globally for game.js and rendering.js to access
         window.gameDifficulty = difficulty;
 
-        // Close any existing instruments window before starting
-        if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
-          try {
-            window.instrumentsWindow.close();
-          } catch (e) {
-            console.log("Could not close old window:", e);
-          }
-        }
-
-        // Clear the reference to ensure we get a fresh window
-        window.instrumentsWindow = null;
-
         gameStarted = true;
 
-        // Open instruments window without top bar
+        // Open or reuse instruments window
         // Using the named window approach - if a window with this name already exists,
-        // it will reuse it (but we can't detect it beforehand due to browser security)
+        // it will be reused and brought to focus
         window.instrumentsWindow = window.open(
           "instruments.html",
           "Submarine Instruments",
@@ -426,32 +414,14 @@
         // Hide welcome screen
         document.getElementById("welcome-screen").style.display = "none";
 
-        // Wait for instruments window to fully load before starting game
-        if (window.instrumentsWindow) {
-          let loadFired = false;
-
-          window.instrumentsWindow.addEventListener("load", function () {
-            // console.log("Instruments window loaded, starting game...");
-            loadFired = true;
-
-            setTimeout(() => {
-              // Start the game loop from game.js (renderer already initialized)
-              if (typeof startGame === "function") {
-                startGame();
-              }
-            }, 100);
-          });
-
-          // Also check after a delay if load event didn't fire
-          // This happens when the window was already open
-          setTimeout(() => {
-            if (!loadFired) {
-              alert("An old Submarine Instruments window was detected. Please close it and click Start Mission again.");
-              gameStarted = false;
-              document.getElementById("welcome-screen").style.display = "flex";
-            }
-          }, 1000);
-        }
+        // Start the game after a short delay to ensure instruments window is ready
+        // This works whether it's a new window or reusing an existing one
+        setTimeout(() => {
+          // Start the game loop from game.js (renderer already initialized)
+          if (typeof startGame === "function") {
+            startGame();
+          }
+        }, 500);
       }
 
       // Fullscreen functionality for main window - keyboard shortcut 'F'
