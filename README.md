@@ -208,7 +208,7 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 - **Computer**: Mac Laptop (others may work as well)
 - **Browser**: Chrome (latest version)
 - **Hardware**: Micro:bit v2 for physical controls configuration, connected to Mac with USB
-- **UX design**: Figma, illustrator, AI tools for coding
+- **UX design**: Figma (recommended), Adobe Illustrator, AI tools for coding
 - **Programming**: Basic HTML and CSS (examples provided)
 
 <!--
@@ -248,7 +248,12 @@ http-server -p 8080
 
 ### Set up
 
-#### Mac Setup
+1. [Download this repo zip](https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/archive/refs/heads/main.zip)
+1. Unzip, perhaps move folder to your Documents folder
+1. In Google Chrome app, Open the index.html file
+1. Play!
+
+<!-- #### Local web server Mac Setup
 
 1. [Download this repo zip](https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/archive/refs/heads/main.zip)
 1. Unzip, move folder to your Documents folder (~/Documents)
@@ -271,7 +276,7 @@ http-server -p 8080
    1. (you may occasionally need to re-do this, like after a computer restart).
    1. Leave this window running, you can minimize it.
    1. To stop the web server, press `Ctrl + C` in the Command Prompt window, or run `netstat -ano | findstr :8080` to find the process ID, then `taskkill /PID <process_id> /F`
-1. Open Chrome, go to `http://localhost:8080/`
+1. Open Chrome, go to `http://localhost:8080/` -->
 
 ### Development Workflow
 

@@ -92,6 +92,11 @@ async function connectToMicrobit() {
       statusDiv.textContent = "Micro:bit Connected (click to disconnect)";
       statusDiv.style.color = "#00ff00";
     }
+
+    // Notify instruments window of connection status
+    if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
+      window.instrumentsWindow.postMessage({ type: "microbitStatus", connected: true }, "*");
+    }
   } catch (error) {
     console.log(`Error: ${error.message}`);
   }
@@ -120,6 +125,11 @@ async function disconnectFromMicrobit() {
   if (statusDiv) {
     statusDiv.textContent = "Click circuit board to connect Micro:bit";
     statusDiv.style.color = "white";
+  }
+
+  // Notify instruments window of disconnection
+  if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
+    window.instrumentsWindow.postMessage({ type: "microbitStatus", connected: false }, "*");
   }
 
   console.log("Disconnected from Micro:bit");
@@ -156,14 +166,22 @@ async function autoConnectToMicrobit() {
 
     // console.log("Auto-connected to Micro:bit successfully");
     const microbitGauge = document.getElementById("instruments-microBitGauge");
-    if (microbitGauge && microbitGauge.contentDocument) {
-      const circuitBoard = microbitGauge.contentDocument.getElementById("circuit-board-top-layer");
-      if (circuitBoard) {
-        circuitBoard.setAttribute("fill", "#00ff00");
-        circuitBoard.removeEventListener("click", connectToMicrobit);
-        circuitBoard.addEventListener("click", disconnectFromMicrobit);
-      }
+    if (microbitGauge) {
+      microbitGauge.setAttribute("fill", "#00ff00");
+      microbitGauge.removeEventListener("click", connectToMicrobit);
+      microbitGauge.addEventListener("click", disconnectFromMicrobit);
     }
+    const statusDiv = document.getElementById("microbit-status");
+    if (statusDiv) {
+      statusDiv.textContent = "Micro:bit Connected (click to disconnect)";
+      statusDiv.style.color = "#00ff00";
+    }
+
+    // Notify instruments window of connection status
+    if (window.instrumentsWindow && !window.instrumentsWindow.closed) {
+      window.instrumentsWindow.postMessage({ type: "microbitStatus", connected: true }, "*");
+    }
+
     return true; // Successfully connected
   } catch (error) {
     console.log(`Auto-connect error: ${error.message}`);
