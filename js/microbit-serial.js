@@ -81,16 +81,17 @@ async function connectToMicrobit() {
     readSerialData();
 
     console.log("Connected to Micro:bit successfully");
-    document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").setAttribute("fill", "#00ff00");
-
-    document
-      .getElementById("instruments-microBitGauge")
-      .contentDocument.getElementById("circuit-board-top-layer")
-      .removeEventListener("click", connectToMicrobit);
-    document
-      .getElementById("instruments-microBitGauge")
-      .contentDocument.getElementById("circuit-board-top-layer")
-      .addEventListener("click", disconnectFromMicrobit);
+    const microbitGauge = document.getElementById("instruments-microBitGauge");
+    if (microbitGauge) {
+      microbitGauge.setAttribute("fill", "#00ff00");
+      microbitGauge.removeEventListener("click", connectToMicrobit);
+      microbitGauge.addEventListener("click", disconnectFromMicrobit);
+    }
+    const statusDiv = document.getElementById("microbit-status");
+    if (statusDiv) {
+      statusDiv.textContent = "Micro:bit Connected (click to disconnect)";
+      statusDiv.style.color = "#00ff00";
+    }
   } catch (error) {
     console.log(`Error: ${error.message}`);
   }
@@ -108,18 +109,18 @@ async function disconnectFromMicrobit() {
   }
 
   readingInProgress = false;
-  //   connectionStatus.textContent = "Not connected";
-  //   connectionStatus.classList.remove("connected");
-  //   connectionStatus.classList.add("disconnected");
-  //   connectButton.textContent = "Connect to Micro:bit";
 
-  document
-    .getElementById("instruments-microBitGauge")
-    .contentDocument.getElementById("circuit-board-top-layer")
-    .removeEventListener("click", disconnectFromMicrobit);
-  document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").addEventListener("click", connectToMicrobit);
-
-  document.getElementById("instruments-microBitGauge").contentDocument.getElementById("circuit-board-top-layer").setAttribute("fill", "#ffffff");
+  const microbitGauge = document.getElementById("instruments-microBitGauge");
+  if (microbitGauge) {
+    microbitGauge.setAttribute("fill", "#cccccc");
+    microbitGauge.removeEventListener("click", disconnectFromMicrobit);
+    microbitGauge.addEventListener("click", connectToMicrobit);
+  }
+  const statusDiv = document.getElementById("microbit-status");
+  if (statusDiv) {
+    statusDiv.textContent = "Click circuit board to connect Micro:bit";
+    statusDiv.style.color = "white";
+  }
 
   console.log("Disconnected from Micro:bit");
 }

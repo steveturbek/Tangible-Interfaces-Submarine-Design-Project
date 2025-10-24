@@ -209,21 +209,21 @@ function createSeabed() {
   // NOTE: When running from file:// protocol (without web server), texture loading
   // will fail due to CORS restrictions. The game will use the fallback color instead.
   // This is expected behavior and does not affect gameplay.
-  textureLoader.load(
-    "artwork/sand_texture.jpg",
-    function (texture) {
-      // Success callback
-      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.set(50, 50);
-      seabedMaterial.map = texture;
-      seabedMaterial.needsUpdate = true;
-    },
-    undefined,
-    function (err) {
-      // Error callback - already using fallback color
-      console.log("Using fallback sand color (texture failed to load - this is expected when running from file://)");
-    }
-  );
+  // textureLoader.load(
+  //   "artwork/sand_texture.jpg",
+  //   function (texture) {
+  //     // Success callback
+  //     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  //     texture.repeat.set(50, 50);
+  //     seabedMaterial.map = texture;
+  //     seabedMaterial.needsUpdate = true;
+  //   },
+  //   undefined,
+  //   function (err) {
+  //     // Error callback - already using fallback color
+  //     console.log("Using fallback sand color (texture failed to load - this is expected when running from file://)");
+  //   }
+  // );
 
   // Create seabed mesh and position it
   seabed = new THREE.Mesh(seabedGeometry, seabedMaterial);
