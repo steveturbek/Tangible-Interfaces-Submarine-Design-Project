@@ -67,6 +67,7 @@
 * 4 = power to right potentiometer 
 * 5 to microbit pin 4 
 */
+// @ts-nocheck // remove errors in VS Code app
 
 let list: number[] = [];
 music.play(music.tonePlayable(262, music.beat(BeatFraction.Sixteenth)), music.PlaybackMode.UntilDone);
