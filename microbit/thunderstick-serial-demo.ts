@@ -26,15 +26,18 @@
 
 // Conceptually, the numbers are proportions of the absolute measures set in the game logic, not any kind of absolute or 'real' number
 
-// [0] Pitch setElevator/adjustElevator
-// [1] Roll setRudder, adjustRudder
-// [2] Port Engine setPortThruster, adjustPortThruster
-// [3] Starboard Engine setStarboardThruster, adjustStarboardThruster
-// [4] Vertical Engine setVerticalThruster, adjustVerticalThruster
+// Conceptually, the numbers are proportions of the absolute measures set in the game logic, not any kind of absolute or 'real' number
+// Range of all metrics is -99 to +99 (as in percentage forward or back)
+// String output line "#f00,r85,f99,f99,f00|0|0"
+// 1 Pitch setElevator from r99 to f00 to f99
+// 2 Roll setRudder from r99 to f00 to f99
+// 3 Port Engine setPortThruster from r99 to f00 to f99
+// 4 Starboard Engine setStarboardThruster from r99 to f00 to f99
+// 5 Vertical Engine setVerticalThruster from r99 to f00 to f99
 
 // | separators
 // first binary number is emergencyAllStop() // stop all engines
-// second binary number is  emergencyBlowTanks() // currently unused
+// second binary number is  GrabTarget() 
 *
  * Example web page to test serial output https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/examples/microbit-web-serial-demo.html
 
@@ -69,7 +72,6 @@
 */
 // @ts-nocheck // remove errors in VS Code app
 
-let list: number[] = [];
 music.play(music.tonePlayable(262, music.beat(BeatFraction.Sixteenth)), music.PlaybackMode.UntilDone);
 led.enable(false); //turn off display to use inputs 4, 10
 serial.redirectToUSB();
@@ -143,8 +145,8 @@ let AllStopPin = DigitalPin.P8;
 pins.setPull(AllStopPin, PinPullMode.PullDown);
 // these need resistors to ground!
 
-let BlowBallastPin = DigitalPin.P5;
-pins.setPull(BlowBallastPin, PinPullMode.PullDown);
+let GrabTargetPin = DigitalPin.P5;
+pins.setPull(GrabTargetPin, PinPullMode.PullDown);
 // these need resistors to ground!
 
 /////////////////////////////////////////////////////////////////////////////
@@ -191,25 +193,6 @@ basic.forever(function () {
   );
 
   if (pins.analogReadPin(VerticalEnginePowerPin) <= 100) VerticalEnginePowerOutput = "f00"; // this potentiometer has a switch, which reads analog 0 if off
-  // serial.writeLine("VerticalEngineAnalog:" + pins.analogReadPin(VerticalEnginePowerPin) + "  VerticalEnginePowerOutput:" + VerticalEnginePowerOutput);
-
-  //potential 6th analog pin for ballast control
-
-  //Digital input pins 5 (button A), 8 ,11 (button b)
-
-  // serial.writeValue("AllStopPin", pins.digitalReadPin(AllStopPin))
-  // serial.writeValue("BlowBallastPin", pins.digitalReadPin(BlowBallastPin))
-  // haven't a use for pin 8 yet
-
-  //serial output message will take the form of a string of 5 analog values and 3 digital values
-  // Absolute value analog out: P (positive) or N (negative) + 00-99, so Full forward if F99 and Reverse half is R50
-  // Incremental change is +10 or -10
-  //--- is equal to zero, for readability, is equivalent to N00 and P00
-  // Example string &P00,P00,P00,P00,P00,P00,DDD#
-
-  //old way
-  //  list = [pitchOutput, rollOutput, PortEnginePowerOutput, StarboardEnginePowerOutput, VerticalEnginePowerOutput];
-  //  serial.writeNumbers(list);
 
   //convert to string
   serial.writeLine(
@@ -226,7 +209,7 @@ basic.forever(function () {
       "|" +
       pins.digitalReadPin(AllStopPin) +
       "|" +
-      pins.digitalReadPin(BlowBallastPin)
+      pins.digitalReadPin(GrabTargetPin)
   );
 });
 

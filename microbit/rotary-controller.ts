@@ -40,7 +40,7 @@
 
 // | separators
 // first binary number is emergencyAllStop() // stop all engines
-// second binary number is  emergencyBlowTanks() // currently unused
+// second binary number is  GrabTarget() 
 *
  * Example web page to test serial output https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/examples/microbit-web-serial-demo.html
 
