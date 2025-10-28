@@ -4,6 +4,8 @@
 * part of project https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
 * This is a demo code the student can modify for their project.  
 * The student should not need to edit the main game javascript to control the sub, just this program
+* STATUS: works with single encoder, testing with multiple encoders.  The encoders do skip readings when fast spinning
+
 * 
 * This microbit program 
 *   Reads several rotary encoders and buttons
@@ -28,7 +30,7 @@
 // - = decrement by the number UNUSED NOW
 
 // Conceptually, the numbers are proportions of the absolute measures set in the game logic, not any kind of absolute or 'real' number
-
+//Range of all metrics is -99 to +99 (as in percentage forward or back)
 // String output line "#f00,r85,f99,f99,f00|0|0"
 // 1 Pitch setElevator from r99 to f00 to f99
 // 2 Roll setRudder from r99 to f00 to f99
@@ -57,10 +59,15 @@
 
 // @ts-nocheck // remove errors in VS Code app
 
+let current_time = input.runningTime();
+let serial_send_time = current_time; // what we use to occasionally send a serial message but not block the main loop
+let all_encoders_CLK_time = current_time; // to track when to test the encoders
+let rotary_increment = 10; // how much to change for each rotary click
+
 music.play(music.tonePlayable(262, music.beat(BeatFraction.Sixteenth)), music.PlaybackMode.UntilDone);
 led.enable(false); //turn off display to use inputs 4, 10
 serial.redirectToUSB();
-serial.writeLine("START Microbit\n\n");
+serial.writeLine("START Microbit" + current_time + "\n\n");
 
 //Engine Power
 let enginePower = 0; //range is -99 to +99
@@ -68,8 +75,9 @@ let enginePinCLK = DigitalPin.P0;
 let enginePinDT = DigitalPin.P1;
 pins.setPull(enginePinCLK, PinPullMode.PullUp); //NOTE These pins need pull up, as rotary encoder connects to ground
 pins.setPull(enginePinDT, PinPullMode.PullUp); //NOTE These pins need pull up, as rotary encoder connects to ground
-
-//Range of all metrics is -99 to +99 (as in percentage forward or back)
+let engine_encoder_CLK = pins.digitalReadPin(enginePinCLK);
+let engine_encoder_CLK_previous = engine_encoder_CLK; // variable to remember position to track rotary encoder
+let engine_encoder_DT = pins.digitalReadPin(enginePinDT);
 
 //Pitch
 let pitch = 0; //range is -99 to +99
@@ -77,41 +85,85 @@ let pitchPinCLK = DigitalPin.P2;
 let pitchPinDT = DigitalPin.P3;
 pins.setPull(pitchPinCLK, PinPullMode.PullUp); //NOTE These pins need pull up, as rotary encoder connects to ground
 pins.setPull(pitchPinDT, PinPullMode.PullUp); //NOTE These pins need pull up, as rotary encoder connects to ground
+let pitch_encoder_CLK = pins.digitalReadPin(pitchPinCLK);
+let pitch_encoder_CLK_previous = pitch_encoder_CLK; // variable to remember position to track rotary encoder
+let pitch_encoder_DT = pins.digitalReadPin(pitchPinDT);
 
 //Elevator
 let elevator = 0;
 let elevatorPinCLK = DigitalPin.P4;
-let elevatorPinDT = DigitalPin.P5;
+let elevatorPinDT = DigitalPin.P8;
 pins.setPull(elevatorPinCLK, PinPullMode.PullUp); //NOTE These pins need pull up, as rotary encoder connects to ground
 pins.setPull(elevatorPinDT, PinPullMode.PullUp); //NOTE These pins need pull up, as rotary encoder connects to ground
+let elevator_encoder_CLK = pins.digitalReadPin(elevatorPinCLK);
+let elevator_encoder_CLK_previous = elevator_encoder_CLK; // variable to remember position to track rotary encoder
+let elevator_encoder_DT = pins.digitalReadPin(elevatorPinDT);
 
 ////////////
 
 //Buttons Digital input pins 5 (button A), 8 ,11 (button b)
 
 let GrabTargetPin = DigitalPin.P5;
-pins.setPull(GrabTargetPin, PinPullMode.PullDown);
-// these need resistors to ground!
+pins.setPull(GrabTargetPin, PinPullMode.PullUp); // pin is normally HIGH
 
 let AllStopPin = DigitalPin.P11;
-pins.setPull(AllStopPin, PinPullMode.PullDown);
-// these need resistors to ground!
-
-let serial_send_time = input.runningTime();
-let current_time = input.runningTime();
-let encoder_engine_a;
+pins.setPull(AllStopPin, PinPullMode.PullUp); // pin is normally HIGH
 
 /////////////////////////////////////////////////////////////////////////////
 // the main repeating loop
 /////////////////////////////////////////////////////////////////////////////
 basic.forever(function () {
-  basic.pause(10);
-
-  // Check encoder
+  // basic.pause(1);
   current_time = input.runningTime();
+
+  // Read encoders every loop iteration (no timing check for better responsiveness)
+  // Engine rotary encoder
+  engine_encoder_CLK = pins.digitalReadPin(enginePinCLK);
+  engine_encoder_DT = pins.digitalReadPin(enginePinDT);
+  // Detect falling edge only (1 -> 0) - this is the stable approach
+  if (engine_encoder_CLK == 0 && engine_encoder_CLK_previous == 1) {
+    if (engine_encoder_DT == 1) {
+      //  Counter-clockwise - step down, but not below -99
+      enginePower = Math.max(-100, enginePower - rotary_increment);
+    } else {
+      //  Clockwise - step forward, but not above 99
+      enginePower = Math.min(100, enginePower + rotary_increment);
+    }
+  }
+  engine_encoder_CLK_previous = engine_encoder_CLK;
+
+  // pitch rotary encoder
+  pitch_encoder_CLK = pins.digitalReadPin(pitchPinCLK);
+  pitch_encoder_DT = pins.digitalReadPin(pitchPinDT);
+  // Detect falling edge only (1 -> 0) - this is the stable approach
+  if (pitch_encoder_CLK == 0 && pitch_encoder_CLK_previous == 1) {
+    if (pitch_encoder_DT == 1) {
+      //  Counter-clockwise - step down, but not below -99
+      pitch = Math.max(-100, pitch - rotary_increment);
+    } else {
+      //  Clockwise - step forward, but not above 99
+      pitch = Math.min(100, pitch + rotary_increment);
+    }
+  }
+  pitch_encoder_CLK_previous = pitch_encoder_CLK;
+
+  // elevator rotary encoder
+  elevator_encoder_CLK = pins.digitalReadPin(elevatorPinCLK);
+  elevator_encoder_DT = pins.digitalReadPin(elevatorPinDT);
+  // Detect falling edge only (1 -> 0) - this is the stable approach
+  if (elevator_encoder_CLK == 0 && elevator_encoder_CLK_previous == 1) {
+    if (elevator_encoder_DT == 1) {
+      //  Counter-clockwise - step down, but not below -99
+      elevator = Math.max(-100, elevator - rotary_increment);
+    } else {
+      //  Clockwise - step forward, but not above 99
+      elevator = Math.min(100, elevator + rotary_increment);
+    }
+  }
+  elevator_encoder_CLK_previous = elevator_encoder_CLK;
+
   if (current_time - serial_send_time > 500) {
     serial_send_time = current_time;
-
     //convert to string
     serial.writeLine(
       "#" +
@@ -125,9 +177,9 @@ basic.forever(function () {
         "," +
         "f00" + //not using VerticalEnginePowerOutput
         "|" +
-        pins.digitalReadPin(AllStopPin) +
+        (pins.digitalReadPin(AllStopPin) ? 0 : 1) + // this sends 1 when clicked, as the pin is naturally High
         "|" +
-        pins.digitalReadPin(GrabTargetPin)
+        (pins.digitalReadPin(GrabTargetPin) ? 0 : 1) // this sends 1 when clicked, as the pin is naturally High
     );
   }
 });
