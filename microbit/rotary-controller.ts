@@ -4,7 +4,7 @@
 * part of project https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
 * This is a demo code the student can modify for their project.  
 * The student should not need to edit the main game javascript to control the sub, just this program
-* STATUS: works with single encoder, testing with multiple encoders.  The encoders do skip readings when fast spinning
+* STATUS: works with multiple encoders.  The encoders do skip readings when fast spinning
 
 * 
 * This microbit program 
