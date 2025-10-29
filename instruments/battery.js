@@ -39,7 +39,7 @@ setInterval(() => {
     // console.log(`🔍 Attempt ${initAttempts}: Looking for line element in current document...`);
 
     line = document.getElementById("line");
-    console.log("  - line element:", line);
+    // console.log("  - line element:", line);
 
     if (!line) {
       console.warn("  ❌ Line element not found in SVG");

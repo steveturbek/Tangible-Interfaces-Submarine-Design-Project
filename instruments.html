@@ -59,10 +59,6 @@
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         loading="lazy"
       ></iframe>
-
-      <div>
-        <label><input type="checkbox" name="test" value="1" id="testModeCheckbox" /> Test Mode </label>
-      </div>
     </div>
 
     <script src="js/instruments-window.js"></script>
@@ -80,78 +76,78 @@
         }
       });
 
-      // Test Mode functionality
-      let testModeInterval = null;
-      const testModeCheckbox = document.getElementById("testModeCheckbox");
+      // // Test Mode functionality
+      // let testModeInterval = null;
+      // const testModeCheckbox = document.getElementById("testModeCheckbox");
 
-      // List of all gauge IDs to animate
-      const gaugeIds = [
-        "oxygenGauge",
-        "batteryGauge",
-        "compassGauge",
-        "depthGauge",
-        "speedGauge",
-        "pitchGauge",
-        "leftThrustGauge",
-        "rightThrustGauge",
-        "targetGauge",
-        "rudderGauge",
-        "elevatorGauge",
-        "verticalThrusterGauge",
-      ];
+      // // List of all gauge IDs to animate
+      // const gaugeIds = [
+      //   "oxygenGauge",
+      //   "batteryGauge",
+      //   "compassGauge",
+      //   "depthGauge",
+      //   "speedGauge",
+      //   "pitchGauge",
+      //   "leftThrustGauge",
+      //   "rightThrustGauge",
+      //   "targetGauge",
+      //   "rudderGauge",
+      //   "elevatorGauge",
+      //   "verticalThrusterGauge",
+      // ];
 
-      testModeCheckbox.addEventListener("change", function () {
-        if (this.checked) {
-          // Start test mode animation
-          const loopDuration = 5000; // 5 seconds for complete loop
-          const startTime = Date.now();
+      // testModeCheckbox.addEventListener("change", function () {
+      //   if (this.checked) {
+      //     // Start test mode animation
+      //     const loopDuration = 5000; // 5 seconds for complete loop
+      //     const startTime = Date.now();
 
-          testModeInterval = setInterval(() => {
-            const elapsed = Date.now() - startTime;
-            const cyclePosition = (elapsed % loopDuration) / loopDuration; // 0 to 1
+      //     testModeInterval = setInterval(() => {
+      //       const elapsed = Date.now() - startTime;
+      //       const cyclePosition = (elapsed % loopDuration) / loopDuration; // 0 to 1
 
-            // Create triangle wave: 0 -> 100 -> 0
-            const percentage =
-              cyclePosition < 0.5
-                ? cyclePosition * 200 // 0 to 100 in first half
-                : (1 - cyclePosition) * 200; // 100 to 0 in second half
+      //       // Create triangle wave: 0 -> 100 -> 0
+      //       const percentage =
+      //         cyclePosition < 0.5
+      //           ? cyclePosition * 200 // 0 to 100 in first half
+      //           : (1 - cyclePosition) * 200; // 100 to 0 in second half
 
-            // Write test values to localStorage for each gauge
-            localStorage.setItem("testMode_oxygen", percentage.toString());
-            localStorage.setItem("testMode_battery", percentage.toString());
-            localStorage.setItem("testMode_compass", (percentage * 3.6).toString()); // 0-360 degrees
-            localStorage.setItem("testMode_depth", percentage.toString());
-            localStorage.setItem("testMode_speed", percentage.toString());
-            localStorage.setItem("testMode_pitch", percentage.toString());
-            localStorage.setItem("testMode_leftThrust", percentage.toString());
-            localStorage.setItem("testMode_rightThrust", percentage.toString());
-            localStorage.setItem("testMode_target", percentage.toString());
-            localStorage.setItem("testMode_rudder", percentage.toString());
-            localStorage.setItem("testMode_elevator", percentage.toString());
-            localStorage.setItem("testMode_verticalThruster", percentage.toString());
-          }, 50); // Update every 50ms for smooth animation
-        } else {
-          // Stop test mode animation and clear localStorage
-          if (testModeInterval) {
-            clearInterval(testModeInterval);
-            testModeInterval = null;
+      //       // Write test values to localStorage for each gauge
+      //       localStorage.setItem("testMode_oxygen", percentage.toString());
+      //       localStorage.setItem("testMode_battery", percentage.toString());
+      //       localStorage.setItem("testMode_compass", (percentage * 3.6).toString()); // 0-360 degrees
+      //       localStorage.setItem("testMode_depth", percentage.toString());
+      //       localStorage.setItem("testMode_speed", percentage.toString());
+      //       localStorage.setItem("testMode_pitch", percentage.toString());
+      //       localStorage.setItem("testMode_leftThrust", percentage.toString());
+      //       localStorage.setItem("testMode_rightThrust", percentage.toString());
+      //       localStorage.setItem("testMode_target", percentage.toString());
+      //       localStorage.setItem("testMode_rudder", percentage.toString());
+      //       localStorage.setItem("testMode_elevator", percentage.toString());
+      //       localStorage.setItem("testMode_verticalThruster", percentage.toString());
+      //     }, 50); // Update every 50ms for smooth animation
+      //   } else {
+      //     // Stop test mode animation and clear localStorage
+      //     if (testModeInterval) {
+      //       clearInterval(testModeInterval);
+      //       testModeInterval = null;
 
-            // Clear all test mode values from localStorage
-            localStorage.removeItem("testMode_oxygen");
-            localStorage.removeItem("testMode_battery");
-            localStorage.removeItem("testMode_compass");
-            localStorage.removeItem("testMode_depth");
-            localStorage.removeItem("testMode_speed");
-            localStorage.removeItem("testMode_pitch");
-            localStorage.removeItem("testMode_leftThrust");
-            localStorage.removeItem("testMode_rightThrust");
-            localStorage.removeItem("testMode_target");
-            localStorage.removeItem("testMode_rudder");
-            localStorage.removeItem("testMode_elevator");
-            localStorage.removeItem("testMode_verticalThruster");
-          }
-        }
-      });
+      //       // Clear all test mode values from localStorage
+      //       localStorage.removeItem("testMode_oxygen");
+      //       localStorage.removeItem("testMode_battery");
+      //       localStorage.removeItem("testMode_compass");
+      //       localStorage.removeItem("testMode_depth");
+      //       localStorage.removeItem("testMode_speed");
+      //       localStorage.removeItem("testMode_pitch");
+      //       localStorage.removeItem("testMode_leftThrust");
+      //       localStorage.removeItem("testMode_rightThrust");
+      //       localStorage.removeItem("testMode_target");
+      //       localStorage.removeItem("testMode_rudder");
+      //       localStorage.removeItem("testMode_elevator");
+      //       localStorage.removeItem("testMode_verticalThruster");
+      //     }
+      //   }
+      // });
     </script>
   </body>
 

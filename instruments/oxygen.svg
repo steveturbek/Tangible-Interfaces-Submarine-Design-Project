@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" 
       viewBox="0 0 400 400" aria-labelledby="title desc" role="img">
-  <title id="title">Oxygen Gauge (VU style, corrected)</title>
+  <title id="title">Oxygen Gauge VU style</title>
   <desc id="desc">Square retro VU-style oxygen gauge with functional needle pivoting around fixed point.</desc>
 
   <defs>
@@ -101,28 +101,10 @@
   <!-- Glass overlay -->
   <rect x="25" y="25" width="350" height="350" rx="10" ry="10" class="glass"/>
 
-  <!-- Embedded script (handler left exactly as you provided; note angle formula matches -150..-30 sweep) -->
-  <script type="application/ecmascript"><![CDATA[
-    window.updateInstrument = function(percentage) {
-      const line = document.getElementById('line');
-      if (!line) return;
-      const normalizedLevel = Math.max(0, Math.min(100, percentage));
-      // 120° total span => from -150 to -30
-      const angle = (normalizedLevel - 50) * 1.2;
-      const x1 = parseFloat(line.getAttribute('x1'));
-      const y1 = parseFloat(line.getAttribute('y1'));
-      line.setAttribute('transform', `rotate(${angle}, ${x1}, ${y1})`);
-    };
+    
+<!-- Load external animation script -->
+  <script type="application/ecmascript" xlink:href="oxygen.js"/>
+  <script type="application/ecmascript" xlink:href="oxygen.js"/>
 
-    // Check localStorage for updates (test mode takes priority over game mode)
-    setInterval(() => {
-      const testValue = localStorage.getItem('testMode_oxygen');
-      const gameValue = localStorage.getItem('game_oxygen');
-      if (testValue !== null) {
-        window.updateInstrument(parseFloat(testValue));
-      } else if (gameValue !== null) {
-        window.updateInstrument(parseFloat(gameValue));
-      }
-    }, 50);
-  ]]></script>
 </svg>
+

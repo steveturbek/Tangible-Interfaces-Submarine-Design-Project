@@ -72,10 +72,10 @@ function handleKeyPress(event) {
       break;
 
     // Aft thruster controls
-    case "p":
+    case "d":
       adjustVerticalThruster(controlConfig.thrusterIncrement);
       break;
-    case "l":
+    case "c":
       adjustVerticalThruster(-controlConfig.thrusterIncrement);
       break;
 

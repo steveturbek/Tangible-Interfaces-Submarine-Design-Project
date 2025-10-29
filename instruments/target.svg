@@ -23,30 +23,6 @@
   <text x="40" y="180" style="font-family: Arial; font-size: 20px; fill: white;">0m</text>
   <text x="410" y="180" style="font-family: Arial; font-size: 20px; fill: white;">100%</text>
 
-  <script type="text/javascript">
-    window.updateInstrument = function(meters) {
-      const indicator = document.getElementById('indicator');
-      if (!indicator) return;
-
-      // Clamp distance between 0 and 100 meters
-      const normalizedDistance = Math.max(0, Math.min(100, meters));
-
-      // Map 0 to 100 meters to x position 50 to 462
-      const xPosition = 50 + normalizedDistance * 4.12;
-
-      indicator.setAttribute('x1', xPosition);
-      indicator.setAttribute('x2', xPosition);
-    };
-
-    // Check localStorage for updates (test mode takes priority over game mode)
-    setInterval(() => {
-      const testValue = localStorage.getItem('testMode_target');
-      const gameValue = localStorage.getItem('game_target');
-      if (testValue !== null) {
-      window.updateInstrument(parseFloat(testValue));
-    } else if (gameValue !== null) {
-      window.updateInstrument(parseFloat(gameValue));
-    }
-    }, 50);
-  </script>
+  <!-- Load external animation script -->
+  <script type="application/ecmascript" xlink:href="target.js"/>
 </svg>

@@ -24,27 +24,6 @@
   <text x="230" y="180" style="font-family: Arial; font-size: 20px; fill: white;">0%</text>
   <text x="410" y="180" style="font-family: Arial; font-size: 20px; fill: white;">+100%</text>
 
-  <script type="text/javascript">
-    window.updateInstrument = function(percentage) {
-      const indicator = document.getElementById('indicator');
-      if (!indicator) return;
-
-      const normalizedThrust = Math.max(-100, Math.min(100, percentage));
-      const xPosition = 256 + (normalizedThrust / 100) * 206;
-
-      indicator.setAttribute('x1', xPosition);
-      indicator.setAttribute('x2', xPosition);
-    };
-
-    // Check localStorage for updates (test mode takes priority over game mode)
-    setInterval(() => {
-      const testValue = localStorage.getItem('testMode_rightThrust');
-      const gameValue = localStorage.getItem('game_rightThrust');
-      if (testValue !== null) {
-      window.updateInstrument(parseFloat(testValue));
-    } else if (gameValue !== null) {
-      window.updateInstrument(parseFloat(gameValue));
-    }
-    }, 50);
-  </script>
+  <!-- Load external animation script -->
+  <script type="application/ecmascript" xlink:href="thrust-right.js"/>
 </svg>

@@ -672,7 +672,30 @@ function updateUI() {
   // }
 
   // Update instruments
-  updateInstruments();
+  // updateInstruments();
+
+  // Write to localStorage for file:// protocol compatibility
+
+  localStorage.setItem("game_battery", window.gameState.status.batteryLevel.toString());
+  localStorage.setItem("game_oxygen", window.gameState.status.oxygenLevel.toString());
+  const depth = ((window.gameState.constants.waterSurface - window.gameState.position.y) / window.gameState.constants.waterSurface) * 100;
+  localStorage.setItem("game_depth", depth.toString());
+  localStorage.setItem("game_target", window.gameState.navigation.distanceToTarget.toString());
+  localStorage.setItem("game_compass", window.gameState.navigation.compassHeading.toString());
+  localStorage.setItem("game_speed", window.gameState.navigation.currentSpeedAsPercentage.toString());
+  const pitchPercent = (window.gameState.rotation.x / window.gameState.controls.maxPitchElevatorAngle) * 100;
+  localStorage.setItem("game_pitch", Math.round(pitchPercent).toString());
+
+  localStorage.setItem("game_leftThrust", window.gameState.controls.ThrottleLeft.toString());
+  localStorage.setItem("game_rightThrust", window.gameState.controls.ThrottleRight.toString());
+
+  const rudderPercent = (window.gameState.controls.YawRudderAngle / window.gameState.controls.maxYawRudderAngle) * 100; // Convert rudder angle to percentage (-100% to +100%)
+  localStorage.setItem("game_rudder", Math.round(rudderPercent).toString());
+
+  const elevatorPercent = (window.gameState.controls.PitchElevatorAngle / window.gameState.controls.maxPitchElevatorAngle) * 100; // Convert elevator angle to percentage (-100% to +100%)
+  localStorage.setItem("game_elevator", Math.round(elevatorPercent).toString());
+
+  localStorage.setItem("game_verticalThruster", window.gameState.controls.VerticalThruster.toString());
 }
 
 function appendInstrumentConsoleMessage(message) {
