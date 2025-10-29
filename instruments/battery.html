@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Battery Gauge Test Harness</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #1a1a1a;
+        color: white;
+        padding: 20px;
+        margin: 0;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .gauge-container {
+        background-color: #2a2a2a;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      #batteryGauge {
+        width: 100%;
+        max-width: 512px;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+      }
+
+      .controls {
+        background-color: #2a2a2a;
+        padding: 20px;
+        border-radius: 8px;
+      }
+
+      .control-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        height: 8px;
+        border-radius: 5px;
+        background: #444;
+        outline: none;
+        -webkit-appearance: none;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #4caf50;
+        cursor: pointer;
+      }
+
+      input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #4caf50;
+        cursor: pointer;
+        border: none;
+      }
+
+      .value-display {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 18px;
+      }
+
+      .value-display span {
+        color: #4caf50;
+        font-weight: bold;
+      }
+
+      .preset-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+      }
+
+      .preset-btn {
+        flex: 1;
+        min-width: 80px;
+        padding: 10px;
+        background-color: #444;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.2s;
+      }
+
+      .preset-btn:hover {
+        background-color: #555;
+      }
+
+      .preset-btn:active {
+        background-color: #666;
+      }
+
+      .info {
+        background-color: #2a2a2a;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .info code {
+        background-color: #444;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "Courier New", monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Battery Gauge Test</h1>
+
+      <div class="gauge-container">
+        <h2>Battery Level Indicator</h2>
+        <object id="batteryGauge" type="image/svg+xml" data="instruments-battery.svg"></object>
+      </div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label for="batterySlider">Battery Level Control:</label>
+          <input type="range" id="batterySlider" min="0" max="100" value="50" step="1" />
+          <div class="value-display">
+            <span>0%</span>
+            <span id="batteryValue">50%</span>
+            <span>100%</span>
+          </div>
+        </div>
+
+        <div class="preset-buttons">
+          <button class="preset-btn" data-value="0">Empty (0%)</button>
+          <button class="preset-btn" data-value="25">Low (25%)</button>
+          <button class="preset-btn" data-value="50">Half (50%)</button>
+          <button class="preset-btn" data-value="75">High (75%)</button>
+          <button class="preset-btn" data-value="100">Full (100%)</button>
+        </div>
+      </div>
+
+      <div class="info">
+        <h3>How This Works:</h3>
+        <ul>
+          <li>The slider updates <code>localStorage.setItem('game_battery', value)</code></li>
+          <li>The SVG loads <code>battery.js</code> internally (using <code>&lt;script xlink:href="battery.js"/&gt;</code>)</li>
+          <li>The <code>battery.js</code> script polls localStorage every 50ms</li>
+          <li>When it detects a change, it rotates the needle in the SVG</li>
+          <li>The SVG file can still be edited in Figma - just keep the <code>&lt;script&gt;</code> tag at the end</li>
+          <li>Animation logic is in a separate file, not embedded inline!</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Note: battery.js is loaded BY the SVG, not here -->
+
+    <!-- Test harness controls -->
+    <script>
+      const slider = document.getElementById("batterySlider");
+      const valueDisplay = document.getElementById("batteryValue");
+      const presetButtons = document.querySelectorAll(".preset-btn");
+
+      // Update localStorage when slider changes
+      slider.addEventListener("input", function () {
+        const value = this.value;
+        localStorage.setItem("game_battery", value);
+        valueDisplay.textContent = value + "%";
+      });
+
+      // Preset button handlers
+      presetButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const value = this.getAttribute("data-value");
+          slider.value = value;
+          localStorage.setItem("game_battery", value);
+          valueDisplay.textContent = value + "%";
+        });
+      });
+
+      // Initialize localStorage with current slider value
+      localStorage.setItem("game_battery", slider.value);
+    </script>
+  </body>
+</html>
