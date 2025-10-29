@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Right Thrust Gauge Test Harness</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #1a1a1a;
+        color: white;
+        padding: 20px;
+        margin: 0;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .gauge-container {
+        background-color: #2a2a2a;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      #thrustGauge {
+        width: 100%;
+        max-width: 512px;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+      }
+
+      .controls {
+        background-color: #2a2a2a;
+        padding: 20px;
+        border-radius: 8px;
+      }
+
+      .control-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        height: 8px;
+        border-radius: 5px;
+        background: #444;
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #4caf50;
+        cursor: pointer;
+      }
+
+      input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #4caf50;
+        cursor: pointer;
+        border: none;
+      }
+
+      .value-display {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 18px;
+      }
+
+      .value-display span {
+        color: #4caf50;
+        font-weight: bold;
+      }
+
+      .preset-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+      }
+
+      .preset-btn {
+        flex: 1;
+        min-width: 80px;
+        padding: 10px;
+        background-color: #444;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.2s;
+      }
+
+      .preset-btn:hover {
+        background-color: #555;
+      }
+
+      .preset-btn:active {
+        background-color: #666;
+      }
+
+      .info {
+        background-color: #2a2a2a;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .info code {
+        background-color: #444;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "Courier New", monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Right Thrust Gauge Test</h1>
+
+      <div class="gauge-container">
+        <object id="thrustGauge" type="image/svg+xml" data="thrust-right.svg"></object>
+      </div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label for="thrustSlider">Right Thrust Control:</label>
+          <input type="range" id="thrustSlider" min="-100" max="100" value="0" step="1" />
+          <div class="value-display">
+            <span>-100 (Reverse)</span>
+            <span id="thrustValue">0</span>
+            <span>+100 (Forward)</span>
+          </div>
+        </div>
+
+        <div class="preset-buttons">
+          <button class="preset-btn" data-value="-100">Full Reverse (-100)</button>
+          <button class="preset-btn" data-value="-50">Reverse (-50)</button>
+          <button class="preset-btn" data-value="0">Neutral (0)</button>
+          <button class="preset-btn" data-value="50">Forward (50)</button>
+          <button class="preset-btn" data-value="100">Full Forward (100)</button>
+        </div>
+      </div>
+
+      <div class="info">
+        <h3>How This Works:</h3>
+        <ul>
+          <li>The slider updates <code>localStorage.setItem('game_rightThrust', value)</code></li>
+          <li>The SVG loads <code>thrust-right.js</code> internally</li>
+          <li>The <code>thrust-right.js</code> script polls localStorage every 50ms</li>
+          <li>When it detects a change, it moves the indicator line horizontally</li>
+          <li>Range: -100 (full reverse) to +100 (full forward)</li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      const slider = document.getElementById("thrustSlider");
+      const valueDisplay = document.getElementById("thrustValue");
+      const presetButtons = document.querySelectorAll(".preset-btn");
+
+      slider.addEventListener("input", function () {
+        const value = this.value;
+        localStorage.setItem("game_rightThrust", value);
+        valueDisplay.textContent = value;
+      });
+
+      presetButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const value = this.getAttribute("data-value");
+          slider.value = value;
+          localStorage.setItem("game_rightThrust", value);
+          valueDisplay.textContent = value;
+        });
+      });
+
+      localStorage.setItem("game_rightThrust", slider.value);
+    </script>
+  </body>
+</html>
