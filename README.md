@@ -285,7 +285,7 @@ http-server -p 8080
 1. What is your concept of control? What are the physical motions a pilot could use? Which parts of their body.
 1. Choose your sensors - joystick components are the least interesting choice. Take inspiration from planes, vehicles, Sci-Fi movies..
 1. Rig up a prototype & TEST it with friends
-1. Program a microbit to send the output to the game via serial over USB. Use [this sample code](microbit/thunderstick-serial-demo.microbitJavascript) to start from. [Makecode link](https://makecode.microbit.org/S99508-25130-71089-08675)
+1. Program a microbit to send the output to the game via serial over USB. Use [these sample microbit code](microbit/) to start from
 1. Refine prototype to a looks-like/works-like unit & TEST it with friends
 1. Final CAD / Product manufacture
 
@@ -298,7 +298,7 @@ http-server -p 8080
 1. Modify the SVG instrument files in `instruments/` folder
 1. Test your implementation using keyboard controls or USB gamepad
 1. Build physical controls using sensors from class kit
-1. Program Micro:bit to interpret the sensors, use the provided example file `microbit/thunderstick-serial-demo.microbitJavascript`
+1. Program Micro:bit to interpret the sensors, use the provided example files `microbit/`
 1. Upload to Google drive to collaborate with your partners
 1. At the end, upload the project to github as a 'fork' (help will be provided)
 
@@ -306,13 +306,13 @@ http-server -p 8080
 
 - use HTML and CSS to design the instruments window
 - Design the instrument files using Figma or Illustrator
-- Use AI to modify the instrument logic, for example changing line chart to a dial chart
+- Use AI to modify the instrument logic, for example changing line chart to a dial chart [Claude example(better)](https://claude.ai/share/cbddc266-2dfa-4ab1-bd81-faffc27c8647) and [ChatGPT example](https://chatgpt.com/share/690249f1-f134-800d-b38a-4a4c0a87959d)
 - **If instruments are not updating, do 'hard reload' ( Cmd + Shift + R on a Mac) **
 - Note it is possible to use an iPad/iPhone for touchscreen controls using [Duet display](https://www.duetdisplay.com/)
 
 ## Project Structure
 
-The repository is organized as follows:
+The repository files:
 
 ```
 ***Design Me, Program Me!***

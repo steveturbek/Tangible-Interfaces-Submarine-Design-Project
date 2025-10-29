@@ -25,16 +25,12 @@
   <text x="420" y="180" style="font-family: Arial; font-size: 20px; fill: white;">+25°</text>
 
   <script type="text/javascript">
-    window.updateInstrument = function(degrees) {
+    window.updateInstrument = function(percentage) {
       const indicator = document.getElementById('indicator');
       if (!indicator) return;
 
-      // Clamp pitch between -25 and +25 degrees
-      const normalizedPitch = Math.max(-25, Math.min(25, degrees));
-
-      // Map -25 to +25 degrees to x position 50 to 462
-      // Center (0°) is at x=256
-      const xPosition = 256 + (normalizedPitch / 25) * 206;
+      const normalizedPitch = Math.max(-100, Math.min(100, percentage));
+      const xPosition = 256 + (normalizedPitch / 100) * 206;
 
       indicator.setAttribute('x1', xPosition);
       indicator.setAttribute('x2', xPosition);

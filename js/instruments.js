@@ -137,19 +137,18 @@ function updateInstruments_pitch() {
   if (!gameState || !window.gameState.rotation) return;
   const pitch = window.gameState.rotation.x;
 
-  // Convert pitch to percentage (-100% to +100%), then map to SVG's -25 to +25 degree display range
+  // Convert pitch to percentage (-100% to +100%)
   const pitchPercent = (pitch / window.gameState.controls.maxPitchElevatorAngle) * 100;
-  const pitchForDisplay = (pitchPercent / 100) * 25; // Map percentage to ±25 degrees for display
 
   // Write to localStorage for file:// protocol compatibility
-  localStorage.setItem('game_pitch', Math.round(pitchForDisplay).toString());
+  localStorage.setItem('game_pitch', Math.round(pitchPercent).toString());
 
   const svgDoc = getSVGContentDocument("pitchGauge");
   if (!svgDoc) return;
 
   if (svgDoc.defaultView && svgDoc.defaultView.updateInstrument) {
-    // Pass pitch as a value scaled to ±25 degrees
-    svgDoc.defaultView.updateInstrument(Math.round(pitchForDisplay));
+    // Pass pitch as a percentage value
+    svgDoc.defaultView.updateInstrument(Math.round(pitchPercent));
   }
 }
 
