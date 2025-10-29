@@ -30,21 +30,21 @@
         (Students to Design)
       </div>
 
-      <object id="oxygenGauge" type="image/svg+xml" data="instruments/instruments-oxygen.svg"></object>
-      <object id="batteryGauge" type="image/svg+xml" data="instruments/instruments-battery.svg"></object>
-      <object id="compassGauge" type="image/svg+xml" data="instruments/instruments-compass.svg" style="grid-column: span 2; /* Takes up 2 columns */"></object>
+      <object id="oxygenGauge" type="image/svg+xml" data="instruments/oxygen.svg"></object>
+      <object id="batteryGauge" type="image/svg+xml" data="instruments/battery.svg"></object>
+      <object id="compassGauge" type="image/svg+xml" data="instruments/compass.svg" style="grid-column: span 2; /* Takes up 2 columns */"></object>
 
-      <object id="depthGauge" type="image/svg+xml" data="instruments/instruments-depth.svg"></object>
-      <object id="speedGauge" type="image/svg+xml" data="instruments/instruments-speed.svg"></object>
-      <object id="pitchGauge" type="image/svg+xml" data="instruments/instruments-pitch.svg"></object>
+      <object id="depthGauge" type="image/svg+xml" data="instruments/depth.svg"></object>
+      <object id="speedGauge" type="image/svg+xml" data="instruments/speed.svg"></object>
+      <object id="pitchGauge" type="image/svg+xml" data="instruments/pitch.svg"></object>
 
-      <object id="leftThrustGauge" type="image/svg+xml" data="instruments/instruments-left-thrust.svg"></object>
-      <object id="rightThrustGauge" type="image/svg+xml" data="instruments/instruments-right-thrust.svg"></object>
-      <object id="targetGauge" type="image/svg+xml" data="instruments/instruments-target.svg"></object>
+      <object id="leftThrustGauge" type="image/svg+xml" data="instruments/thrust-left.svg"></object>
+      <object id="rightThrustGauge" type="image/svg+xml" data="instruments/thrust-right.svg"></object>
+      <object id="targetGauge" type="image/svg+xml" data="instruments/target.svg"></object>
 
-      <object id="rudderGauge" type="image/svg+xml" data="instruments/instruments-rudder.svg"></object>
-      <object id="elevatorGauge" type="image/svg+xml" data="instruments/instruments-elevator.svg"></object>
-      <object id="verticalThrusterGauge" type="image/svg+xml" data="instruments/instruments-vertical-thruster.svg"></object>
+      <object id="rudderGauge" type="image/svg+xml" data="instruments/rudder.svg"></object>
+      <object id="elevatorGauge" type="image/svg+xml" data="instruments/elevator.svg"></object>
+      <object id="verticalThrusterGauge" type="image/svg+xml" data="instruments/thrust-vertical.svg"></object>
 
       <div id="sub-data-text" style="grid-column: span 3"></div>
 
@@ -97,7 +97,7 @@
         "targetGauge",
         "rudderGauge",
         "elevatorGauge",
-        "verticalThrusterGauge"
+        "verticalThrusterGauge",
       ];
 
       testModeCheckbox.addEventListener("change", function () {
@@ -111,23 +111,24 @@
             const cyclePosition = (elapsed % loopDuration) / loopDuration; // 0 to 1
 
             // Create triangle wave: 0 -> 100 -> 0
-            const percentage = cyclePosition < 0.5
-              ? cyclePosition * 200  // 0 to 100 in first half
-              : (1 - cyclePosition) * 200; // 100 to 0 in second half
+            const percentage =
+              cyclePosition < 0.5
+                ? cyclePosition * 200 // 0 to 100 in first half
+                : (1 - cyclePosition) * 200; // 100 to 0 in second half
 
             // Write test values to localStorage for each gauge
-            localStorage.setItem('testMode_oxygen', percentage.toString());
-            localStorage.setItem('testMode_battery', percentage.toString());
-            localStorage.setItem('testMode_compass', (percentage * 3.6).toString()); // 0-360 degrees
-            localStorage.setItem('testMode_depth', percentage.toString());
-            localStorage.setItem('testMode_speed', percentage.toString());
-            localStorage.setItem('testMode_pitch', percentage.toString());
-            localStorage.setItem('testMode_leftThrust', percentage.toString());
-            localStorage.setItem('testMode_rightThrust', percentage.toString());
-            localStorage.setItem('testMode_target', percentage.toString());
-            localStorage.setItem('testMode_rudder', percentage.toString());
-            localStorage.setItem('testMode_elevator', percentage.toString());
-            localStorage.setItem('testMode_verticalThruster', percentage.toString());
+            localStorage.setItem("testMode_oxygen", percentage.toString());
+            localStorage.setItem("testMode_battery", percentage.toString());
+            localStorage.setItem("testMode_compass", (percentage * 3.6).toString()); // 0-360 degrees
+            localStorage.setItem("testMode_depth", percentage.toString());
+            localStorage.setItem("testMode_speed", percentage.toString());
+            localStorage.setItem("testMode_pitch", percentage.toString());
+            localStorage.setItem("testMode_leftThrust", percentage.toString());
+            localStorage.setItem("testMode_rightThrust", percentage.toString());
+            localStorage.setItem("testMode_target", percentage.toString());
+            localStorage.setItem("testMode_rudder", percentage.toString());
+            localStorage.setItem("testMode_elevator", percentage.toString());
+            localStorage.setItem("testMode_verticalThruster", percentage.toString());
           }, 50); // Update every 50ms for smooth animation
         } else {
           // Stop test mode animation and clear localStorage
@@ -136,18 +137,18 @@
             testModeInterval = null;
 
             // Clear all test mode values from localStorage
-            localStorage.removeItem('testMode_oxygen');
-            localStorage.removeItem('testMode_battery');
-            localStorage.removeItem('testMode_compass');
-            localStorage.removeItem('testMode_depth');
-            localStorage.removeItem('testMode_speed');
-            localStorage.removeItem('testMode_pitch');
-            localStorage.removeItem('testMode_leftThrust');
-            localStorage.removeItem('testMode_rightThrust');
-            localStorage.removeItem('testMode_target');
-            localStorage.removeItem('testMode_rudder');
-            localStorage.removeItem('testMode_elevator');
-            localStorage.removeItem('testMode_verticalThruster');
+            localStorage.removeItem("testMode_oxygen");
+            localStorage.removeItem("testMode_battery");
+            localStorage.removeItem("testMode_compass");
+            localStorage.removeItem("testMode_depth");
+            localStorage.removeItem("testMode_speed");
+            localStorage.removeItem("testMode_pitch");
+            localStorage.removeItem("testMode_leftThrust");
+            localStorage.removeItem("testMode_rightThrust");
+            localStorage.removeItem("testMode_target");
+            localStorage.removeItem("testMode_rudder");
+            localStorage.removeItem("testMode_elevator");
+            localStorage.removeItem("testMode_verticalThruster");
           }
         }
       });

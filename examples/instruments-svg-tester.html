@@ -414,7 +414,7 @@
       function loadSVGFile(file) {
         currentFileName = file.name;
 
-        // Extract instrument name from filename (e.g., "instruments-depth.svg" -> "depth", "instruments-depth-claude.svg" -> "depth")
+        // Extract instrument name from filename (e.g., "depth.svg" -> "depth", "instruments-depth-claude.svg" -> "depth")
         const match = file.name.match(/instruments?[-_](\w+)/i);
         instrumentName = match ? match[1] : "instrument";
 

@@ -317,8 +317,8 @@ The repository files:
 ```
 ***Design Me, Program Me!***
 ├── instruments/
-│   ├── instruments-oxygen.svg     # Oxygen gauge
-│   ├── instruments-battery.svg    # Battery gauge
+│   ├── oxygen.svg     # Oxygen gauge
+│   ├── battery.svg    # Battery gauge
 │   └── etc...
 
 ***These should not need to be edited***
