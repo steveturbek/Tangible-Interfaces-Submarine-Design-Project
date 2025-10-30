@@ -1,6 +1,7 @@
-// Check localStorage for updates (test mode takes priority over game mode)
-setInterval(() => {
+// Update the pitch indicator based on localStorage value
+function update_pitch() {
   const gameValue = localStorage.getItem("game_pitch");
+
   if (!gameValue) return;
   const percentage = parseFloat(gameValue);
 
@@ -17,4 +18,4 @@ setInterval(() => {
 
   indicator.setAttribute("x1", xPosition);
   indicator.setAttribute("x2", xPosition);
-}, 50);
+}

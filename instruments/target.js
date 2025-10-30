@@ -1,6 +1,7 @@
-// Check localStorage for updates (test mode takes priority over game mode)
-setInterval(() => {
+// Update the target indicator based on localStorage value
+function update_target() {
   const gameValue = localStorage.getItem("game_target");
+
   if (!gameValue) return;
   const meters = parseFloat(gameValue);
 
@@ -20,4 +21,4 @@ setInterval(() => {
 
   indicator.setAttribute("x1", xPosition);
   indicator.setAttribute("x2", xPosition);
-}, 50);
+}

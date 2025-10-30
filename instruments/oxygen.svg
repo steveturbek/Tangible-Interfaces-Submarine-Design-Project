@@ -102,9 +102,6 @@
   <rect x="25" y="25" width="350" height="350" rx="10" ry="10" class="glass"/>
 
     
-<!-- Load external animation script -->
-  <script type="application/ecmascript" xlink:href="oxygen.js"/>
-  <script type="application/ecmascript" xlink:href="oxygen.js"/>
 
 </svg>
 

@@ -24,6 +24,4 @@
   <text x="230" y="180" style="font-family: Arial; font-size: 20px; fill: white;">0°</text>
   <text x="420" y="180" style="font-family: Arial; font-size: 20px; fill: white;">+25°</text>
 
-  <!-- Load external animation script -->
-  <script type="application/ecmascript" xlink:href="pitch.js"/>
 </svg>

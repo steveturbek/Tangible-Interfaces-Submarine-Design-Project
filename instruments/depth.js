@@ -1,13 +1,7 @@
-/**
- * Updates the depth gauge display
- * - The vertical indicator line moves horizontally to show depth
- * - 0 depth (surface) = x position at left (50)
- * - 50 depth (mid-water) = x position at middle (256)
- * - 100 depth (seabed) = x position at right (462)
- */
-
-setInterval(() => {
+// Update the depth indicator based on localStorage value
+function update_depth() {
   const gameValue = localStorage.getItem("game_depth");
+
   if (!gameValue) return;
   const depth = parseFloat(gameValue);
 
@@ -29,4 +23,4 @@ setInterval(() => {
   // Update both x1 and x2 to move the vertical line
   indicator.setAttribute("x1", xPosition);
   indicator.setAttribute("x2", xPosition);
-}, 50);
+}

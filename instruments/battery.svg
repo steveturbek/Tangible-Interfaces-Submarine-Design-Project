@@ -18,6 +18,4 @@
   <text x="0" y="40" style="font-family: Arial; font-size: 50px; font-weight: bold; fill: white;">  Battery
 </text>
 
-  <!-- Load external animation script -->
-  <script type="application/ecmascript" xlink:href="battery.js"/>
 </svg>

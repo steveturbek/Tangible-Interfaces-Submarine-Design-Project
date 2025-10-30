@@ -20,33 +20,31 @@
 
         <!-- --------------------------------------------------- -->
 
-      <?xml version="1.0" encoding="UTF-8"?>
-<svg id="speed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256">
-  <defs>
-    <style>
-      .speed-track {
-        fill: none;
-        stroke-width: 10px;
-        stroke: #666;
-        stroke-linecap: round;
-      }
-      .speed-indicator {
-        fill: none;
-        stroke-width: 1px;
-        stroke: #fff;
-      }
-    </style>
-  </defs>
+        <?xml version="1.0" encoding="UTF-8"?>
+        <svg id="speed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256">
+          <defs>
+            <style>
+              .speed-track {
+                fill: none;
+                stroke-width: 10px;
+                stroke: #666;
+                stroke-linecap: round;
+              }
+              .speed-indicator {
+                fill: none;
+                stroke-width: 1px;
+                stroke: #fff;
+              }
+            </style>
+          </defs>
 
-  <line id="track" class="speed-track" x1="50" y1="128" x2="462" y2="128"/>
-  <line id="indicator" class="speed-indicator" x1="50" y1="100" x2="50" y2="156"/>
+          <line id="track" class="speed-track" x1="50" y1="128" x2="462" y2="128" />
+          <line id="indicator" class="speed-indicator" x1="50" y1="100" x2="50" y2="156" />
 
-  <text x="10" y="40" style="font-family: Arial; font-size: 50px; font-weight: bold; fill: white;">Speed</text>
-  <text x="40" y="180" style="font-family: Arial; font-size: 20px; fill: white;">0%</text>
-  <text x="420" y="180" style="font-family: Arial; font-size: 20px; fill: white;">100%</text>
-
-</svg>
-
+          <text x="10" y="40" style="font-family: Arial; font-size: 50px; font-weight: bold; fill: white">Speed</text>
+          <text x="40" y="180" style="font-family: Arial; font-size: 20px; fill: white">0%</text>
+          <text x="420" y="180" style="font-family: Arial; font-size: 20px; fill: white">100%</text>
+        </svg>
 
         <!--   END SVG PASTE-->
         <!--   END SVG PASTE-->
@@ -76,13 +74,11 @@
       <div class="info">
         <h3>How To Update</h3>
         <ul>
-          <li>Make your instruments illustration in Figma/Illustrator (vector only) and save as .SVG </li>
-          <li> In Illustrator,  Save As SVG  In SVG Options Screen, Click Button "SVG Coder..." </li>
-          <li> This opens the code in Text Edit. Select All, & Copy</li>
-          <li> Open this html file in TextEdit.  Paste your SVG to replace the existing SVG in the indicated area.  </li>
-          <li> Remember: In TextEdit > Settings > Open and Save. Uncheck "Display HTML files as HTML code instead of formatted text" </li>
-        </ul>
-          
+          <li>Make your instruments illustration in Figma/Illustrator (vector only) and save as .SVG</li>
+          <li>In Illustrator, Save As SVG In SVG Options Screen, Click Button "SVG Coder..."</li>
+          <li>This opens the code in Text Edit. Select All, & Copy</li>
+          <li>Open this html file in TextEdit. Paste your SVG to replace the existing SVG in the indicated area.</li>
+          <li>Remember: In TextEdit > Settings > Open and Save. Uncheck "Display HTML files as HTML code instead of formatted text"</li>
         </ul>
         <h3>How This Works:</h3>
         <ul>
@@ -253,10 +249,12 @@
     <script>
       // Wait for everything to be fully loaded, then start the update interval
       window.addEventListener("load", function () {
-
-    // Alert designer if the file is missing the ID tag with the file name ( or code won't work!)
-    const filename = window.location.pathname.split('/').pop().split('.')[0];
-    if (!document.getElementById(filename)) {alert("Missing the SVG file or the ID tag in the file");return;}
+        // Alert designer if the file is missing the ID tag with the file name ( or code won't work!)
+        const filename = window.location.pathname.split("/").pop().split(".")[0];
+        if (!document.getElementById(filename)) {
+          alert("Missing the SVG file or the ID tag in the file");
+          return;
+        }
 
         setInterval(update_speed, 50);
       });

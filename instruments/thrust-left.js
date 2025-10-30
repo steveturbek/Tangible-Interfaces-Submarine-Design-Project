@@ -1,5 +1,5 @@
-// Check localStorage for updates (test mode takes priority over game mode)
-setInterval(() => {
+// Update the thrust-left indicator based on localStorage value
+function update_thrust_left() {
   const gameValue = localStorage.getItem("game_leftThrust");
 
   if (!gameValue) return;
@@ -21,4 +21,4 @@ setInterval(() => {
 
   indicator.setAttribute("x1", xPosition);
   indicator.setAttribute("x2", xPosition);
-}, 50);
+}

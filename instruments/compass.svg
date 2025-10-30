@@ -34,5 +34,4 @@
   <!-- Compass label -->
   <text x="10" y="40" style="font-family: Arial; font-size: 50px; font-weight: bold; fill: white;">Compass</text>
 
-  <script type="application/ecmascript" xlink:href="compass.js"/>
 </svg>

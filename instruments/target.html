@@ -4,6 +4,88 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Target Gauge Test Harness</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Target Gauge Test</h1>
+
+      <div class="gauge-container">
+        <!-- --------------------------------------------------- -->
+        <!-- STUDENT INSTRUCTIONS -->
+        <!-- Students: Make your instruments illustration in Figma/Illustrator (vector only) and save as .SVG -->
+        <!-- In Illustrator,  Save As SVG  In SVG Options Screen, Click Button "SVG Coder..." -->
+        <!-- This opens the code in Text Edit. Select All, & Copy-->
+        <!-- Paste your SVG below. Should start with something like <?xml version="1.0" encoding="UTF-8"?> <svg id="target" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256" style="width: 100%; max-width: 512px; height: auto">-->
+        <!-- In TextEdit > Settings > Open and Save. Uncheck "Display HTML files as HTML code instead of formatted text" -->
+
+        <!-- --------------------------------------------------- -->
+
+        <?xml version="1.0" encoding="UTF-8"?>
+        <svg id="target" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 512 256">
+          <defs>
+            <style>
+              .target-track {
+                fill: none;
+                stroke-width: 10px;
+                stroke: #666;
+                stroke-linecap: round;
+              }
+              .target-indicator {
+                fill: none;
+                stroke-width: 1px;
+                stroke: #0f0;
+              }
+            </style>
+          </defs>
+
+          <line id="track" class="target-track" x1="50" y1="128" x2="462" y2="128" />
+          <line id="indicator" class="target-indicator" x1="462" y1="100" x2="462" y2="156" />
+
+          <text x="10" y="40" style="font-family: Arial; font-size: 50px; font-weight: bold; fill: white">Target</text>
+          <text x="40" y="180" style="font-family: Arial; font-size: 20px; fill: white">0m</text>
+          <text x="410" y="180" style="font-family: Arial; font-size: 20px; fill: white">100%</text>
+
+          <!-- Load external animation script -->
+        </svg>
+
+        <!--   END SVG PASTE-->
+        <!--   END SVG PASTE-->
+        <!--   END SVG PASTE-->
+      </div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label for="targetSlider">Target Control:</label>
+          <input type="range" id="targetSlider" min="0" max="100" value="50" step="1" />
+          <div class="value-display">
+            <span>0m</span>
+            <span id="targetValue">50m</span>
+            <span>100m</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info">
+        <h3>How To Update</h3>
+        <ul>
+          <li>Make your instruments illustration in Figma/Illustrator (vector only) and save as .SVG</li>
+          <li>In Illustrator, Save As SVG In SVG Options Screen, Click Button "SVG Coder..."</li>
+          <li>This opens the code in Text Edit. Select All, & Copy</li>
+          <li>Open this html file in TextEdit. Paste your SVG to replace the existing SVG in the indicated area.</li>
+          <li>Remember: In TextEdit > Settings > Open and Save. Uncheck "Display HTML files as HTML code instead of formatted text"</li>
+        </ul>
+
+        <h3>How This Works:</h3>
+        <ul>
+          <li>There is a <code>target.svg</code> file. For the purposes of this demo, the student pastes the SVG contents in this HTML page</li>
+          <li>The HTML loads <code>target.js</code> which contains the <code>update_target()</code> function</li>
+          <li>The slider updates <code>localStorage.setItem('game_target', value)</code></li>
+          <li>After page load, <code>setInterval</code> calls <code>update_target()</code> every 50ms</li>
+          <li>When it detects a change, it moves the indicator to show target distance (0-100 meters)</li>
+        </ul>
+      </div>
+    </div>
+
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -29,14 +111,6 @@
         border-radius: 8px;
         margin-bottom: 30px;
         text-align: center;
-      }
-
-      #targetGauge {
-        width: 100%;
-        max-width: 512px;
-        height: auto;
-        margin: 0 auto;
-        display: block;
       }
 
       .controls {
@@ -96,34 +170,6 @@
         font-weight: bold;
       }
 
-      .preset-buttons {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 15px;
-      }
-
-      .preset-btn {
-        flex: 1;
-        min-width: 80px;
-        padding: 10px;
-        background-color: #444;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: background-color 0.2s;
-      }
-
-      .preset-btn:hover {
-        background-color: #555;
-      }
-
-      .preset-btn:active {
-        background-color: #666;
-      }
-
       .info {
         background-color: #2a2a2a;
         padding: 15px;
@@ -140,51 +186,9 @@
         font-family: "Courier New", monospace;
       }
     </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Target Distance Gauge Test</h1>
-
-      <div class="gauge-container">
-        <object id="targetGauge" type="image/svg+xml" data="target.svg"></object>
-      </div>
-
-      <div class="controls">
-        <div class="control-group">
-          <label for="targetSlider">Target Distance Control (meters):</label>
-          <input type="range" id="targetSlider" min="0" max="100" value="50" step="1" />
-          <div class="value-display">
-            <span>0m (Close)</span>
-            <span id="targetValue">50m</span>
-            <span>100m (Far)</span>
-          </div>
-        </div>
-
-        <div class="preset-buttons">
-          <button class="preset-btn" data-value="0">Very Close (0m)</button>
-          <button class="preset-btn" data-value="25">Near (25m)</button>
-          <button class="preset-btn" data-value="50">Medium (50m)</button>
-          <button class="preset-btn" data-value="75">Far (75m)</button>
-          <button class="preset-btn" data-value="100">Very Far (100m)</button>
-        </div>
-      </div>
-
-      <div class="info">
-        <h3>How This Works:</h3>
-        <ul>
-          <li>The slider updates <code>localStorage.setItem('game_target', value)</code></li>
-          <li>The SVG loads <code>target.js</code> internally</li>
-          <li>The <code>target.js</code> script polls localStorage every 50ms</li>
-          <li>When it detects a change, it moves the indicator line horizontally</li>
-          <li>Range: 0 meters (very close) to 100 meters (far away)</li>
-        </ul>
-      </div>
-    </div>
-
     <script>
       const slider = document.getElementById("targetSlider");
       const valueDisplay = document.getElementById("targetValue");
-      const presetButtons = document.querySelectorAll(".preset-btn");
 
       slider.addEventListener("input", function () {
         const value = this.value;
@@ -192,16 +196,24 @@
         valueDisplay.textContent = value + "m";
       });
 
-      presetButtons.forEach((button) => {
-        button.addEventListener("click", function () {
-          const value = this.getAttribute("data-value");
-          slider.value = value;
-          localStorage.setItem("game_target", value);
-          valueDisplay.textContent = value + "m";
-        });
-      });
-
       localStorage.setItem("game_target", slider.value);
+    </script>
+
+    <!-- Load target.js -->
+    <script src="target.js"></script>
+
+    <script>
+      // Wait for everything to be fully loaded, then start the update interval
+      window.addEventListener("load", function () {
+        // Alert designer if the file is missing the ID tag with the file name ( or code won't work!)
+        const filename = window.location.pathname.split("/").pop().split(".")[0];
+        if (!document.getElementById(filename)) {
+          alert("Missing the SVG file or the ID tag in the file");
+          return;
+        }
+
+        setInterval(update_target, 50);
+      });
     </script>
   </body>
 </html>

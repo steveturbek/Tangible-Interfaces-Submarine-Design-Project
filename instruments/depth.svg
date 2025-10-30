@@ -27,6 +27,4 @@
   <text x="30" y="100" style="font-family: Arial; font-size: 20px; fill: white;">Surface</text>
   <text x="390" y="100" style="font-family: Arial; font-size: 20px; fill: white;">Seabed</text>
 
-<!-- Load external animation script -->
-  <script type="application/ecmascript" xlink:href="depth.js"/>
 </svg>
