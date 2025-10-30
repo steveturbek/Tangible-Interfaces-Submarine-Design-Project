@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" 
+<svg id="oxygen" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" 
       viewBox="0 0 400 400" aria-labelledby="title desc" role="img">
   <title id="title">Oxygen Gauge VU style</title>
   <desc id="desc">Square retro VU-style oxygen gauge with functional needle pivoting around fixed point.</desc>

@@ -295,19 +295,26 @@ http-server -p 8080
 
 #### Instruments
 
+<!--
 1. Modify the SVG instrument files in `instruments/` folder
 1. Test your implementation using keyboard controls or USB gamepad
 1. Build physical controls using sensors from class kit
 1. Program Micro:bit to interpret the sensors, use the provided example files `microbit/`
 1. Upload to Google drive to collaborate with your partners
-1. At the end, upload the project to github as a 'fork' (help will be provided)
+1. At the end, upload the project to github as a 'fork' (help will be provided) -->
 
-**Students should:**
+**SVG File Instructions**
 
-- use HTML and CSS to design the instruments window
-- Design the instrument files using Figma or Illustrator
-- Use AI to modify the instrument logic, for example changing line chart to a dial chart [Claude example(better)](https://claude.ai/share/cbddc266-2dfa-4ab1-bd81-faffc27c8647) and [ChatGPT example](https://chatgpt.com/share/690249f1-f134-800d-b38a-4a4c0a87959d)
-- **If instruments are not updating, do 'hard reload' ( Cmd + Shift + R on a Mac) **
+1. Use HTML and CSS to design the instruments window
+1. Design the instrument files using Figma or Illustrator (vectors only)
+1. Save as SVG
+1. You don't need any special editing app. Use TextEdit app, but make this one settings change: TextEdit > Settings > Open and Save. **Uncheck** "Display HTML files as HTML code instead of formatted text"
+1. Use AI to modify the instrument logic, for `speed.svg`, the code is in `speed.js`
+1. There is a `speed.html` page to test it out
+
+**Tips**
+
+- If instruments SVG is not updating after a save, do 'hard reload' ( Cmd + Shift + R on a Mac)
 - Note it is possible to use an iPad/iPhone for touchscreen controls using [Duet display](https://www.duetdisplay.com/)
 
 ## Project Structure

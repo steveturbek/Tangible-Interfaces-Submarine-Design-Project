@@ -4,7 +4,12 @@ setInterval(() => {
   if (!gameValue) return;
   const percentage = parseFloat(gameValue);
 
-  const line = document.getElementById("line");
+  // Select the SVG with id 'oxygen'
+  const oxygenSVG = document.getElementById("oxygen");
+  if (!oxygenSVG) return;
+
+  // Select the line element within this SVG
+  const line = oxygenSVG.querySelector("#line");
   if (!line) return;
   const normalizedLevel = Math.max(0, Math.min(100, percentage));
   // 120° total span => from -150 to -30

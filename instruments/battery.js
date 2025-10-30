@@ -33,12 +33,20 @@ setInterval(() => {
     return;
   }
 
-  // Get needle element from the SVG (we're running inside the SVG, so use document directly)
+  // Get needle element from the SVG
   if (!line) {
     initAttempts++;
     // console.log(`🔍 Attempt ${initAttempts}: Looking for line element in current document...`);
 
-    line = document.getElementById("line");
+    // Select the SVG with id 'battery'
+    const batterySVG = document.getElementById("battery");
+    if (!batterySVG) {
+      console.warn("  ❌ Battery SVG container not found");
+      return;
+    }
+
+    // Select the line element within this SVG
+    line = batterySVG.querySelector("#line");
     // console.log("  - line element:", line);
 
     if (!line) {

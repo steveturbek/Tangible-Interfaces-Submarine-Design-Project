@@ -4,7 +4,12 @@ setInterval(() => {
   if (!gameValue) return;
   const percentage = parseFloat(gameValue);
 
-  const indicator = document.getElementById("indicator");
+  // Select the SVG with id 'rudder'
+  const rudderSVG = document.getElementById("rudder");
+  if (!rudderSVG) return;
+
+  // Select the indicator element within this SVG
+  const indicator = rudderSVG.querySelector("#indicator");
   if (!indicator) return;
 
   const normalizedRudder = Math.max(-100, Math.min(100, percentage));

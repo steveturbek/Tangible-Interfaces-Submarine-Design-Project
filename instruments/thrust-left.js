@@ -5,7 +5,12 @@ setInterval(() => {
   if (!gameValue) return;
   const percentage = parseFloat(gameValue);
 
-  const indicator = document.getElementById("indicator");
+  // Select the SVG with id 'thrust-left'
+  const thrustLeftSVG = document.getElementById("thrust-left");
+  if (!thrustLeftSVG) return;
+
+  // Select the indicator element within this SVG
+  const indicator = thrustLeftSVG.querySelector("#indicator");
   if (!indicator) return;
 
   // Clamp between -100 and +100

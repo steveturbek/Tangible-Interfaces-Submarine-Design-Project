@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 512 256">
+<svg id="speed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256">
   <defs>
     <style>
       .speed-track {
@@ -23,6 +23,4 @@
   <text x="40" y="180" style="font-family: Arial; font-size: 20px; fill: white;">0%</text>
   <text x="420" y="180" style="font-family: Arial; font-size: 20px; fill: white;">100%</text>
 
-<!-- Load external animation script -->
-  <script type="application/ecmascript" xlink:href="speed.js"/>
 </svg>

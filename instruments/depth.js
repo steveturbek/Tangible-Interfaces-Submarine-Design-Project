@@ -11,8 +11,12 @@ setInterval(() => {
   if (!gameValue) return;
   const depth = parseFloat(gameValue);
 
-  // Get the indicator line element
-  const indicator = document.getElementById("indicator");
+  // Select the SVG with id 'depth'
+  const depthSVG = document.getElementById("depth");
+  if (!depthSVG) return;
+
+  // Get the indicator line element within this SVG
+  const indicator = depthSVG.querySelector("#indicator");
   if (!indicator) return;
 
   // Make sure depth is between 0 and 100

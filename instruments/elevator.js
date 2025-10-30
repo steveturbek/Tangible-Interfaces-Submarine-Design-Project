@@ -4,7 +4,12 @@ setInterval(() => {
   if (!gameValue) return;
   const percentage = parseFloat(gameValue);
 
-  const indicator = document.getElementById("indicator");
+  // Select the SVG with id 'elevator'
+  const elevatorSVG = document.getElementById("elevator");
+  if (!elevatorSVG) return;
+
+  // Select the indicator element within this SVG
+  const indicator = elevatorSVG.querySelector("#indicator");
   if (!indicator) return;
 
   const normalizedElevator = Math.max(-100, Math.min(100, percentage));

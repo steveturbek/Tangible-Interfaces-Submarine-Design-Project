@@ -4,7 +4,12 @@ setInterval(() => {
   if (!gameValue) return;
   const percentage = parseFloat(gameValue);
 
-  const indicator = document.getElementById("indicator");
+  // Select the SVG with id 'thrust-vertical'
+  const thrustVerticalSVG = document.getElementById("thrust-vertical");
+  if (!thrustVerticalSVG) return;
+
+  // Select the indicator element within this SVG
+  const indicator = thrustVerticalSVG.querySelector("#indicator");
   if (!indicator) return;
 
   const normalizedThruster = Math.max(-100, Math.min(100, percentage));

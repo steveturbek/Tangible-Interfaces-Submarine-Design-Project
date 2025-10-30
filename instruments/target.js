@@ -4,7 +4,12 @@ setInterval(() => {
   if (!gameValue) return;
   const meters = parseFloat(gameValue);
 
-  const indicator = document.getElementById("indicator");
+  // Select the SVG with id 'target'
+  const targetSVG = document.getElementById("target");
+  if (!targetSVG) return;
+
+  // Select the indicator element within this SVG
+  const indicator = targetSVG.querySelector("#indicator");
   if (!indicator) return;
 
   // Clamp distance between 0 and 100 meters

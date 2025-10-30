@@ -25,7 +25,12 @@ setInterval(() => {
 
   //   console.log(game_compass, normalizedHeading);
 
-  const compassRotating = document.getElementById("compass-rotating");
+  // Select the SVG with id 'compass'
+  const compassSVG = document.getElementById("compass");
+  if (!compassSVG) return;
+
+  // Select the compass-rotating element within this SVG
+  const compassRotating = compassSVG.querySelector("#compass-rotating");
   if (!compassRotating) return;
 
   // Rotate the compass so N points north
