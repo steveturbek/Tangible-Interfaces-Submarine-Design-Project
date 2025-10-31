@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="400" viewBox="0 0 200 400">
+  <defs>
+    <!-- Glass effect gradient -->
+    <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:white;stop-opacity:0.3" />
+      <stop offset="45%" style="stop-color:white;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:white;stop-opacity:0.05" />
+    </linearGradient>
+    
+    <!-- Highlight for glass -->
+    <linearGradient id="glassHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:white;stop-opacity:0.4" />
+      <stop offset="30%" style="stop-color:white;stop-opacity:0.15" />
+      <stop offset="100%" style="stop-color:white;stop-opacity:0" />
+    </linearGradient>
+
+    <!-- Shadow for bezel depth -->
+    <filter id="innerShadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="2" result="offsetblur"/>
+      <feFlood flood-color="#000000" flood-opacity="0.5"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Outer shadow for case -->
+    <filter id="dropShadow">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+
+    <!-- Mask for window -->
+    <mask id="windowMask">
+      <rect x="50" y="100" width="100" height="200" rx="8" ry="8" fill="white"/>
+    </mask>
+  </defs>
+
+  <!-- Main case/housing -->
+  <rect x="10" y="20" width="180" height="360" rx="12" ry="12" 
+        fill="#d64a2b" stroke="#b83920" stroke-width="2" filter="url(#dropShadow)"/>
+  
+  <!-- Inner bezel -->
+  <rect x="30" y="80" width="140" height="240" rx="10" ry="10" 
+        fill="#c4412a" stroke="#a83520" stroke-width="1"/>
+  
+  <!-- Window frame (darker inner edge) -->
+  <rect x="45" y="95" width="110" height="210" rx="8" ry="8" 
+        fill="#2a2a2a" filter="url(#innerShadow)"/>
+  
+  <!-- Window opening -->
+  <rect x="50" y="100" width="100" height="200" rx="8" ry="8" 
+        fill="#f5f5f0"/>
+
+  <!-- Moving scale group (clipped by window) -->
+  <g mask="url(#windowMask)">
+    <!-- Scale background -->
+    <rect id="scaleBackground" x="50" y="100" width="100" height="800" fill="#f5f5f0"/>
+    
+    <!-- Moving scale -->
+    <g id="movingScale" transform="translate(0, 0)">
+      <!-- Draw scale markings from 0 to 100 -->
+      <!-- Scale spans 800px (4x window height of 200px) -->
+      <!-- 0% is at y=700, 100% is at y=-100 -->
+      <!-- Each 1% = 8px -->
+      
+      <!-- Major tick marks and numbers every 10% -->
+      <g id="majorTicks" stroke="#333" stroke-width="2" fill="#333" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+        <line x1="120" y1="700" x2="150" y2="700"/><text x="115" y="705" text-anchor="end">0</text>
+        <line x1="120" y1="620" x2="150" y2="620"/><text x="115" y="625" text-anchor="end">10</text>
+        <line x1="120" y1="540" x2="150" y2="540"/><text x="115" y="545" text-anchor="end">20</text>
+        <line x1="120" y1="460" x2="150" y2="460"/><text x="115" y="465" text-anchor="end">30</text>
+        <line x1="120" y1="380" x2="150" y2="380"/><text x="115" y="385" text-anchor="end">40</text>
+        <line x1="120" y1="300" x2="150" y2="300"/><text x="115" y="305" text-anchor="end">50</text>
+        <line x1="120" y1="220" x2="150" y2="220"/><text x="115" y="225" text-anchor="end">60</text>
+        <line x1="120" y1="140" x2="150" y2="140"/><text x="115" y="145" text-anchor="end">70</text>
+        <line x1="120" y1="60" x2="150" y2="60"/><text x="115" y="65" text-anchor="end">80</text>
+        <line x1="120" y1="-20" x2="150" y2="-20"/><text x="115" y="-15" text-anchor="end">90</text>
+        <line x1="120" y1="-100" x2="150" y2="-100"/><text x="115" y="-95" text-anchor="end">100</text>
+      </g>
+      
+      <!-- Minor tick marks every 1% -->
+      <g id="minorTicks" stroke="#666" stroke-width="1">
+        <!-- Generate minor ticks programmatically via script -->
+      </g>
+    </g>
+  </g>
+
+  <!-- Fixed center indicator (red triangle pointing right) -->
+  <polygon points="45,200 60,190 60,210" fill="#d32f2f" stroke="#b71c1c" stroke-width="1"/>
+  
+  <!-- Glass effect overlay -->
+  <rect x="50" y="100" width="100" height="200" rx="8" ry="8" 
+        fill="url(#glassGradient)" opacity="0.5" pointer-events="none"/>
+  
+  <!-- Glass highlight -->
+  <ellipse cx="100" cy="140" rx="35" ry="25" 
+           fill="url(#glassHighlight)" opacity="0.6" pointer-events="none"/>
+
+  <!-- Brand name -->
+  <text x="100" y="55" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" 
+        font-size="18" font-weight="bold" fill="#f5f5f0" letter-spacing="2">TURBEK</text>
+  
+  <!-- Model text -->
+  <text x="100" y="350" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" 
+        font-size="10" fill="#f5f5f0">DEPTH INDICATOR</text>
+  <text x="100" y="365" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" 
+        font-size="8" fill="#f5f5f0">MODEL 501-D</text>
+
+  <script type="text/javascript">
+    <![CDATA[
+    // Animation variables for smooth movement
+    let currentPosition = -500; // Starting position (0% at indicator)
+    let targetPosition = -500;
+    const animationSpeed = 0.1; // Smoothing factor
+    let minorTicksGenerated = false;
+
+    // Original function structure preserved
+    window.updateInstrument = function(depth) {
+      // Normalize depth between 0 and 100
+      const normalizedDepth = Math.max(0, Math.min(100, depth));
+
+      // Calculate target position
+      // At depth=0, scale should show 0 at center (translate by -500)
+      // At depth=100, scale should show 100 at center (translate by 300)
+      // Each percent moves the scale up by 8px
+      targetPosition = -500 + (normalizedDepth * 8);
+    }
+
+    // Smooth animation function
+    let animateCallCount = 0;
+    function animateScale() {
+      // Smooth interpolation towards target
+      currentPosition += (targetPosition - currentPosition) * animationSpeed;
+
+      // Apply transformation
+      const scale = document.getElementById('movingScale');
+      if (scale) {
+        scale.setAttribute('transform', `translate(0, ${currentPosition})`);
+        if (animateCallCount < 3) {
+          console.log('animateScale called, currentPosition:', currentPosition, 'element found:', !!scale);
+          animateCallCount++;
+        }
+      } else {
+        if (animateCallCount < 3) {
+          console.log('animateScale called but movingScale element NOT FOUND');
+          animateCallCount++;
+        }
+      }
+    }
+
+    // Generate minor tick marks once on first animation frame
+    function generateMinorTicks() {
+      if (minorTicksGenerated) return;
+
+      const minorTicksGroup = document.getElementById('minorTicks');
+      if (!minorTicksGroup) return;
+
+      for (let i = 0; i <= 100; i++) {
+        if (i % 10 !== 0) { // Skip major tick positions
+          const y = 700 - (i * 8); // Each percent is 8px
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', '135');
+          line.setAttribute('y1', y);
+          line.setAttribute('x2', '150');
+          line.setAttribute('y2', y);
+          minorTicksGroup.appendChild(line);
+        }
+      }
+      minorTicksGenerated = true;
+      console.log('Depth instrument initialized');
+    }
+
+    // Start animation loop immediately
+    setInterval(function() {
+      generateMinorTicks(); // Try to generate ticks each frame until successful
+      animateScale();
+    }, 16); // ~60fps for smooth animation
+
+    // Check localStorage for test mode or game state updates
+    let lastLoggedValue = null;
+    setInterval(function() {
+      // Check test mode first
+      const testValue = localStorage.getItem('testMode_depth');
+      if (testValue !== null) {
+        const parsedValue = parseFloat(testValue);
+        if (lastLoggedValue === null || Math.abs(parsedValue - lastLoggedValue) > 10) {
+          console.log('testMode_depth value:', parsedValue, 'targetPosition:', targetPosition);
+          lastLoggedValue = parsedValue;
+        }
+        window.updateInstrument(parsedValue);
+        return;
+      }
+
+      // Otherwise check game state
+      const gameStateStr = localStorage.getItem('gameState');
+      if (gameStateStr) {
+        try {
+          const gameState = JSON.parse(gameStateStr);
+          if (gameState.depth !== undefined) {
+            window.updateInstrument(gameState.depth);
+          }
+        } catch (e) {
+          // Ignore parse errors
+        }
+      }
+    }, 50); // Check every 50ms
+
+    // Initialize at 0
+    window.updateInstrument(0);
+    console.log('Depth claude SVG script loaded, initial targetPosition:', targetPosition);
+    ]]>
+  </script>
+</svg>
