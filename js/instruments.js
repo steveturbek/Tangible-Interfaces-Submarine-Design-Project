@@ -37,7 +37,7 @@
 //   const oxygenLevel = window.gameState.status.oxygenLevel;
 
 //   // Write to localStorage for file:// protocol compatibility
-//   localStorage.setItem('game_oxygen', oxygenLevel.toString());
+//   localStorage.setItem('oxygen', oxygenLevel.toString());
 
 //   // Get the SVG's content document (fallback for web server mode)
 //   const svgDoc = getSVGContentDocument("oxygenGauge");
@@ -54,7 +54,7 @@
 //   const batteryLevel = window.gameState.status.batteryLevel;
 
 //   // Write to localStorage for file:// protocol compatibility
-//   localStorage.setItem('game_battery', batteryLevel.toString());
+//   localStorage.setItem('battery', batteryLevel.toString());
 
 //   // Get the SVG's content document (fallback for web server mode)
 //   const svgDoc = getSVGContentDocument("batteryGauge");
@@ -72,7 +72,7 @@
 //   const depth = ((window.gameState.constants.waterSurface - window.gameState.position.y) / window.gameState.constants.waterSurface) * 100;
 
 //   // Write to localStorage for file:// protocol compatibility
-//   localStorage.setItem('game_depth', depth.toString());
+//   localStorage.setItem('depth', depth.toString());
 
 //   // console.log("depth:" + Math.round(depth) + " Y:" + Math.round(window.gameState.position.y));
 //   // Get the SVG's content document (fallback for web server mode)
@@ -91,7 +91,7 @@
 //   const distanceToTarget = window.gameState.navigation.distanceToTarget;
 
 //   // Write to localStorage for file:// protocol compatibility
-//   localStorage.setItem('game_target', distanceToTarget.toString());
+//   localStorage.setItem('target', distanceToTarget.toString());
 
 //   const svgDoc = getSVGContentDocument("targetGauge");
 //   if (!svgDoc) return;
@@ -106,7 +106,7 @@
 //   const compassHeading = window.gameState.navigation.compassHeading;
 
 //   // Write to localStorage for file:// protocol compatibility
-//   localStorage.setItem('game_compass', compassHeading.toString());
+//   localStorage.setItem('compass', compassHeading.toString());
 
 //   const svgDoc = getSVGContentDocument("compassGauge");
 //   if (!svgDoc) return;
@@ -121,7 +121,7 @@
 //   if (!gameState || !window.gameState.navigation) return;
 
 //   // Write to localStorage for file:// protocol compatibility
-//   localStorage.setItem('game_speed', window.gameState.navigation.currentSpeedAsPercentage.toString());
+//   localStorage.setItem('speed', window.gameState.navigation.currentSpeedAsPercentage.toString());
 
 //   // console.log("currentSpeed:" + Math.round(window.gameState.navigation.currentSpeedAsPercentage) + "%");
 //   const svgDoc = getSVGContentDocument("speedGauge");
@@ -141,7 +141,7 @@
 //   const pitchPercent = (pitch / window.gameState.controls.maxPitchElevatorAngle) * 100;
 
 //   // Write to localStorage for file:// protocol compatibility
-//   localStorage.setItem('game_pitch', Math.round(pitchPercent).toString());
+//   localStorage.setItem('pitch', Math.round(pitchPercent).toString());
 
 //   const svgDoc = getSVGContentDocument("pitchGauge");
 //   if (!svgDoc) return;
@@ -157,7 +157,7 @@
 //   const leftThrust = window.gameState.controls.ThrottleLeft;
 
 //   // Write to localStorage for file:// protocol compatibility
-//   localStorage.setItem('game_leftThrust', leftThrust.toString());
+//   localStorage.setItem('leftThrust', leftThrust.toString());
 
 //   const svgDoc = getSVGContentDocument("leftThrustGauge");
 //   if (!svgDoc) return;
@@ -172,7 +172,7 @@
 //   const rightThrust = window.gameState.controls.ThrottleRight;
 
 //   // Write to localStorage for file:// protocol compatibility
-//   localStorage.setItem('game_rightThrust', rightThrust.toString());
+//   localStorage.setItem('rightThrust', rightThrust.toString());
 
 //   const svgDoc = getSVGContentDocument("rightThrustGauge");
 //   if (!svgDoc) return;
@@ -191,7 +191,7 @@
 //   const rudderPercent = (rudder / window.gameState.controls.maxYawRudderAngle) * 100;
 
 //   // Write to localStorage for file:// protocol compatibility
-//   localStorage.setItem('game_rudder', Math.round(rudderPercent).toString());
+//   localStorage.setItem('rudder', Math.round(rudderPercent).toString());
 
 //   const svgDoc = getSVGContentDocument("rudderGauge");
 //   if (!svgDoc) return;
@@ -211,7 +211,7 @@
 //   const elevatorPercent = (elevator / window.gameState.controls.maxPitchElevatorAngle) * 100;
 
 //   // Write to localStorage for file:// protocol compatibility
-//   localStorage.setItem('game_elevator', Math.round(elevatorPercent).toString());
+//   localStorage.setItem('elevator', Math.round(elevatorPercent).toString());
 
 //   const svgDoc = getSVGContentDocument("elevatorGauge");
 //   if (!svgDoc) return;
@@ -227,7 +227,7 @@
 //   const verticalThruster = window.gameState.controls.VerticalThruster;
 
 //   // Write to localStorage for file:// protocol compatibility
-//   localStorage.setItem('game_verticalThruster', verticalThruster.toString());
+//   localStorage.setItem('verticalThruster', verticalThruster.toString());
 
 //   const svgDoc = getSVGContentDocument("verticalThrusterGauge");
 //   if (!svgDoc) return;

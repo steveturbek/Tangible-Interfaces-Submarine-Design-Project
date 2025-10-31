@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="elevator" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 512 256">
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256">
   <defs>
     <style>
       .elevator-track {
@@ -24,5 +24,27 @@
   <text x="230" y="180" style="font-family: Arial; font-size: 20px; fill: white;">0%</text>
   <text x="410" y="180" style="font-family: Arial; font-size: 20px; fill: white;">+100%</text>
 
-    
+  <script type="text/javascript">
+    window.updateInstrument = function(percentage) {
+      const indicator = document.getElementById('indicator');
+      if (!indicator) return;
+
+      const normalizedElevator = Math.max(-100, Math.min(100, percentage));
+      const xPosition = 256 + (normalizedElevator / 100) * 206;
+
+      indicator.setAttribute('x1', xPosition);
+      indicator.setAttribute('x2', xPosition);
+    };
+
+    // Check localStorage for updates (test mode takes priority over game mode)
+    setInterval(() => {
+      const testValue = localStorage.getItem('testMode_elevator');
+      const gameValue = localStorage.getItem('elevator');
+      if (testValue !== null) {
+      window.updateInstrument(parseFloat(testValue));
+    } else if (gameValue !== null) {
+      window.updateInstrument(parseFloat(gameValue));
+    }
+    }, 50);
+  </script>
 </svg>

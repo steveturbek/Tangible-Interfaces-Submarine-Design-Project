@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="target" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 512 256">
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256">
   <defs>
     <style>
       .target-track {
@@ -23,4 +23,30 @@
   <text x="40" y="180" style="font-family: Arial; font-size: 20px; fill: white;">0m</text>
   <text x="410" y="180" style="font-family: Arial; font-size: 20px; fill: white;">100%</text>
 
+  <script type="text/javascript">
+    window.updateInstrument = function(meters) {
+      const indicator = document.getElementById('indicator');
+      if (!indicator) return;
+
+      // Clamp distance between 0 and 100 meters
+      const normalizedDistance = Math.max(0, Math.min(100, meters));
+
+      // Map 0 to 100 meters to x position 50 to 462
+      const xPosition = 50 + normalizedDistance * 4.12;
+
+      indicator.setAttribute('x1', xPosition);
+      indicator.setAttribute('x2', xPosition);
+    };
+
+    // Check localStorage for updates (test mode takes priority over game mode)
+    setInterval(() => {
+      const testValue = localStorage.getItem('testMode_target');
+      const gameValue = localStorage.getItem('target');
+      if (testValue !== null) {
+      window.updateInstrument(parseFloat(testValue));
+    } else if (gameValue !== null) {
+      window.updateInstrument(parseFloat(gameValue));
+    }
+    }, 50);
+  </script>
 </svg>

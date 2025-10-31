@@ -189,20 +189,20 @@ function restartGame() {
 
   // Clear all game data from localStorage (for file:// protocol compatibility)
   // Set a special "clear" message to signal the instruments window to clear its console
-  localStorage.setItem("game_consoleClear", Date.now().toString());
-  localStorage.removeItem("game_consoleMessage");
-  localStorage.removeItem("game_oxygen");
-  localStorage.removeItem("game_battery");
-  localStorage.removeItem("game_compass");
-  localStorage.removeItem("game_depth");
-  localStorage.removeItem("game_speed");
-  localStorage.removeItem("game_pitch");
-  localStorage.removeItem("game_leftThrust");
-  localStorage.removeItem("game_rightThrust");
-  localStorage.removeItem("game_target");
-  localStorage.removeItem("game_rudder");
-  localStorage.removeItem("game_elevator");
-  localStorage.removeItem("game_verticalThruster");
+  localStorage.setItem("consoleClear", Date.now().toString());
+  localStorage.removeItem("consoleMessage");
+  localStorage.removeItem("oxygen");
+  localStorage.removeItem("battery");
+  localStorage.removeItem("compass");
+  localStorage.removeItem("depth");
+  localStorage.removeItem("speed");
+  localStorage.removeItem("pitch");
+  localStorage.removeItem("thrust-right");
+  localStorage.removeItem("thrust-left");
+  localStorage.removeItem("target");
+  localStorage.removeItem("rudder");
+  localStorage.removeItem("elevator");
+  localStorage.removeItem("thrust-vertical");
 
   // Restart the game loop
   setTimeout(startGame, 500);
@@ -676,26 +676,26 @@ function updateUI() {
 
   // Write to localStorage for file:// protocol compatibility
 
-  localStorage.setItem("game_battery", window.gameState.status.batteryLevel.toString());
-  localStorage.setItem("game_oxygen", window.gameState.status.oxygenLevel.toString());
+  localStorage.setItem("battery", window.gameState.status.batteryLevel.toString());
+  localStorage.setItem("oxygen", window.gameState.status.oxygenLevel.toString());
   const depth = ((window.gameState.constants.waterSurface - window.gameState.position.y) / window.gameState.constants.waterSurface) * 100;
-  localStorage.setItem("game_depth", depth.toString());
-  localStorage.setItem("game_target", window.gameState.navigation.distanceToTarget.toString());
-  localStorage.setItem("game_compass", window.gameState.navigation.compassHeading.toString());
-  localStorage.setItem("game_speed", window.gameState.navigation.currentSpeedAsPercentage.toString());
+  localStorage.setItem("depth", depth.toString());
+  localStorage.setItem("target", window.gameState.navigation.distanceToTarget.toString());
+  localStorage.setItem("compass", window.gameState.navigation.compassHeading.toString());
+  localStorage.setItem("speed", window.gameState.navigation.currentSpeedAsPercentage.toString());
   const pitchPercent = (window.gameState.rotation.x / window.gameState.controls.maxPitchElevatorAngle) * 100;
-  localStorage.setItem("game_pitch", Math.round(pitchPercent).toString());
+  localStorage.setItem("pitch", Math.round(pitchPercent).toString());
 
-  localStorage.setItem("game_leftThrust", window.gameState.controls.ThrottleLeft.toString());
-  localStorage.setItem("game_rightThrust", window.gameState.controls.ThrottleRight.toString());
+  localStorage.setItem("thrust-right", window.gameState.controls.ThrottleLeft.toString());
+  localStorage.setItem("thrust-left", window.gameState.controls.ThrottleRight.toString());
 
   const rudderPercent = (window.gameState.controls.YawRudderAngle / window.gameState.controls.maxYawRudderAngle) * 100; // Convert rudder angle to percentage (-100% to +100%)
-  localStorage.setItem("game_rudder", Math.round(rudderPercent).toString());
+  localStorage.setItem("rudder", Math.round(rudderPercent).toString());
 
   const elevatorPercent = (window.gameState.controls.PitchElevatorAngle / window.gameState.controls.maxPitchElevatorAngle) * 100; // Convert elevator angle to percentage (-100% to +100%)
-  localStorage.setItem("game_elevator", Math.round(elevatorPercent).toString());
+  localStorage.setItem("elevator", Math.round(elevatorPercent).toString());
 
-  localStorage.setItem("game_verticalThruster", window.gameState.controls.VerticalThruster.toString());
+  localStorage.setItem("thrust-vertical", window.gameState.controls.VerticalThruster.toString());
 }
 
 function appendInstrumentConsoleMessage(message) {
@@ -703,7 +703,7 @@ function appendInstrumentConsoleMessage(message) {
 
   // Store message in localStorage for file:// protocol compatibility
   const timestamp = Date.now();
-  localStorage.setItem("game_consoleMessage", JSON.stringify({ message, timestamp }));
+  localStorage.setItem("consoleMessage", JSON.stringify({ message, timestamp }));
 
   try {
     const doc = window.instrumentsWindow && !window.instrumentsWindow.closed ? window.instrumentsWindow.document : document;

@@ -14,35 +14,41 @@ function restartGame() {
 window.addEventListener("keydown", (e) => {
   if (window.opener && !window.opener.closed) {
     // Send keyboard event data via postMessage (works with file:// protocol)
-    window.opener.postMessage({
-      type: "keydown",
-      key: e.key,
-      code: e.code,
-      keyCode: e.keyCode,
-      which: e.which,
-      shiftKey: e.shiftKey,
-      ctrlKey: e.ctrlKey,
-      altKey: e.altKey,
-      metaKey: e.metaKey,
-      repeat: e.repeat,
-    }, "*");
+    window.opener.postMessage(
+      {
+        type: "keydown",
+        key: e.key,
+        code: e.code,
+        keyCode: e.keyCode,
+        which: e.which,
+        shiftKey: e.shiftKey,
+        ctrlKey: e.ctrlKey,
+        altKey: e.altKey,
+        metaKey: e.metaKey,
+        repeat: e.repeat,
+      },
+      "*"
+    );
   }
 });
 
 window.addEventListener("keyup", (e) => {
   if (window.opener && !window.opener.closed) {
     // Send keyboard event data via postMessage (works with file:// protocol)
-    window.opener.postMessage({
-      type: "keyup",
-      key: e.key,
-      code: e.code,
-      keyCode: e.keyCode,
-      which: e.which,
-      shiftKey: e.shiftKey,
-      ctrlKey: e.ctrlKey,
-      altKey: e.altKey,
-      metaKey: e.metaKey,
-    }, "*");
+    window.opener.postMessage(
+      {
+        type: "keyup",
+        key: e.key,
+        code: e.code,
+        keyCode: e.keyCode,
+        which: e.which,
+        shiftKey: e.shiftKey,
+        ctrlKey: e.ctrlKey,
+        altKey: e.altKey,
+        metaKey: e.metaKey,
+      },
+      "*"
+    );
   }
 });
 
@@ -54,12 +60,12 @@ let lastMessageTimestamp = 0;
 let lastClearTimestamp = 0;
 setInterval(() => {
   // Check if we need to clear the console
-  const clearSignal = localStorage.getItem('game_consoleClear');
+  const clearSignal = localStorage.getItem("consoleClear");
   if (clearSignal) {
     const clearTime = parseInt(clearSignal);
     if (clearTime > lastClearTimestamp) {
       lastClearTimestamp = clearTime;
-      const subDataText = document.getElementById('sub-data-text');
+      const subDataText = document.getElementById("sub-data-text");
       if (subDataText) {
         subDataText.textContent = "";
       }
@@ -69,14 +75,14 @@ setInterval(() => {
   }
 
   // Check for new messages
-  const messageData = localStorage.getItem('game_consoleMessage');
+  const messageData = localStorage.getItem("consoleMessage");
   if (messageData) {
     try {
       const { message, timestamp } = JSON.parse(messageData);
       // Only append if this is a new message
       if (timestamp > lastMessageTimestamp) {
         lastMessageTimestamp = timestamp;
-        const subDataText = document.getElementById('sub-data-text');
+        const subDataText = document.getElementById("sub-data-text");
         if (subDataText) {
           subDataText.textContent += "\n" + message + "\n";
           // Auto-scroll to bottom
@@ -94,7 +100,7 @@ setInterval(() => {
 
 // Fullscreen functionality
 // Wait for DOM to be ready before adding event listener
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function () {
   const fullscreenIcon = document.getElementById("fullscreen-icon");
   if (fullscreenIcon) {
     fullscreenIcon.addEventListener("click", function () {
