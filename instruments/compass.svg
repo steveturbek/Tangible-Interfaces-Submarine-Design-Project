@@ -35,47 +35,84 @@
   <text x="10" y="40" style="font-family: Arial; font-size: 50px; font-weight: bold; fill: white;">Compass</text>
 
   <script type="text/javascript">
+//<![CDATA[ // this is to make javascript work in the SVG, leave it alone
+
+    function updateSVG(instrumentValue){
     // ========================================
     // STUDENT EDIT ZONE
-    // This script controls how the compass displays
+    // This sections controls how the gauge displays
     // ========================================
 
     /**
      * Updates the compass display
-     * @param {number} heading - Compass heading in degrees (0-360)
-     *
-     * How it works:
-     * - The compass needle rotates to show direction
-     * - 0° = North (needle points up)
-     * - 90° = East (needle points right)
-     * - 180° = South (needle points down)
-     * - 270° = West (needle points left)
-     * - The compass rotates so N always points toward true north
+     * - The compass rotates to show heading direction
+     * - 0° = North (N points up)
+     * - 90° = East (N points right)
+     * - 180° = South (N points down)
+     * - 270° = West (N points left)
      */
-    window.updateInstrument = function(heading) {
-      // Get the rotating group element
-      const compassRotating = document.getElementById('compass-rotating');
-      if (!compassRotating) return;
 
       // Normalize heading to 0-360 range
-      const normalizedHeading = ((heading % 360) + 360) % 360;
+      const normalizedHeading = ((instrumentValue % 360) + 360) % 360;
 
-      // Rotate the compass so N points north
-      // Negative rotation because we want N to point in the opposite direction of travel
+      // Get the rotating compass group element
+      const compassRotating = document.getElementById('compass-rotating');
+      if (!compassRotating) {
+        console.log('Cant find element to animate');
+        return;
+      }
+
+      // Rotate the compass so N points toward current heading
       compassRotating.setAttribute('transform', `rotate(${normalizedHeading}, 256, 128)`);
-    };
 
-    // Check localStorage for updates (test mode takes priority over game mode)
-    setInterval(() => {
-      const testValue = localStorage.getItem('testMode_compass');
-      const gameValue = localStorage.getItem('compass');
-      if (testValue !== null) {
-      window.updateInstrument(parseFloat(testValue));
-    } else if (gameValue !== null) {
-      window.updateInstrument(parseFloat(gameValue));
+
+    // ========================================
+    // END STUDENT EDIT ZONE
+    // ========================================
+
     }
-    }, 50);
 
-    //console.log('Compass gauge script loaded');
+
+    setInterval(() => { // do this repeatedly
+
+    // Check localStorage for updates
+      const thisSVGfilename = window.location.pathname;
+    // this SVG expects a localStorage with the same name as its file
+      const localStorageName =  thisSVGfilename.substring(thisSVGfilename.lastIndexOf('/') + 1, thisSVGfilename.lastIndexOf('.'));
+      let instrumentValue = localStorage.getItem(localStorageName);
+
+
+
+    if (instrumentValue !== null) {
+      // Normalize heading to 0-360 range
+      instrumentValue = ((instrumentValue % 360) + 360) % 360;
+
+    } else {
+    // no localStorage, so make up a number, so it spins around
+    // Initialize static variables if they don't exist
+    if (typeof window.testValue === 'undefined') {
+      window.testValue = 0;
+    }
+
+    // Update the test value - continuously rotate
+    window.testValue += 2; // increment by 2 degrees each time
+
+    // Wrap around at 360
+    if (window.testValue >= 360) {
+      window.testValue = 0;
+    }
+
+    instrumentValue = window.testValue;
+    console.log('no local storage \"'+localStorageName+'\", using test value:', instrumentValue);
+
+     }
+
+    updateSVG(instrumentValue)
+
+
+
+    }, 50);  //end of setInterval code.  50 is 50 milliseconds or 20 times per second.
+
+  //]]> // this is to make javascript work in the SVG, leave it alone
   </script>
 </svg>

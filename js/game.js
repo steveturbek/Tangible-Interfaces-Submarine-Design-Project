@@ -686,8 +686,8 @@ function updateUI() {
   const pitchPercent = (window.gameState.rotation.x / window.gameState.controls.maxPitchElevatorAngle) * 100;
   localStorage.setItem("pitch", Math.round(pitchPercent).toString());
 
-  localStorage.setItem("thrust-right", window.gameState.controls.ThrottleLeft.toString());
-  localStorage.setItem("thrust-left", window.gameState.controls.ThrottleRight.toString());
+  localStorage.setItem("thrust-right", window.gameState.controls.ThrottleRight.toString());
+  localStorage.setItem("thrust-left", window.gameState.controls.ThrottleLeft.toString());
 
   const rudderPercent = (window.gameState.controls.YawRudderAngle / window.gameState.controls.maxYawRudderAngle) * 100; // Convert rudder angle to percentage (-100% to +100%)
   localStorage.setItem("rudder", Math.round(rudderPercent).toString());

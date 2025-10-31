@@ -15,7 +15,7 @@
   </defs>
   <path id="back" d="M503.8,256c0-136.9-110.9-247.8-247.8-247.8S8.2,119.1,8.2,256"/>
   <line id="line"  x1="256" y1="252.9" x2="492.4" y2="252.9"/>
-  <text x="0" y="40" style="font-family: Arial; font-size: 50px; font-weight: bold; fill: white;">  Battery
+  <text x="0" y="40" style="font-family: Arial; font-size: 50px; font-weight: bold; fill: lime;">  Battery
 </text>
  
 <script type="text/javascript">
