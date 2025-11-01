@@ -18,10 +18,12 @@ You're redesigning gauges for a **submarine dashboard**. The project already has
 ## What You'll Need
 
 1. Your SVG file from Figma or Illustrator (your new design)
-2. The stock gauge you're replacing (e.g., `instruments/speed.svg`)
+2. The project GitHub URL (provided below - just copy it!)
 3. Access to Claude AI (claude.ai)
 4. The `examples/svg-dashboard-helper-SKILL.md` file
 5. A web browser (Chrome, Firefox, or Safari)
+
+**Project URL:** `https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main`
 
 ## Step 1: Prepare Your SVG in Figma/Illustrator
 
@@ -43,31 +45,34 @@ Save it with a descriptive filename like `speed.svg` or `battery.svg`
 
 ## Step 3: Talk to Claude
 
-Open a new chat with Claude and upload **THREE** files:
+Open a new chat with Claude and upload **TWO** files, plus provide the project URL:
 
 1. **The SKILL file:** `examples/svg-dashboard-helper-SKILL.md` (teaches Claude the rules)
-2. **The stock gauge:** `instruments/speed.svg` (or whichever gauge you're replacing)
-3. **Your new design:** The SVG you just exported from Figma
+2. **Your new design:** The SVG you just exported from Figma
+3. **The project URL** (copy-paste from above)
 
 Then use this template:
 
 ```
-I'm redesigning the speed gauge for my submarine dashboard.
+I'm redesigning the speed gauge for my submarine dashboard, as part of my design class.
+The project is here:
+https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
 
 [upload examples/svg-dashboard-helper-SKILL.md]
-[upload instruments/speed.svg] ← the original working gauge
-[upload my-new-speed-design.svg] ← your Figma design
+[upload my-new-speed-design.svg]
 
-Please apply the same animation behavior from the stock gauge to my new design.
+Please look at the stock speed gauge in the instruments/ folder and apply
+the same animation behavior to my new design.
 
 My animated element is called "speedometer_needle" in my new SVG.
 Keep the same behavior as the original.
 ```
 
-**Why upload the stock gauge?**
-- It already has the correct animation behavior
-- Claude copies the working code and adapts it to your design
-- You don't have to describe the animation from scratch
+**Why provide the GitHub URL?**
+- Claude can fetch the stock gauge directly from the repo
+- Claude can see all the other gauges for reference
+- Claude can read the project documentation
+- You only need to upload 2 files instead of 3!
 - Ensures consistency with the dashboard project
 
 **If you want different behavior,** say so:
@@ -75,6 +80,10 @@ Keep the same behavior as the original.
 My animated element is called "needle".
 Change the angle range to -90° to +90° instead of the original range.
 ```
+
+**Alternative - if you prefer to upload the stock gauge yourself:**
+You can still upload all 3 files (SKILL.md + stock gauge + your design) if you prefer.
+See the example prompts section below for that format.
 
 ## Step 4: Test Your Animated SVG
 
@@ -178,7 +187,23 @@ The SVG detects its own filename and uses it as the localStorage key. No configu
 
 ## Example Prompts That Work Well
 
-**Replacing a stock gauge (most common):**
+**Replacing a stock gauge (most common - using GitHub URL):**
+```
+I'm redesigning the battery gauge for my submarine dashboard, as part of my design class.
+The project is here:
+https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
+
+[upload examples/svg-dashboard-helper-SKILL.md]
+[upload my-battery-redesign.svg]
+
+Please look at the stock battery gauge in the instruments/ folder and apply
+the same animation behavior to my new design.
+
+My animated element is called "battery_needle".
+Keep the same behavior as the original.
+```
+
+**Replacing a stock gauge (alternative - uploading the stock gauge):**
 ```
 I'm redesigning the battery gauge for my submarine dashboard.
 
@@ -193,15 +218,17 @@ Keep the same behavior as the original.
 
 **Replacing with a different animation style:**
 ```
-I'm redesigning the speed gauge.
+I'm redesigning the speed gauge for my submarine dashboard, as part of my design class.
+The project is here:
+https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
 
 [upload examples/svg-dashboard-helper-SKILL.md]
-[upload instruments/speed.svg]
 [upload my-speed-redesign.svg]
 
-Instead of rotating a needle, I want to fill a bar from left to right.
-The bar element is called "speed_bar" and should fill based on the
-same 0-100 values that the original gauge uses.
+Please look at the stock speed gauge in the instruments/ folder to understand
+the data range and localStorage key, but instead of rotating a needle, I want
+to fill a bar from left to right. The bar element is called "speed_bar" and
+should fill based on the same 0-100 values that the original gauge uses.
 ```
 
 **Starting from scratch (no stock gauge reference):**
@@ -220,16 +247,20 @@ Values range from 0-100.
 
 **Multiple animations:**
 ```
-I'm redesigning the battery gauge with extra features.
+I'm redesigning the battery gauge with extra features, as part of my design class.
+The project is here:
+https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
 
 [upload examples/svg-dashboard-helper-SKILL.md]
-[upload instruments/battery.svg]
 [upload my-battery-redesign.svg]
 
-Copy the needle rotation behavior from the stock gauge, but also
-add a color change to the arc background: green above 50%, yellow
-between 20-50%, red below 20%. The needle is "battery_needle"
-and the arc is "battery_arc".
+Please look at the stock battery gauge in the instruments/ folder and copy
+the needle rotation behavior, but also add a color change to the arc background:
+- Green above 50%
+- Yellow between 20-50%
+- Red below 20%
+
+The needle is "battery_needle" and the arc is "battery_arc".
 ```
 
 ## Next Steps

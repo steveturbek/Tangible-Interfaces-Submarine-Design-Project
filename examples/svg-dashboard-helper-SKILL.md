@@ -78,6 +78,23 @@ Help beginner UX design students animate SVG dashboard elements using JavaScript
 **Replacing an existing gauge (MOST COMMON for this project):**
 
 ```
+I'm redesigning the [speed/battery/depth/etc.] gauge for my submarine dashboard,
+as part of my design class. The project is here:
+https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
+
+[upload SKILL.md file]
+[upload your NEW DESIGN from Figma - no code inside]
+
+Please look at the stock [speed/battery/etc.] gauge in the instruments/ folder
+and apply the same animation behavior to my new design.
+
+My animated element is called "[element name]" in my new SVG.
+[Optional: "Keep the same behavior" OR describe any animation changes needed]
+```
+
+**Alternative - if student prefers to upload the stock gauge:**
+
+```
 I'm redesigning the [speed/battery/depth/etc.] gauge for my submarine dashboard.
 
 [upload SKILL.md file]
@@ -301,18 +318,27 @@ const angle = -90 + normalized * 180; // -90° to +90°
 
 ### Replacing a Stock Gauge (MOST COMMON for this project)
 
-1. Student uploads SKILL.md, **stock gauge SVG** (e.g., instruments/speed.svg), and their new design
-2. **Analyze the stock gauge:**
+1. **Student provides GitHub URL and uploads files:**
+   - Gives you the project URL: https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
+   - Uploads SKILL.md
+   - Uploads their new design SVG
+   - Tells you which gauge they're replacing (speed, battery, etc.)
+
+2. **Fetch and analyze the stock gauge from GitHub:**
+   - Navigate to the instruments/ folder in the repo
+   - Read the stock gauge SVG they're replacing (e.g., instruments/speed.svg)
    - Read the STUDENT EDIT ZONE to understand the animation behavior
    - Note the data range (0-100, -100 to +100, etc.)
    - Identify the element being animated and the transformation type (rotation, translation, etc.)
    - Note the formula/mapping (e.g., `-180 + instrumentValue * 1.8`)
    - Check for any color changes or multi-element animations
    - **This is your reference for what behavior to replicate**
+
 3. **Analyze the new design:**
    - Find the element(s) to animate (student should have named them)
    - Determine rotation/transformation origins (center points, pivot points)
    - Check if the visual layout requires formula adjustments
+
 4. **Apply the behavior:**
    - Copy the animation logic from stock gauge STUDENT EDIT ZONE
    - Adapt element IDs to match new design
@@ -320,8 +346,12 @@ const angle = -90 + normalized * 180; // -90° to +90°
    - Keep the same localStorage key (filename-based detection will handle this)
    - Preserve all the boilerplate (test mode, interval, clamp logic, etc.)
    - Update the comments to describe the new design
+
 5. Generate complete merged SVG with embedded script
 6. Student tests by opening in browser
+
+**Alternative workflow if student uploads stock gauge:**
+- If student uploaded the stock gauge SVG directly, skip step 2 and use the uploaded file instead
 
 ### First Time Animation (Less Common)
 
