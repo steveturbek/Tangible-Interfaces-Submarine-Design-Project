@@ -1,113 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256">
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 512 256">
+  <!-- Generator: Adobe Illustrator 29.8.3, SVG Export Plug-In . SVG Version: 2.1.1 Build 3)  -->
   <defs>
     <style>
-      .speed-track {
-        fill: none;
-        stroke-width: 10px;
-        stroke: #666;
-        stroke-linecap: round;
+
+ @font-face {
+      font-family: "Doto";
+      src: url("14-Segment-LED-Regular.ttf ") format("truetype");
+    }
+
+
+      .st0 {
+        font-size: 130px;
       }
-      .speed-indicator {
-        fill: none;
-        stroke-width: 1px;
-        stroke: #fff;
+
+      .st0, .st1 {
+        fill: #ff08ff;
+        font-family: 'Doto';
+        letter-spacing: 0em;
+      }
+
+      .st1 {
+        font-size: 227px;
+      }
+
+      .st2 {
+        fill: #000800;
       }
     </style>
   </defs>
-
-  <line id="track" class="speed-track" x1="50" y1="128" x2="462" y2="128"/>
-  <line id="indicator" class="speed-indicator" x1="50" y1="100" x2="50" y2="156"/>
-
-  <text x="10" y="40" style="font-family: Arial; font-size: 50px; font-weight: bold; fill: white;">Speed</text>
-  <text x="40" y="180" style="font-family: Arial; font-size: 20px; fill: white;">0%</text>
-  <text x="420" y="180" style="font-family: Arial; font-size: 20px; fill: white;">100%</text>
+  <rect class="st2" width="512" height="256"/>
+  <text class="st1" transform="translate(10 156.2)"><tspan id="speedNum" x="0" y="0">125%</tspan></text>
+  <text class="st0" transform="translate(10 251.7)"><tspan x="0" y="0">_SPEED_</tspan></text>
 
   <script type="text/javascript">
-//<![CDATA[ // this is to make javascript work in the SVG, leave it alone
+//<![CDATA[
 
     function updateSVG(instrumentValue){
-    // ========================================
-    // STUDENT EDIT ZONE
-    // This sections controls how the gauge displays
-    // ========================================
-
-    /**
-     * Updates the speed gauge display
-     * - The vertical indicator line moves horizontally to show speed
-     * - 0% = x position at left (50)
-     * - 50% = x position at middle (256)
-     * - 100% = x position at right (462)
-     */
-
-      // Calculate x position
-      // Formula: 50 + (percentage * 4.12) to map 0-100 to 50-462
-      const xPosition = 50 + instrumentValue * 4.12;
-
-      // Get the indicator line element
-      const indicator = document.getElementById('indicator');
-      if (!indicator) {
-        console.log('Cant find element to animate');
+      // Get the speedNum text element
+      const speedNum = document.getElementById('speedNum');
+      if (!speedNum) {
+        console.log('Cant find speedNum element');
         return;
       }
 
-      // Update both x1 and x2 to move the vertical line horizontally
-      indicator.setAttribute('x1', xPosition);
-      indicator.setAttribute('x2', xPosition);
-
-
-    // ========================================
-    // END STUDENT EDIT ZONE
-    // ========================================
-
+      // Update the text content with percentage
+      speedNum.textContent = instrumentValue + '%';
     }
 
-
-    setInterval(() => { // do this repeatedly
-
-    // Check localStorage for updates
+    setInterval(() => {
+      // Check localStorage for updates
       const thisSVGfilename = window.location.pathname;
-    // this SVG expects a localStorage with the same name as its file
-      const localStorageName =  thisSVGfilename.substring(thisSVGfilename.lastIndexOf('/') + 1, thisSVGfilename.lastIndexOf('.'));
+      // this SVG expects a localStorage with the same name as its file
+      const localStorageName = thisSVGfilename.substring(thisSVGfilename.lastIndexOf('/') + 1, thisSVGfilename.lastIndexOf('.'));
       let instrumentValue = localStorage.getItem(localStorageName);
 
+      if (instrumentValue !== null) {
+        // Make sure percentage is between 0 and 100
+        instrumentValue = Math.max(0, Math.min(100, instrumentValue));
+      } else {
+        // no localStorage, so make up a number, so it swings back and forth
+        // Initialize static variables if they don't exist
+        if (typeof window.testValue === 'undefined') {
+          window.testValue = 0;
+          window.testDirection = 1; // 1 for increasing, -1 for decreasing
+        }
 
+        // Update the test value
+        window.testValue += window.testDirection * 2; // increment by 2 each time
 
-    if (instrumentValue !== null) {
-      // Make sure percentage is between 0 and 100
-      instrumentValue = Math.max(0, Math.min(100, instrumentValue));
+        // Reverse direction at boundaries
+        if (window.testValue >= 100) {
+          window.testValue = 100;
+          window.testDirection = -1;
+        } else if (window.testValue <= 0) {
+          window.testValue = 0;
+          window.testDirection = 1;
+        }
 
-    } else {
-    // no localStorage, so make up a number, so it swings back and forth
-    // Initialize static variables if they don't exist
-    if (typeof window.testValue === 'undefined') {
-      window.testValue = 0;
-      window.testDirection = 1; // 1 for increasing, -1 for decreasing
-    }
+        instrumentValue = window.testValue;
+        console.log('no local storage "'+localStorageName+'", using test value:', instrumentValue);
+      }
 
-    // Update the test value
-    window.testValue += window.testDirection * 2; // increment by 2 each time
+      updateSVG(instrumentValue);
 
-    // Reverse direction at boundaries
-    if (window.testValue >= 100) {
-      window.testValue = 100;
-      window.testDirection = -1;
-    } else if (window.testValue <= 0) {
-      window.testValue = 0;
-      window.testDirection = 1;
-    }
+    }, 50);  //end of setInterval code. 50 is 50 milliseconds or 20 times per second.
 
-    instrumentValue = window.testValue;
-    console.log('no local storage \"'+localStorageName+'\", using test value:', instrumentValue);
-
-     }
-
-    updateSVG(instrumentValue)
-
-
-
-    }, 50);  //end of setInterval code.  50 is 50 milliseconds or 20 times per second.
-
-  //]]> // this is to make javascript work in the SVG, leave it alone
+  //]]>
   </script>
 </svg>
