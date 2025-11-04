@@ -85,26 +85,27 @@ https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree
 [upload SKILL.md file]
 [upload your NEW DESIGN from Figma - no code inside]
 
-Please look at the stock [speed/battery/etc.] gauge in the instruments/ folder
+Please fetch the stock [speed/battery/etc.] gauge from the instruments/ folder
 and apply the same animation behavior to my new design.
 
 My animated element is called "[element name]" in my new SVG.
 [Optional: "Keep the same behavior" OR describe any animation changes needed]
 ```
 
-**Alternative - if student prefers to upload the stock gauge:**
+**Note:** Students don't need to upload the stock gauge - you'll fetch it from GitHub using WebFetch.
+
+**Alternative - if student is iterating on their own custom code:**
 
 ```
-I'm redesigning the [speed/battery/depth/etc.] gauge for my submarine dashboard.
+I'm updating my custom [gauge type] design.
 
 [upload SKILL.md file]
-[upload the ORIGINAL stock gauge from instruments/ folder, e.g., instruments/speed.svg]
-[upload your NEW DESIGN from Figma - no code inside]
+[upload OLD SVG with working code - student's previous version]
+[upload NEW DESIGN from Figma - no code inside]
 
-Please apply the same animation behavior from the stock gauge to my new design.
+Please apply the animation code from my old file to my new design.
 
-My animated element is called "[element name]" in my new SVG.
-[Optional: "Keep the same behavior" OR describe any animation changes needed]
+[Tell Claude if element names changed, or say "same element names as before"]
 ```
 
 **If starting completely fresh (less common):**
@@ -159,6 +160,8 @@ Please merge the animation code into my updated design.
 7. **Built-in test mode** - Auto-oscillating values (0-100) when localStorage missing
 
 ### Code Structure Template
+
+**CRITICAL: The boundary comment markers below MUST be preserved exactly as shown. They are visual landmarks for students.**
 
 ```xml
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256">
@@ -318,15 +321,17 @@ const angle = -90 + normalized * 180; // -90° to +90°
 
 ### Replacing a Stock Gauge (MOST COMMON for this project)
 
+**Preferred workflow: Fetch from GitHub (cleaner, always up-to-date)**
+
 1. **Student provides GitHub URL and uploads files:**
    - Gives you the project URL: https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
    - Uploads SKILL.md
    - Uploads their new design SVG
    - Tells you which gauge they're replacing (speed, battery, etc.)
+   - **NO need to upload the stock gauge** - you'll fetch it from GitHub
 
 2. **Fetch and analyze the stock gauge from GitHub:**
-   - Navigate to the instruments/ folder in the repo
-   - Read the stock gauge SVG they're replacing (e.g., instruments/speed.svg)
+   - Use WebFetch to access: `https://raw.githubusercontent.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/main/instruments/[gauge-name].svg`
    - Read the STUDENT EDIT ZONE to understand the animation behavior
    - Note the data range (0-100, -100 to +100, etc.)
    - Identify the element being animated and the transformation type (rotation, translation, etc.)
@@ -340,18 +345,22 @@ const angle = -90 + normalized * 180; // -90° to +90°
    - Check if the visual layout requires formula adjustments
 
 4. **Apply the behavior:**
-   - Copy the animation logic from stock gauge STUDENT EDIT ZONE
+   - **CRITICAL: Include the STUDENT EDIT ZONE boundary markers exactly** - they must be present
+   - Recreate the animation logic from stock gauge STUDENT EDIT ZONE
    - Adapt element IDs to match new design
    - Adjust rotation origins or positions if needed based on new design geometry
    - Keep the same localStorage key (filename-based detection will handle this)
-   - Preserve all the boilerplate (test mode, interval, clamp logic, etc.)
+   - Include all the boilerplate (test mode, interval, clamp logic, etc.)
+   - **Ensure both opening and closing boundary markers are present**
    - Update the comments to describe the new design
 
 5. Generate complete merged SVG with embedded script
 6. Student tests by opening in browser
 
-**Alternative workflow if student uploads stock gauge:**
-- If student uploaded the stock gauge SVG directly, skip step 2 and use the uploaded file instead
+**Alternative workflow if student is iterating on their own custom code:**
+- If student uploads their own working SVG (not a stock gauge), use that as the reference
+- This is for when they've already customized beyond the stock gauges
+- Extract their existing logic and apply it to their new design
 
 ### First Time Animation (Less Common)
 
@@ -370,6 +379,7 @@ const angle = -90 + normalized * 180; // -90° to +90°
 - Ask what needs to change specifically
 - Analyze existing code in STUDENT EDIT ZONE and comments
 - Make surgical edits to specific parts
+- **CRITICAL: Preserve the STUDENT EDIT ZONE boundary markers exactly**
 - Preserve: localStorage detection, element IDs, timing, working logic, test mode
 - Update comments if intent changed
 
@@ -466,6 +476,40 @@ Every SVG has **automatic test mode** built-in. No external test page needed!
 
 - Student needs to toggle between [0-100] and [-100 to +100]
 - Check self-prompting comments in SVG to confirm intended range
+
+## CRITICAL: Preserving Boundary Markers
+
+**YOU MUST ALWAYS include these exact boundary comment markers in EVERY SVG you generate:**
+
+```javascript
+// ========================================
+// STUDENT EDIT ZONE
+// This section controls how the gauge displays
+// ========================================
+```
+
+And the closing marker:
+
+```javascript
+// ========================================
+// END STUDENT EDIT ZONE
+// ========================================
+```
+
+**Why these markers are critical:**
+- Students are visual designers with limited coding experience
+- These boundary markers are **visual landmarks** that show where it's safe to edit
+- Without them, students don't know which code to modify vs. which infrastructure code to leave alone
+- The equals signs (========) create a clear visual separator in text editors
+- The phrase "STUDENT EDIT ZONE" is instantly recognizable
+
+**Rules for boundary markers:**
+1. **NEVER remove or modify these comment markers** when editing existing code
+2. **ALWAYS include them** when generating new code
+3. **Keep the exact formatting** - 40 equals signs, all caps, exact wording
+4. They must surround the animation logic inside the `updateSVG()` function
+5. Everything between these markers is student-editable
+6. Everything outside these markers is infrastructure (don't touch)
 
 ## Output Format
 

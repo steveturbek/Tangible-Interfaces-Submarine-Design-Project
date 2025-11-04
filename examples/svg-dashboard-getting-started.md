@@ -45,11 +45,14 @@ Save it with a descriptive filename like `speed.svg` or `battery.svg`
 
 ## Step 3: Talk to Claude
 
-Open a new chat with Claude and upload **TWO** files, plus provide the project URL:
+Open a new chat with Claude and provide **TWO** things:
 
 1. **The SKILL file:** `examples/svg-dashboard-helper-SKILL.md` (teaches Claude the rules)
 2. **Your new design:** The SVG you just exported from Figma
-3. **The project URL** (copy-paste from above)
+
+Plus copy-paste the project URL (shown below).
+
+**That's it!** You don't need to upload the stock gauge - Claude will fetch it from GitHub automatically.
 
 Then use this template:
 
@@ -61,19 +64,19 @@ https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree
 [upload examples/svg-dashboard-helper-SKILL.md]
 [upload my-new-speed-design.svg]
 
-Please look at the stock speed gauge in the instruments/ folder and apply
+Please fetch the stock speed gauge from the instruments/ folder and apply
 the same animation behavior to my new design.
 
 My animated element is called "speedometer_needle" in my new SVG.
 Keep the same behavior as the original.
 ```
 
-**Why provide the GitHub URL?**
-- Claude can fetch the stock gauge directly from the repo
-- Claude can see all the other gauges for reference
-- Claude can read the project documentation
-- You only need to upload 2 files instead of 3!
-- Ensures consistency with the dashboard project
+**Why this workflow is better:**
+- Only 2 files to upload instead of 3
+- Claude fetches the latest version from GitHub
+- Less clutter, cleaner conversation
+- Ensures you're using the current stock gauge
+- Less confusing - you just focus on your new design
 
 **If you want different behavior,** say so:
 ```
@@ -81,9 +84,17 @@ My animated element is called "needle".
 Change the angle range to -90° to +90° instead of the original range.
 ```
 
-**Alternative - if you prefer to upload the stock gauge yourself:**
-You can still upload all 3 files (SKILL.md + stock gauge + your design) if you prefer.
-See the example prompts section below for that format.
+**Special case - iterating on your own custom code:**
+If you've already made a custom gauge and want to apply it to a new design, then upload your working SVG file:
+```
+I'm updating my custom battery gauge design.
+
+[upload examples/svg-dashboard-helper-SKILL.md]
+[upload my-old-working-battery.svg]
+[upload my-new-battery-design.svg]
+
+Please apply the animation code from my old file to my new design.
+```
 
 ## Step 4: Test Your Animated SVG
 
@@ -128,21 +139,28 @@ Claude will fix just that part while keeping everything else working.
 
 ## Understanding the Code (Optional)
 
-When you open your animated SVG in a text editor, you'll see:
+When you open your animated SVG in a text editor, you'll see these important boundary markers:
 
 ```javascript
 // ========================================
 // STUDENT EDIT ZONE
 // This section controls how the gauge displays
 // ========================================
+
+   ... your animation code here ...
+
+// ========================================
+// END STUDENT EDIT ZONE
+// ========================================
 ```
 
-**This is where the magic happens!** You can make small tweaks here:
-- Change the angle ranges
-- Adjust colors
-- Modify the formula
+**This is where the magic happens!** These boundary markers are your visual guide:
+- Everything **between** these markers is yours to modify safely
+- Change the angle ranges, adjust colors, modify formulas
+- These markers will be preserved in every iteration
+- Everything **outside** this zone handles the plumbing (localStorage, test mode, etc.) - don't touch that unless you know what you're doing!
 
-Everything outside this zone handles the plumbing (localStorage, test mode, etc.) - don't touch that unless you know what you're doing!
+**Important:** These boundary comment lines are deliberately visual (with lots of `=` signs) so they're easy to spot in your code editor.
 
 ## How It Works in Your Dashboard
 
@@ -187,7 +205,7 @@ The SVG detects its own filename and uses it as the localStorage key. No configu
 
 ## Example Prompts That Work Well
 
-**Replacing a stock gauge (most common - using GitHub URL):**
+**Replacing a stock gauge (most common - simplest workflow):**
 ```
 I'm redesigning the battery gauge for my submarine dashboard, as part of my design class.
 The project is here:
@@ -196,23 +214,10 @@ https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree
 [upload examples/svg-dashboard-helper-SKILL.md]
 [upload my-battery-redesign.svg]
 
-Please look at the stock battery gauge in the instruments/ folder and apply
+Please fetch the stock battery gauge from the instruments/ folder and apply
 the same animation behavior to my new design.
 
 My animated element is called "battery_needle".
-Keep the same behavior as the original.
-```
-
-**Replacing a stock gauge (alternative - uploading the stock gauge):**
-```
-I'm redesigning the battery gauge for my submarine dashboard.
-
-[upload examples/svg-dashboard-helper-SKILL.md]
-[upload instruments/battery.svg]
-[upload my-battery-redesign.svg]
-
-Please apply the same animation behavior from the stock battery gauge
-to my new design. My animated element is called "battery_needle".
 Keep the same behavior as the original.
 ```
 
