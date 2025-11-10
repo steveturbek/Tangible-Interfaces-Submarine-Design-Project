@@ -60,17 +60,18 @@ serial.redirectToUSB();
 serial.writeLine("START Microbit\n\n");
 
 //Engine Power
-let enginePower = 0;
+let enginePowerLeft = 0;
+let enginePowerRight = 0;
 let pitch = 0;
 let elevator = 0;
-
-////////////
+let AllStop = 0;
+let GrabTarget = 0;
 
 /////////////////////////////////////////////////////////////////////////////
 // the main repeating loop
 /////////////////////////////////////////////////////////////////////////////
 basic.forever(function () {
-  basic.pause(50);
+  // Start Student Work area
 
   pitch = Math.constrain(input.rotation(Rotation.Pitch), -90, 90);
   pitch = Math.map(pitch, -90, 90, -100, 100);
@@ -78,6 +79,36 @@ basic.forever(function () {
   elevator = Math.constrain(input.rotation(Rotation.Roll), -90, 90) * -1; // flip roll to steer rudder
   elevator = Math.map(elevator, -90, 90, -100, 100);
 
+  AllStop = input.buttonIsPressed(Button.A) && input.buttonIsPressed(Button.B) ? 1 : 0; // both buttons all stop
+  GrabTarget = input.logoIsPressed() ? 1 : 0; // grab target
+
+  // END Student work area
+  SendControlMessageToGame();
+  basic.pause(100); // this happens 100 times per second
+});
+
+/////////////////////////////////////////////////////////////////////////////
+
+input.onButtonPressed(Button.A, function () {
+  enginePowerLeft -= 10;
+  enginePowerLeft = Math.max(-100, enginePowerLeft);
+  enginePowerRight -= 10;
+  enginePowerRight = Math.max(-100, enginePowerRight);
+});
+
+input.onButtonPressed(Button.B, function () {
+  enginePowerLeft += 10;
+  enginePowerLeft = Math.min(100, enginePowerLeft);
+
+  enginePowerRight += 10;
+  enginePowerRight = Math.min(100, enginePowerRight);
+});
+
+/////////////////////////////////////////////////////////////////////////////
+// You don't need to edit below this ling
+/////////////////////////////////////////////////////////////////////////////
+
+function SendControlMessageToGame() {
   //convert to string
   serial.writeLine(
     "#" +
@@ -85,30 +116,17 @@ basic.forever(function () {
       "," +
       RemapSteeringValueForSerialOut(elevator) +
       "," +
-      RemapSteeringValueForSerialOut(enginePower) +
+      RemapSteeringValueForSerialOut(enginePowerLeft) +
       "," +
-      RemapSteeringValueForSerialOut(enginePower) + // note both engines use same control
+      RemapSteeringValueForSerialOut(enginePowerRight) +
       "," +
       "f00" + //not using VerticalEnginePowerOutput
       "|" +
-      (input.buttonIsPressed(Button.A) && input.buttonIsPressed(Button.B) ? 1 : 0) + // both buttons all stop
+      AllStop +
       "|" +
-      (input.logoIsPressed() ? 1 : 0) // grab target
+      GrabTarget
   );
-});
-
-/////////////////////////////////////////////////////////////////////////////
-
-input.onButtonPressed(Button.A, function () {
-  enginePower -= 10;
-  enginePower = Math.max(-100, enginePower);
-});
-
-input.onButtonPressed(Button.B, function () {
-  enginePower += 10;
-  enginePower = Math.min(100, enginePower);
-});
-
+}
 /////////////////////////////////////////////////////////////////////////////
 function RemapSteeringValueForSerialOut(InputValue: number) {
   //clean up number and limit to the maximum values

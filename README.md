@@ -308,14 +308,13 @@ http-server -p 8080
 1. Use HTML and CSS to design the instruments window
 1. Design the instrument files using Figma or Illustrator (vectors only)
 1. Save as SVG
-1. You don't need any special editing app. Use TextEdit app, but make this one settings change: TextEdit > Settings > Open and Save. **Uncheck** "Display HTML files as HTML code instead of formatted text"
-1. Use AI to modify the instrument logic, for `speed.svg`, the code is in `speed.js`
-1. There is a `speed.html` page to test it out
+<!-- 1. You don't need any special editing app. Use TextEdit app, but make this one settings change: TextEdit > Settings > Open and Save. **Uncheck** "Display HTML files as HTML code instead of formatted text" -->
+1. Use AI to modify the instrument logic, instructions are in examples/svg-dashboard-getting-started.md
 
 **Tips**
 
 - If instruments SVG is not updating after a save, do 'hard reload' ( Cmd + Shift + R on a Mac)
-- Note it is possible to use an iPad/iPhone for touchscreen controls using [Duet display](https://www.duetdisplay.com/)
+<!-- - Note it is possible to use an iPad/iPhone for touchscreen controls using [Duet display](https://www.duetdisplay.com/) -->
 
 ## Project Structure
 
