@@ -8,6 +8,8 @@
     <div style="width: 95%; height: 40px; text-align: middle; padding: 10px; display: flex; justify-content: space-between">
       <button id="restart-btn" onclick="restartGame()">Restart Mission</button>
 
+      <div id="Submarine_Instruments_message" style="grid-column: span 4; font-size: x-large">Submarine Instruments (Students to Design)</div>
+
       <svg id="fullscreen-icon" height="100%" width="40px" version="1.1" viewBox="10 10 18 18">
         <style>
           path {
@@ -25,11 +27,6 @@
     </div>
 
     <div class="instruments-grid">
-      <div style="grid-column: span 4; font-size: x-large">
-        Submarine Instruments <br />
-        (Students to Design)
-      </div>
-
       <object id="oxygenGauge" type="image/svg+xml" data="instruments/oxygen.svg"></object>
       <object id="batteryGauge" type="image/svg+xml" data="instruments/battery.svg"></object>
       <object id="compassGauge" type="image/svg+xml" data="instruments/compass.svg" style="grid-column: span 2; /* Takes up 2 columns */"></object>
@@ -45,21 +42,19 @@
       <object id="rudderGauge" type="image/svg+xml" data="instruments/rudder.svg"></object>
       <object id="elevatorGauge" type="image/svg+xml" data="instruments/elevator.svg"></object>
       <object id="verticalThrusterGauge" type="image/svg+xml" data="instruments/thrust-vertical.svg"></object>
-
-      <div id="sub-data-text" style="grid-column: span 3"></div>
-
-      <iframe
-        data-testid="embed-iframe"
-        style="border-radius: 12px; grid-column: span 3"
-        src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcG4kXwIFULb?utm_source=generator&theme=0"
-        width="100%"
-        height="152"
-        frameborder="0"
-        allowfullscreen=""
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        loading="lazy"
-      ></iframe>
     </div>
+    <div id="sub-data-text" style="grid-column: span 3"></div>
+
+    <iframe
+      data-testid="embed-iframe"
+      style="border-radius: 12px; grid-column: span 3"
+      src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcG4kXwIFULb?utm_source=generator&theme=0"
+      width="100%"
+      height="152"
+      frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
+      loading="lazy"
+    ></iframe>
 
     <script src="js/instruments-window.js"></script>
   </body>
@@ -78,21 +73,129 @@
     }
 
     /* Grid layout for instruments - easy to customize! */
-    .instruments-grid {
+    /* Comment out the below code to make specific positions for the gauges */
+    /* .instruments-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr); /* Four columns */
-      grid-template-rows: auto, 1fr, 1fr, 1fr; /* Four rows */
-      gap: 5px; /* Space between grid items */
+      grid-template-columns: 1fr, 1fr, 1fr, 1fr;
+      grid-template-rows: auto, 1fr, 1fr, 1fr;
+      gap: 5px;
       height: 91vh;
       padding: 0px;
-    }
+    } */
 
     /* All grid items get centered with background */
-    .instruments-grid > * {
+    /* .instruments-grid > * {
       background: rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
+    } */
+
+    /* Container for absolute positioning */
+    .instruments-grid {
+      position: relative;
+      height: 91vh;
+      width: 100%;
+      background-image: url("instruments/cyberpunk-horizon.svg");
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Center gauge - Speed */
+    #speedGauge {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 400px;
+    }
+
+    /* Left of speed */
+    #depthGauge {
+      position: absolute;
+      top: 50%;
+      left: 150px;
+      transform: translateY(-50%);
+      width: 200px;
+      height: 200px;
+    }
+
+    /* Right of speed */
+    #pitchGauge {
+      position: absolute;
+      top: 50%;
+      right: 50px;
+      transform: translateY(-50%);
+      width: 200px;
+      height: 200px;
+    }
+
+    /* Top row - 4 gauges */
+    #oxygenGauge {
+      position: absolute;
+      top: calc(50% - 150px - 210px);
+      left: calc(50% - 420px);
+      width: 200px;
+      height: 200px;
+    }
+    #batteryGauge {
+      position: absolute;
+      top: calc(50% - 150px - 210px);
+      left: calc(50% - 210px);
+      width: 200px;
+      height: 200px;
+    }
+    #compassGauge {
+      position: absolute;
+      top: calc(50% - 150px - 210px);
+      left: calc(50% + 10px);
+      width: 200px;
+      height: 200px;
+    }
+    #leftThrustGauge {
+      position: absolute;
+      top: calc(50% - 150px - 210px);
+      left: calc(50% + 220px);
+      width: 200px;
+      height: 200px;
+    }
+
+    /* Bottom row - 5 gauges */
+    #rightThrustGauge {
+      position: absolute;
+      top: calc(50% + 150px + 10px);
+      left: calc(50% - 525px);
+      width: 200px;
+      height: 200px;
+    }
+    #targetGauge {
+      position: absolute;
+      top: calc(50% + 150px + 10px);
+      left: calc(50% - 315px);
+      width: 200px;
+      height: 200px;
+    }
+    #rudderGauge {
+      position: absolute;
+      top: calc(50% + 150px + 10px);
+      left: calc(50% - 105px);
+      width: 200px;
+      height: 200px;
+    }
+    #elevatorGauge {
+      position: absolute;
+      top: calc(50% + 150px + 10px);
+      left: calc(50% + 105px);
+      width: 200px;
+      height: 200px;
+    }
+    #verticalThrusterGauge {
+      position: absolute;
+      top: calc(50% + 150px + 10px);
+      left: calc(50% + 315px);
+      width: 200px;
+      height: 200px;
     }
 
     /* All SVG instruments */

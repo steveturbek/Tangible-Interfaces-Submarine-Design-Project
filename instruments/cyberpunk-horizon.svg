@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Synthwave horizon background">
+  <defs>
+    <!-- sky gradient -->
+    <linearGradient id="skyGrad" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f0326"/>
+      <stop offset="35%" stop-color="#2b0a4f"/>
+      <stop offset="60%" stop-color="#7b1fa8"/>
+      <stop offset="85%" stop-color="#ff3d81"/>
+      <stop offset="100%" stop-color="#ff9f4d"/>
+    </linearGradient>
+
+    <!-- sun radial -->
+    <radialGradient id="sunGrad" cx="50%" cy="60%" r="40%">
+      <stop offset="0%" stop-color="#fff2d6" stop-opacity="1"/>
+      <stop offset="30%" stop-color="#ffd07a" stop-opacity="1"/>
+      <stop offset="60%" stop-color="#ff6f7a" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#ff3d81" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- neon line glow -->
+    <linearGradient id="gridColor" x1="0" x2="1">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="50%" stop-color="#9affff"/>
+      <stop offset="100%" stop-color="#8b5cff"/>
+    </linearGradient>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- vignette -->
+    <radialGradient id="vignette" cx="50%" cy="40%" r="80%">
+      <stop offset="60%" stop-color="rgba(0,0,0,0)" />
+      <stop offset="100%" stop-color="rgba(0,0,0,0.45)" />
+    </radialGradient>
+
+    <!-- subtle grain (tiny, keeps svg size small) -->
+    <pattern id="grain" patternUnits="userSpaceOnUse" width="4" height="4">
+      <rect width="4" height="4" fill="transparent"/>
+      <circle cx="2" cy="2" r="0.4" fill="rgba(255,255,255,0.02)"/>
+    </pattern>
+  </defs>
+
+  <!-- sky -->
+  <rect x="0" y="0" width="1600" height="900" fill="url(#skyGrad)"/>
+
+ <!-- perspective grid - converging lines to vanishing point (800,360) -->
+  <g stroke-linecap="round" stroke-width="1.6" filter="url(#glow)">
+    <!-- long perspective spokes -->
+    <g stroke="url(#gridColor)" opacity="0.95">
+      <line x1="0" y1="900" x2="800" y2="360"/>
+      <line x1="80" y1="900" x2="800" y2="360"/>
+      <line x1="160" y1="900" x2="800" y2="360"/>
+      <line x1="240" y1="900" x2="800" y2="360"/>
+      <line x1="320" y1="900" x2="800" y2="360"/>
+      <line x1="400" y1="900" x2="800" y2="360"/>
+      <line x1="480" y1="900" x2="800" y2="360"/>
+      <line x1="560" y1="900" x2="800" y2="360"/>
+      <line x1="640" y1="900" x2="800" y2="360"/>
+      <line x1="720" y1="900" x2="800" y2="360"/>
+      <line x1="880" y1="900" x2="800" y2="360"/>
+      <line x1="960" y1="900" x2="800" y2="360"/>
+      <line x1="1040" y1="900" x2="800" y2="360"/>
+      <line x1="1120" y1="900" x2="800" y2="360"/>
+      <line x1="1200" y1="900" x2="800" y2="360"/>
+      <line x1="1280" y1="900" x2="800" y2="360"/>
+      <line x1="1360" y1="900" x2="800" y2="360"/>
+      <line x1="1440" y1="900" x2="800" y2="360"/>
+      <line x1="1600" y1="900" x2="800" y2="360"/>
+    </g>
+  </g>
+  
+  <!-- sun (semi-hidden behind horizon) -->
+  <g transform="translate(800,360)">
+    <circle cx="0" cy="40" r="160" fill="url(#sunGrad)" opacity="0.95"/>
+    <circle cx="0" cy="40" r="64" fill="#ffeb9a" opacity="0.7" />
+  </g>
+
+  <!-- faint distant horizontal glow near horizon -->
+  <ellipse cx="800" cy="400" rx="900" ry="120" fill="rgba(255,120,110,0.06)" />
+
+ 
+
+  <!-- horizontal "grid" lines (curved slightly) -->
+  <g fill="none" stroke="url(#gridColor)" stroke-linecap="round" stroke-width="2" opacity="0.95" filter="url(#glow)">
+    <!-- nearer lines (bolder) -->
+    <path d="M0 820 C400 780 1200 780 1600 820" stroke-opacity="0.95"/>
+    <path d="M0 750 C400 720 1200 720 1600 750" stroke-opacity="0.90"/>
+    <path d="M0 690 C400 665 1200 665 1600 690" stroke-opacity="0.84"/>
+    <path d="M0 640 C400 620 1200 620 1600 640" stroke-opacity="0.78"/>
+    <path d="M0 600 C400 585 1200 585 1600 600" stroke-opacity="0.72"/>
+    <path d="M0 565 C400 555 1200 555 1600 565" stroke-opacity="0.66"/>
+    <path d="M0 535 C400 530 1200 530 1600 535" stroke-opacity="0.60"/>
+    <path d="M0 510 C400 507 1200 507 1600 510" stroke-opacity="0.54"/>
+    <!-- mid-distance lines -->
+    <path d="M0 490 C400 488 1200 488 1600 490" stroke-opacity="0.48"/>
+    <path d="M0 475 C400 474 1200 474 1600 475" stroke-opacity="0.42"/>
+    <path d="M0 465 C400 464 1200 464 1600 465" stroke-opacity="0.36"/>
+    <path d="M0 460 C400 459 1200 459 1600 460" stroke-opacity="0.30"/>
+    <!-- very near horizon, very faint -->
+    <path d="M0 452 C400 451 1200 451 1600 452" stroke-opacity="0.24"/>
+    <path d="M0 446 C400 445 1200 445 1600 446" stroke-opacity="0.20"/>
+    <path d="M0 442 C400 441 1200 441 1600 442" stroke-opacity="0.16"/>
+  </g>
+
+  <!-- subtle reflective highlight on the ground center -->
+  <ellipse cx="800" cy="600" rx="440" ry="40" fill="rgba(255,255,255,0.02)"/>
+
+  <!-- horizon line (thin) -->
+  <line x1="0" y1="400" x2="1600" y2="400" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+  <!-- gentle vignette and grain overlay -->
+  <rect x="0" y="0" width="1600" height="900" fill="url(#vignette)" opacity="0.9"/>
+  <rect x="0" y="0" width="1600" height="900" fill="url(#grain)" opacity="0.9"/>
+
+  <!-- subtle stars near the top (sparse) -->
+  <g fill="#ffffff" opacity="0.06">
+    <circle cx="220" cy="80" r="1.6"/>
+    <circle cx="460" cy="60" r="1.2"/>
+    <circle cx="1090" cy="50" r="1.8"/>
+    <circle cx="1280" cy="110" r="1.4"/>
+    <circle cx="1400" cy="90" r="1.1"/>
+  </g>
+</svg>
