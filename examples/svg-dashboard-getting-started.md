@@ -1,141 +1,551 @@
-# Getting Started: Animated SVG Dashboards with Claude
+# Animating SVG Dashboard Instruments with AI
 
 ## Quick Start (5 minutes)
 
-Want to make your dashboard gauges come alive? This guide shows you how to use Claude AI to add animations to your SVG designs - no coding experience needed!
+You're redesigning instruments for the [Tangible Interfaces Submarine](https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main). The project already has working instruments in the `instruments/` folder (battery, speed, depth, compass, etc.).
 
-## Project Context
+## Main Steps
 
-You're redesigning gauges for a **submarine dashboard**. The project already has working gauges in the `instruments/` folder (battery, speed, depth, compass, etc.). Your job is to:
+1. Design a better-looking instrument and save as SVG
+1. Load the default code onto your SVG
+1. Work with AI (using ChatGPT in this demo) to animate your instrument
+1. Download SVG & Test it in a browser
+1. Iterate and Refine
 
-1. Design a better-looking version in Figma/Illustrator
-2. Use Claude to copy the animation code from the stock gauge to your design
-3. Test it in a browser
-4. Drop it into the dashboard project
+## Step 1: Design a better-looking instrument and save as SVG
 
-**Key insight:** You don't have to explain the animation from scratch - just upload the stock gauge you're replacing and Claude will copy its behavior!
+I find Adobe Illustrator to be most useful for this specific task as you can open the SVG file directly and it retains the javascript code in the file. [Figma](http://figma.com/) can also work with SVG. [Inkscape](https://inkscape.org) is a commonly noted open source version. If you use Figma, make sure to select "Include ID Attribute". De-select "Outline Text" if you want to change the text in the SVG, for example to show the speed as a number.
 
-## What You'll Need
+**Tips**
 
-1. Your SVG file from Figma or Illustrator (your new design)
-2. The project GitHub URL (provided below - just copy it!)
-3. Access to Claude AI (claude.ai)
-4. The `examples/svg-dashboard-helper-SKILL.md` file
-5. A web browser (Chrome, Firefox, or Safari)
+- Use vectors as much as possible.
+- If you place an PNG image in Illustrator (File > Place). When saving as SVG, select "Link" - keeps the image as an external reference. It usually needs to be in the same folder as the SVG
+- Text works fine in SVG, and we often update it in our designs. BUT you have to set a font your browser knows about, not what is in Illustrator or Figma
+- Custom fonts can work, we use the see Speed.svg as an example. Ask for help
 
-**Project URL:** `https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main`
-
-## Step 1: Prepare Your SVG in Figma/Illustrator
-
-**Give your layers meaningful names!** This is the most important step.
+**Give your layers meaningful names** This is the most important step.
 
 - Bad names: `Rectangle 47`, `Group 3`, `Path 125`
 - Good names: `needle`, `indicator`, `fill_bar`, `warning_light`
 
-**Example:** If you want a needle to rotate, name that layer "needle" in Figma before exporting.
+These layer names become IDs in your SVG code. When you tell the AI "rotate the needle," it knows exactly what you mean.
 
-**Why?** These layer names become IDs in your SVG code. When you tell Claude "rotate the needle," it knows exactly what you mean!
+## Step 2: Add AI Starter code to your SVG file
 
-## Step 2: Export Your SVG
+Use this tool to add the basic JavaScript template to your SVG. Just drop your SVG file below, and it will automatically add the starter code that the AI can then customize:
 
-1. In Figma: Select your artboard → Right-click → Export → SVG
-2. In Illustrator: File → Export → Export As → SVG
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SVG JavaScript Setup</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-Save it with a descriptive filename like `speed.svg` or `battery.svg`
+      body {
+        padding: 20px;
+        color: #333;
+      }
 
-## Step 3: Talk to Claude
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+      }
 
-Open a new chat with Claude and provide **TWO** things:
+      h1 {
+        margin-bottom: 10px;
+        font-size: 2em;
+      }
 
-1. **The SKILL file:** `examples/svg-dashboard-helper-SKILL.md` (teaches Claude the rules)
-2. **Your new design:** The SVG you just exported from Figma
+      h2 {
+        margin-bottom: 20px;
+        font-size: 1.2em;
+        color: #666;
+      }
 
-Plus copy-paste the project URL (shown below).
+      .drop-zones {
+        margin-bottom: 30px;
+      }
 
-**That's it!** You don't need to upload the stock gauge - Claude will fetch it from GitHub automatically.
+      .drop-zone {
+        border: 3px dashed #ccc;
+        border-radius: 8px;
+        padding: 40px 20px;
+        text-align: center;
+        background: #fafafa;
+        transition: all 0.3s ease;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .drop-zone:hover {
+        border-color: #667eea;
+        background: #f0f4ff;
+      }
+
+      .drop-zone.drag-over {
+        border-color: #667eea;
+        background: #e8f0ff;
+        border-style: solid;
+        transform: scale(1.02);
+      }
+
+      .drop-zone.loaded {
+        border-color: #28a745;
+        background: #f0fff4;
+      }
+
+      .drop-zone h3 {
+        font-size: 1.3em;
+        margin-bottom: 10px;
+        color: #667eea;
+      }
+
+      .file-info {
+        margin-top: 15px;
+        padding: 10px;
+        background: white;
+        border-radius: 4px;
+        font-size: 0.9em;
+        color: #28a745;
+        font-weight: bold;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-bottom: 30px;
+      }
+
+      button {
+        padding: 12px 30px;
+        font-size: 1em;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      #resetBtn {
+        background: #6c757d;
+        color: white;
+      }
+
+      #downloadBtn {
+        background: #28a745;
+        color: white;
+      }
+
+      #downloadBtn:hover:not(:disabled) {
+        background: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+      }
+
+      .output-section {
+        display: none;
+      }
+
+      .output-section.visible {
+        display: block;
+      }
+
+      .output-section h3 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        color: #667eea;
+        text-align: center;
+      }
+
+      .preview-area {
+        border: 2px solid #28a745;
+        border-radius: 8px;
+        padding: 20px;
+        background: #fafafa;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        overflow: auto;
+      }
+
+      .preview-area svg {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .status-message {
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        display: none;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .status-message.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        display: block;
+      }
+
+      .status-message.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        display: block;
+      }
+
+      .status-message.info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+        display: block;
+      }
+
+      @media (max-width: 768px) {
+        .button-group {
+          flex-direction: column;
+        }
+      }
+    </style>
+
+  </head>
+  <body>
+    <div class="container">
+      <div class="drop-zones">
+        <div class="drop-zone" id="newSvgZone">
+          <h3>Drop your SVG file here</h3>
+          <input type="file" id="newSvgInput" accept=".svg" style="display: none" />
+          <button onclick="document.getElementById('newSvgInput').click()" style="background: #667eea; color: white; padding: 8px 16px">
+            Or Click to Browse
+          </button>
+          <div id="newSvgInfo" class="file-info" style="display: none"></div>
+        </div>
+      </div>
+      <div id="statusMessage" class="status-message"></div>
+      <div class="output-section" id="outputSection">
+        <div class="button-group">
+          <button id="downloadBtn">Download SVG with Code</button>
+          <button id="resetBtn">Start Over</button>
+        </div>
+        <div class="preview-area" id="previewArea"></div>
+      </div>
+    </div>
+
+    <script type="text/plain" id="defaultCodeTemplate">
+            <script type='text/javascript' id='TangibleSVG'>
+      //<![CDATA[
+
+          function updateSVG(instrumentValue){
+          // ========================================
+          // STUDENT EDIT ZONE
+          // This sections controls how the instrument displays
+          // ========================================
+
+
+
+
+          // ========================================
+          // END STUDENT EDIT ZONE
+          // ========================================
+
+          }
+
+
+          setInterval(() => {
+
+          // Check localStorage for updates
+            const thisSVGfilename = window.location.pathname;
+          // this SVG expects a localStorage with the same name as its file
+            const localStorageName =  thisSVGfilename.substring(thisSVGfilename.lastIndexOf('/') + 1, thisSVGfilename.lastIndexOf('.'));
+            let instrumentValue = localStorage.getItem(localStorageName);
+
+
+
+          if (instrumentValue !== null) {
+            // Make sure percentage is between 0 and 100
+            instrumentValue = Math.max(0, Math.min(100, instrumentValue));
+
+          } else {
+          // no localStorage, so make up a number, so it swings back and forth
+          // Initialize static variables if they don't exist
+          if (typeof window.testValue === 'undefined') {
+            window.testValue = 0;
+            window.testDirection = 1; // 1 for increasing, -1 for decreasing
+          }
+
+          // Update the test value
+          window.testValue += window.testDirection * 2; // increment by 2 each time
+
+          // Reverse direction at boundaries
+          if (window.testValue >= 100) {
+            window.testValue = 100;
+            window.testDirection = -1;
+          } else if (window.testValue <= 0) {
+            window.testValue = 0;
+            window.testDirection = 1;
+          }
+
+          instrumentValue = window.testValue;
+          console.log('no local storage '+localStorageName+', using test value:', instrumentValue);
+
+           }
+
+          updateSVG(instrumentValue)
+
+
+
+          }, 50);
+
+        //]]>
+    <\/script>
+
+    <script>
+      let newSvgContent = null;
+      let mergedSvgContent = null;
+      let newSvgFileName = "";
+
+      let defaultSVGCodeTemplate = document.getElementById("defaultCodeTemplate").textContent + "</" + "script>";
+
+      // Set up drag and drop for the SVG zone
+      setupDropZone("newSvgZone", handleNewSvgFile);
+
+      // Set up file input change handler
+      document.getElementById("newSvgInput").addEventListener("change", function (e) {
+        if (e.target.files.length > 0) {
+          handleNewSvgFile(e.target.files[0]);
+        }
+      });
+
+      // Reset button handler
+      document.getElementById("resetBtn").addEventListener("click", resetAll);
+
+      // Download button handler
+      document.getElementById("downloadBtn").addEventListener("click", downloadMergedSvg);
+
+      function setupDropZone(zoneId, handler) {
+        const zone = document.getElementById(zoneId);
+
+        zone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          zone.classList.add("drag-over");
+        });
+
+        zone.addEventListener("dragleave", () => {
+          zone.classList.remove("drag-over");
+        });
+
+        zone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          zone.classList.remove("drag-over");
+
+          const files = e.dataTransfer.files;
+          if (files.length > 0 && files[0].name.toLowerCase().endsWith(".svg")) {
+            handler(files[0]);
+          } else {
+            showStatus("Please drop a valid SVG file", "error");
+          }
+        });
+      }
+
+      function handleNewSvgFile(file) {
+        newSvgFileName = file.name;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          newSvgContent = e.target.result;
+          document.getElementById("newSvgInfo").textContent = `✓ Loaded: ${file.name}`;
+          document.getElementById("newSvgInfo").style.display = "block";
+          document.getElementById("newSvgZone").classList.add("loaded");
+
+          // Automatically add JavaScript template
+          addJavaScriptToSvg();
+        };
+        reader.readAsText(file);
+      }
+
+      function addJavaScriptToSvg() {
+        try {
+          // Parse the SVG file
+          const parser = new DOMParser();
+          const svgDoc = parser.parseFromString(newSvgContent, "image/svg+xml");
+
+          // Check for parsing errors
+          if (svgDoc.querySelector("parsererror")) {
+            throw new Error("Error parsing SVG file");
+          }
+
+          // Get the SVG element
+          const svgElement = svgDoc.querySelector("svg");
+
+          if (!svgElement) {
+            throw new Error("Invalid SVG file - missing <svg> element");
+          }
+
+          // Check if SVG already has script tags
+          const existingScripts = svgElement.querySelectorAll("script");
+
+          if (existingScripts.length > 0) {
+            // Alert user but continue
+            showStatus(`Warning: This SVG already contains ${existingScripts.length} script tag(s). The template code will be added anyway.`, "info");
+          }
+
+          // Create new script element with the template code
+          const newScript = svgDoc.createElementNS("http://www.w3.org/2000/svg", "script");
+          newScript.setAttribute("type", "text/javascript");
+          newScript.setAttribute("id", "TangibleSVG");
+
+          // Add the template code (already includes CDATA wrapper)
+          newScript.textContent = defaultSVGCodeTemplate.replace(/<script type='text\/javascript' id='TangibleSVG'>/, "").replace(/<\/script>$/, "");
+
+          // Append to SVG
+          svgElement.appendChild(newScript);
+
+          // Serialize the modified SVG
+          const serializer = new XMLSerializer();
+          mergedSvgContent = serializer.serializeToString(svgDoc);
+
+          // Display preview
+          document.getElementById("previewArea").innerHTML = mergedSvgContent;
+          document.getElementById("outputSection").classList.add("visible");
+
+          // Show success message
+          if (existingScripts.length === 0) {
+           // showStatus(`Success! JavaScript template added to ${newSvgFileName}. Click "Download SVG with Code" above to save it.`, "success");
+          }
+        } catch (error) {
+          showStatus(`Error: ${error.message}`, "error");
+          console.error("Processing error:", error);
+        }
+      }
+
+      function downloadMergedSvg() {
+        if (!mergedSvgContent) {
+          showStatus("No SVG to download", "error");
+          return;
+        }
+
+        // Create filename
+        const baseName = newSvgFileName.replace(".svg", "");
+        const fileName = `${baseName}-with-code.svg`;
+
+        // Create download
+        const blob = new Blob([mergedSvgContent], { type: "image/svg+xml" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        showStatus(`Downloaded: ${fileName}`, "success");
+      }
+
+      function resetAll() {
+        newSvgContent = null;
+        mergedSvgContent = null;
+        newSvgFileName = "";
+
+        document.getElementById("newSvgInfo").style.display = "none";
+        document.getElementById("newSvgZone").classList.remove("loaded");
+        document.getElementById("outputSection").classList.remove("visible");
+        document.getElementById("previewArea").innerHTML = "";
+        document.getElementById("newSvgInput").value = "";
+        document.getElementById("statusMessage").style.display = "none";
+      }
+
+      function showStatus(message, type) {
+        const statusEl = document.getElementById("statusMessage");
+        statusEl.textContent = message;
+        statusEl.className = `status-message ${type}`;
+
+        // Auto-hide success messages after 5 seconds
+        if (type === "success" || type === "info") {
+          setTimeout(() => {
+            statusEl.style.display = "none";
+          }, 5000);
+        }
+      }
+
+      // Don't show initial message - keep UI clean until merge
+    <\/script>
+
+  </body>
+</html>
+
+## Step 3: Talk to the AI
+
+_ChatGPT is used in this demo as it is free, but others may work._
+
+Open a new chat with the AI and drag these files onto the window:
+
+1. The [AI 'skill' file](https://raw.githubusercontent.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/refs/heads/main/examples/svg-dashboard-helper-SKILL.md) or in `examples/svg-dashboard-helper-SKILL.md` (teaches the AI the rules)
+1. The instrument SVG file you are replacing (e.g. speed.svg)
+1. Your new SVG file (with the code added in step 2), name it speed-new.svg
 
 Then use this template:
 
 ```
-I'm redesigning the speed gauge for my submarine dashboard, as part of my design class.
-The project is here:
-https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
+I'm redesigning the speed.svg instrument for the class project: https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
+Please use these uploaded AI Skill instructions to guide you.
 
-[upload examples/svg-dashboard-helper-SKILL.md]
-[upload my-new-speed-design.svg]
+Please look at the speed.svg instrument to understand the data range and localStorage key.
 
-Please fetch the stock speed gauge from the instruments/ folder and apply
-the same animation behavior to my new design.
+I want to update speed-new.svg but add a different behavior in the STUDENT EDIT ZONE only.  Do not change any other code.
 
-My animated element is called "speedometer_needle" in my new SVG.
-Keep the same behavior as the original.
+I want to fill a bar from left to right. The bar element is called "speed_bar" and
+should fill based on the same 0-100 values that the original instrument uses.
+
+
 ```
 
-**Why this workflow is better:**
-- Only 2 files to upload instead of 3
-- Claude fetches the latest version from GitHub
-- Less clutter, cleaner conversation
-- Ensures you're using the current stock gauge
-- Less confusing - you just focus on your new design
+## Step 4: Download and Test
 
-**If you want different behavior,** say so:
-```
-My animated element is called "needle".
-Change the angle range to -90° to +90° instead of the original range.
-```
+1. Load file in chrome browser, it should auto animate the Instrument.
 
-**Special case - iterating on your own custom code:**
-If you've already made a custom gauge and want to apply it to a new design, then upload your working SVG file:
-```
-I'm updating my custom battery gauge design.
+   1. The SVG has **built-in test mode** - it will oscillate between 0-100 automatically so you can see how it looks.
+   1. **Check the browser console** (Right-click → Inspect → Console) to see debugging info.
 
-[upload examples/svg-dashboard-helper-SKILL.md]
-[upload my-old-working-battery.svg]
-[upload my-new-battery-design.svg]
-
-Please apply the animation code from my old file to my new design.
-```
-
-## Step 4: Test Your Animated SVG
-
-Claude will give you a new SVG file with animation code embedded inside.
-
-**To test it:**
-1. Download the SVG file Claude created
-2. Double-click it (or drag it into Chrome/Firefox/Safari)
-3. Watch it animate automatically! 🎉
-
-The SVG has **built-in test mode** - it will oscillate between 0-100 automatically so you can see how it looks.
-
-**Check the browser console** (Right-click → Inspect → Console) to see debugging info.
+1. Drop in `instruments` folder and load game
+   1. Make sure it has the same name as the old file
 
 ## Step 5: Iterate and Refine
 
-Don't expect perfection on the first try! Most animations take 2-5 rounds.
+Don't expect perfection on the first try. Most animations take 2-5 rounds.
 
 ### If the animation looks wrong:
 
-Upload your animated SVG back to Claude and say:
+Upload your animated SVG back to the AI and say:
+
 - "The needle goes backwards"
 - "The rotation is too fast"
 - "The needle should start pointing up, not left"
 - "The range is wrong - it should go from -180° to +180°"
 
-Claude will fix just that part while keeping everything else working.
+the AI will fix just that part while keeping everything else working.
 
-### If you changed your design in Figma:
+### If you made a new version of the SVG and lost the code
 
-**Option 1: Use the SVG Code Merger** (easiest!)
-1. Open `examples/svg-code-merger.html` in your browser
-2. Drag your NEW SVG (from Figma) into slot 1
-3. Drag your OLD SVG (with working animation) into slot 2
-4. Click "Merge Code Into New SVG"
-5. Download and test!
-
-**Option 2: Ask Claude to merge**
-1. Upload your OLD SVG (with working code)
-2. Upload your NEW SVG (fresh from Figma)
-3. Say: "Please apply the animation code from the old file to my new design"
+If you edited the look and feel of the design after you got it working, and lost the code. The [Code merger tool](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/examples/svg-code-merger.html) Copies the code from an old SVG to the new one. This wil only work if the main parts of the file, like the layer names are the same.
 
 ## Understanding the Code (Optional)
 
@@ -144,7 +554,7 @@ When you open your animated SVG in a text editor, you'll see these important bou
 ```javascript
 // ========================================
 // STUDENT EDIT ZONE
-// This section controls how the gauge displays
+// This section controls how the instrument displays
 // ========================================
 
    ... your animation code here ...
@@ -154,11 +564,12 @@ When you open your animated SVG in a text editor, you'll see these important bou
 // ========================================
 ```
 
-**This is where the magic happens!** These boundary markers are your visual guide:
+**This is where the magic happens.** These boundary markers are your visual guide:
+
 - Everything **between** these markers is yours to modify safely
 - Change the angle ranges, adjust colors, modify formulas
 - These markers will be preserved in every iteration
-- Everything **outside** this zone handles the plumbing (localStorage, test mode, etc.) - don't touch that unless you know what you're doing!
+- Everything **outside** this zone handles the plumbing (localStorage, test mode, etc.) - don't touch that unless you know what you're doing.
 
 **Important:** These boundary comment lines are deliberately visual (with lots of `=` signs) so they're easy to spot in your code editor.
 
@@ -167,129 +578,66 @@ When you open your animated SVG in a text editor, you'll see these important bou
 Your animated SVG reads data from your dashboard using `localStorage`:
 
 **In your dashboard JavaScript:**
+
 ```javascript
 // Set the battery level (0-100)
-localStorage.setItem('battery', 75);
+localStorage.setItem("battery", 75);
 ```
 
 **In your SVG (battery.svg):**
+
 ```javascript
 // Reads 'battery' from localStorage automatically
 // Animates to show 75%
 ```
 
-The SVG detects its own filename and uses it as the localStorage key. No configuration needed!
+The SVG detects its own filename and uses it as the localStorage key.
 
 ## Common Questions
 
 ### Q: Do I need to know JavaScript?
-**A:** Nope! Just describe what you want and Claude will write the code. You'll learn by seeing the patterns.
+
+**A:** Just describe what you want and the AI will write the code. You'll learn by seeing the patterns.
 
 ### Q: What if I don't see any animation?
+
 **A:**
+
 - Make sure you're opening the SVG in a web browser (not an image viewer)
 - Check the browser console for error messages
-- Verify the element name in your SVG matches what Claude is trying to animate
+- Verify the element name in your SVG matches what the AI is trying to animate
 
 ### Q: Can I animate multiple things?
-**A:** Yes! Tell Claude what each element should do. Example: "Rotate the needle and change the background color from blue to red"
+
+**A:** Yes. Tell the AI what each element should do. Example: "Rotate the needle and change the background color from blue to red"
 
 ### Q: What if the rotation point is wrong?
-**A:** Tell Claude: "The needle should rotate around its left end, not its center"
+
+**A:** Tell the AI: "The needle should rotate around its left end, not its center"
 
 ### Q: Why is my SVG not working in my dashboard?
+
 **A:**
-- Make sure your dashboard sets the localStorage value
-- Use `<object>` or `<embed>` tags in your HTML, NOT `<img>`
-- Check that the localStorage key matches the filename
 
-## Example Prompts That Work Well
-
-**Replacing a stock gauge (most common - simplest workflow):**
-```
-I'm redesigning the battery gauge for my submarine dashboard, as part of my design class.
-The project is here:
-https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
-
-[upload examples/svg-dashboard-helper-SKILL.md]
-[upload my-battery-redesign.svg]
-
-Please fetch the stock battery gauge from the instruments/ folder and apply
-the same animation behavior to my new design.
-
-My animated element is called "battery_needle".
-Keep the same behavior as the original.
-```
-
-**Replacing with a different animation style:**
-```
-I'm redesigning the speed gauge for my submarine dashboard, as part of my design class.
-The project is here:
-https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
-
-[upload examples/svg-dashboard-helper-SKILL.md]
-[upload my-speed-redesign.svg]
-
-Please look at the stock speed gauge in the instruments/ folder to understand
-the data range and localStorage key, but instead of rotating a needle, I want
-to fill a bar from left to right. The bar element is called "speed_bar" and
-should fill based on the same 0-100 values that the original gauge uses.
-```
-
-**Starting from scratch (no stock gauge reference):**
-```
-I have a custom temperature indicator SVG.
-
-[upload examples/svg-dashboard-helper-SKILL.md]
-[upload my-temp-gauge.svg]
-
-The circle called "temp_indicator" should change color:
-- Blue at 0
-- Green at 50
-- Red at 100
-Values range from 0-100.
-```
-
-**Multiple animations:**
-```
-I'm redesigning the battery gauge with extra features, as part of my design class.
-The project is here:
-https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
-
-[upload examples/svg-dashboard-helper-SKILL.md]
-[upload my-battery-redesign.svg]
-
-Please look at the stock battery gauge in the instruments/ folder and copy
-the needle rotation behavior, but also add a color change to the arc background:
-- Green above 50%
-- Yellow between 20-50%
-- Red below 20%
-
-The needle is "battery_needle" and the arc is "battery_arc".
-```
+- Check that the filename is an exact replacement of the old one
 
 ## Next Steps
 
 1. **Start simple:** Animate just one element first
 2. **Test constantly:** Open the SVG in a browser after every change
-3. **Iterate:** Describe what's wrong and Claude will fix it
-4. **Experiment:** Once one gauge works, try different animation types!
+3. **Iterate:** Describe what's wrong and the AI will fix it
+4. **Experiment:** Once one instrument works, try different animation types
 
 ## Tools Reference
 
-- **svg-dashboard-helper-SKILL.md** - The instruction file for Claude
+- **svg-dashboard-helper-SKILL.md** - The instruction file for the AI
 - **svg-code-merger.html** - Tool to merge new designs with working code
 - **Your browser console** - Shows debugging info and errors
 
 ## Getting Help
 
 If something isn't working:
+
 1. Check the browser console for error messages
-2. Upload your SVG to Claude and describe the problem
-3. Ask Claude to explain what a specific part of the code does
-
-Remember: Claude is here to help! Be specific about what you want, and don't be afraid to iterate.
-
----
-
-**Ready to get started?** Open Claude, upload your SVG and the SKILL file, and describe what you want to animate!
+2. Upload your SVG to the AI and describe the problem
+3. Ask the AI to explain what a specific part of the code does

@@ -201,7 +201,7 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 - Forward/backward propulsion (digital and analog)
 - Pitch and yaw steering (digital and analog)
 
-## Getting Started
+## Building your Sub Prototype
 
 ### Technical Requirements
 
@@ -211,41 +211,6 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 - **UX design**: Figma (recommended), Adobe Illustrator, AI tools for coding
 - **Programming**: Basic HTML and CSS (examples provided)
 
-<!--
-### Installation
-<!--### Local Development Setup
-
-**IMPORTANT:** When developing locally, you must use a local web server due to browser security restrictions. Opening HTML files directly (via `file://`) will prevent the instruments from working.
-
-**Option 1: Python (Recommended for macOS, should not need installation)**
-
-```bash
-# Navigate to the project directory
-cd /path/to/Tangible-Interfaces-Submarine-Design-Project
-
-# Start the server (Python 3 comes pre-installed on macOS)
-python3 -m http.server 8080
-
-# Open in Chrome
-# http://localhost:8080
-```
-
-
-**Option 2: VS Code Live Server Extension**
-
-1. Install the "Live Server" extension in VS Code
-2. Right-click `index.html` and select "Open with Live Server"
-
-**Option 3: Node.js**
-
-```bash
-# Install http-server globally (if you have Node.js)
-npm install -g http-server
-
-# Run the server
-http-server -p 8080
-``` -->
-
 ### Set up
 
 1. [Download this repo zip](https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/archive/refs/heads/main.zip)
@@ -253,78 +218,55 @@ http-server -p 8080
 1. In Google Chrome app, Open the index.html file
 1. Play!
 
-<!-- #### Local web server Mac Setup
+### Building the Physical Controls
 
-1. [Download this repo zip](https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/archive/refs/heads/main.zip)
-1. Unzip, move folder to your Documents folder (~/Documents)
-1. Open Terminal.app
-1. Go to the project directory, type `cd ~/Documents/Tangible-Interfaces-Submarine-Design-Project`
-1. Start web server just on your computer, type `python3 -m http.server 8080`
-   1. (you may occasionally need to re-do this, like after a computer restart).
-   1. Leave this window running, you can hide it.
-   1. To stop the web server `lsof -ti:8080 | xargs kill`
-1. Open Chrome, go to `http://localhost:8080/`
-
-#### Windows Setup
-
-1. [Download this repo zip](https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/archive/refs/heads/main.zip)
-1. Unzip, move folder to your Documents folder (e.g., `C:\Users\YourUsername\Documents\`)
-1. Open Command Prompt (search for "cmd" in Start menu) or PowerShell
-1. Go to the project directory, type `cd %USERPROFILE%\Documents\Tangible-Interfaces-Submarine-Design-Project`
-1. Start web server just on your computer, type `python -m http.server 8080`
-   1. If Python is not installed, download it from [python.org](https://www.python.org/downloads/) (check "Add Python to PATH" during installation)
-   1. (you may occasionally need to re-do this, like after a computer restart).
-   1. Leave this window running, you can minimize it.
-   1. To stop the web server, press `Ctrl + C` in the Command Prompt window, or run `netstat -ano | findstr :8080` to find the process ID, then `taskkill /PID <process_id> /F`
-1. Open Chrome, go to `http://localhost:8080/` -->
-
-### Development Workflow
-
-#### Physical Controls
+**Concept**
 
 1. What is your concept of control? What are the physical motions a pilot could use? Which parts of their body.
 1. Choose your sensors - joystick components are the least interesting choice. Take inspiration from planes, vehicles, Sci-Fi movies..
-1. Rig up a prototype & TEST it with friends
+1. Connect sensors to Microbit
 1. Program a microbit to send the output to the game via serial over USB. Use [these sample microbit code](microbit/) to start from
+1. Rig up a prototype & TEST it with friends
 1. Refine prototype to a looks-like/works-like unit & TEST it with friends
 1. Final CAD / Product manufacture
 
 **Note**
 
 - A Makecode editor open in a browser tab at the same time as the game may have worse performance as each tab is 'taking' the serial messages from the microbit.
+<!-- - Note it is possible to use an iPad/iPhone for touchscreen controls using [Duet display](https://www.duetdisplay.com/), but this is outside the scope of the class -->
 
-#### Instruments
+### On Screen Instruments
 
-<!--
-1. Modify the SVG instrument files in `instruments/` folder
-1. Test your implementation using keyboard controls or USB gamepad
-1. Build physical controls using sensors from class kit
-1. Program Micro:bit to interpret the sensors, use the provided example files `microbit/`
-1. Upload to Google drive to collaborate with your partners
-1. At the end, upload the project to github as a 'fork' (help will be provided) -->
+1. Research instrument displays
+1. Pick a display screen, can be a laptop monitor, an iPad, or one of the interesting monitor shapes like [round](https://www.amazon.com/s?k=HDMI+Round+Touch+Display&i=electronics&crid=2KOIQO2N9TW8C&sprefix=hdmi+round+touch+display%2Caps%2C101) or [skinny](https://www.amazon.com/s?k=11.26+inch+1920x440+HDMI+LCD&i=electronics&crid=1UKVEQ5GCQXD7&sprefix=11.26+inch+1920x440+hdmi+lcd%2Caps%2C125&ref=nb_sb_noss_1)
+1. Instruments page
 
-**SVG File Instructions**
+   1. In the downloaded game folder, the file instruments.html controls the layout of the instruments
+   1. Edit instrument.html to layout and style the instruments window
+   1. Use TextEdit to edit instruments.html, but make this one settings change: TextEdit > Settings > Open and Save. **Uncheck** "Display HTML files as HTML code instead of formatted text"
+   1. Edit the CSS style code to change an instruments location on the screen
+   1. Instruments can overlap each other (if they have transparent backgrounds)
+   1. AI's are really good at explaining and fixing errors in the code, if you give them context of the github project URL
 
-1. Use HTML and CSS to design the instruments window
-1. Design the instrument files using Figma or Illustrator (vectors only)
-1. Save as SVG
-<!-- 1. You don't need any special editing app. Use TextEdit app, but make this one settings change: TextEdit > Settings > Open and Save. **Uncheck** "Display HTML files as HTML code instead of formatted text" -->
-1. Use AI to modify the instrument logic, instructions are in examples/svg-dashboard-getting-started.md
+1. Instruments (Speed, Oxygen)
 
-**Tips**
-
-- If instruments SVG is not updating after a save, do 'hard reload' ( Cmd + Shift + R on a Mac)
-<!-- - Note it is possible to use an iPad/iPhone for touchscreen controls using [Duet display](https://www.duetdisplay.com/) -->
+   1. Each instrument is a file in the `instruments/` folder.
+   1. They are SVG files, which is a image file type which can have some extra tricks we use.
+   1. You can simply replace an SVG instrument to update the window
+   1. Instructions: [Instruments SVG AI Page](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/examples/svg-dashboard-getting-started.html)
+   1. Move updated file to instruments folder and reload instrument.html page in Chrome browser
+      1. If instruments SVG is not updating after a save, do 'hard reload' ( Cmd + Shift + R on a Mac)
 
 ## Project Structure
 
-The repository files:
+The files:
 
 ```
 ***Design Me, Program Me!***
+├── instruments.html # the layout of the instruments window
 ├── instruments/
-│   ├── oxygen.svg     # Oxygen gauge
-│   ├── battery.svg    # Battery gauge
+│   ├── oxygen.svg     # Oxygen instruments
+│   ├── battery.svg    # Battery instruments
 │   └── etc...
 
 ***These should not need to be edited***

@@ -42,7 +42,7 @@ Help beginner UX design students animate SVG dashboard elements using JavaScript
 
 - Upload your current SVG with embedded JavaScript
 - Describe what needs to change: "needle goes backwards" or "too slow"
-- Claude will revise the code in the STUDENT EDIT ZONE while preserving the framework
+- the AI will revise the code in the STUDENT EDIT ZONE while preserving the framework
 
 **For design iterations** (you changed the visual design in Figma):
 
@@ -55,16 +55,16 @@ Help beginner UX design students animate SVG dashboard elements using JavaScript
   - Download the merged result
   - Test it by opening directly in browser (it will auto-oscillate)
 
-- **Option 2: Ask Claude to merge**
+- **Option 2: Ask the AI to merge**
   - Upload TWO files:
     1. **Old SVG with working code** - has the JavaScript that mostly works
     2. **New SVG without code** - your updated design from Figma
   - Say: "I'm iterating - please apply the working code from file 1 to the new design in file 2"
-  - Claude will extract the working logic and map it to your new element structure
+  - the AI will extract the working logic and map it to your new element structure
 
 **If element names changed:**
 
-- Tell Claude: "I renamed 'needle' to 'pointer' in the new design"
+- Tell the AI: "I renamed 'needle' to 'pointer' in the new design"
 - Or: "Same element names as before"
 
 **Testing your SVG:**
@@ -75,29 +75,29 @@ Help beginner UX design students animate SVG dashboard elements using JavaScript
 
 ### Starter Prompt Template
 
-**Replacing an existing gauge (MOST COMMON for this project):**
+**Replacing an existing instrument (MOST COMMON for this project):**
 
 ```
-I'm redesigning the [speed/battery/depth/etc.] gauge for my submarine dashboard,
+I'm redesigning the [speed/battery/depth/etc.] instruments for my submarine dashboard,
 as part of my design class. The project is here:
 https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
 
 [upload SKILL.md file]
 [upload your NEW DESIGN from Figma - no code inside]
 
-Please fetch the stock [speed/battery/etc.] gauge from the instruments/ folder
+Please fetch the stock [speed/battery/etc.] instruments from the instruments/ folder
 and apply the same animation behavior to my new design.
 
 My animated element is called "[element name]" in my new SVG.
 [Optional: "Keep the same behavior" OR describe any animation changes needed]
 ```
 
-**Note:** Students don't need to upload the stock gauge - you'll fetch it from GitHub using WebFetch.
+**Note:** Students don't need to upload the stock instruments - you'll fetch it from GitHub using WebFetch.
 
 **Alternative - if student is iterating on their own custom code:**
 
 ```
-I'm updating my custom [gauge type] design.
+I'm updating my custom [instruments type] design.
 
 [upload SKILL.md file]
 [upload OLD SVG with working code - student's previous version]
@@ -105,13 +105,13 @@ I'm updating my custom [gauge type] design.
 
 Please apply the animation code from my old file to my new design.
 
-[Tell Claude if element names changed, or say "same element names as before"]
+[Tell AI if element names changed, or say "same element names as before"]
 ```
 
 **If starting completely fresh (less common):**
 
 ```
-I need to animate a dashboard gauge.
+I need to animate a dashboard instruments.
 
 [upload SKILL.md file]
 [upload your SVG from Figma/Illustrator]
@@ -144,7 +144,7 @@ I updated my design in Figma and need to apply the working code to the new versi
 [upload new SVG from Figma - updated design, no code]
 
 Please merge the animation code into my updated design.
-[Tell Claude if element names changed, or say "same element names as before"]
+[Tell the AI if element names changed, or say "same element names as before"]
 ```
 
 ## Technical Requirements
@@ -165,74 +165,72 @@ Please merge the animation code into my updated design.
 
 ```xml
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256">
-  <script type="text/javascript">
-  //<![CDATA[
+    <script type='text/javascript' id='TangibleSVG'>
+      //<![CDATA[ // this is to make javascript work in the SVG, leave it alone
 
-    function updateSVG(instrumentValue){
-    // ========================================
-    // STUDENT EDIT ZONE
-    // This section controls how the gauge displays
-    // ========================================
+          function updateSVG(instrumentValue){
+          // ========================================
+          // STUDENT EDIT ZONE
+          // This sections controls how the instrument displays
+          // ========================================
 
-    /**
-     * Clear description of what this animation does
-     * - Describe the visual effect
-     * - Show the data range (e.g., 0% = left, 100% = right)
-     * - Explain the formula if applicable
-     */
 
-      // Animation logic here
-      const element = document.getElementById('animated-element');
-      if (!element) {
-        console.log('Cannot find element to animate');
-        return;
-      }
 
-      // Apply transformations based on instrumentValue (0-100)
-      // Example: const angle = -180 + instrumentValue * 1.8;
-      // element.setAttribute('transform', `rotate(${angle}, cx, cy)`);
 
-    // ========================================
-    // END STUDENT EDIT ZONE
-    // ========================================
-    }
+          // ========================================
+          // END STUDENT EDIT ZONE
+          // ========================================
 
-    setInterval(() => {
-      // Auto-detect localStorage key from filename
-      const thisSVGfilename = window.location.pathname;
-      const localStorageName = thisSVGfilename.substring(
-        thisSVGfilename.lastIndexOf('/') + 1,
-        thisSVGfilename.lastIndexOf('.')
-      );
-      let instrumentValue = localStorage.getItem(localStorageName);
+          }
 
-      if (instrumentValue !== null) {
-        // Clamp value between 0 and 100
-        instrumentValue = Math.max(0, Math.min(100, instrumentValue));
-      } else {
-        // Test mode: oscillate between 0-100
-        if (typeof window.testValue === 'undefined') {
-          window.testValue = 0;
-          window.testDirection = 1;
-        }
-        window.testValue += window.testDirection * 2;
-        if (window.testValue >= 100) {
-          window.testValue = 100;
-          window.testDirection = -1;
-        } else if (window.testValue <= 0) {
-          window.testValue = 0;
-          window.testDirection = 1;
-        }
-        instrumentValue = window.testValue;
-        console.log('No localStorage "'+localStorageName+'", using test value:', instrumentValue);
-      }
 
-      updateSVG(instrumentValue);
-    }, 50);
+          setInterval(() => { // do this repeatedly
 
-  //]]>
-  </script>
+          // Check localStorage for updates
+            const thisSVGfilename = window.location.pathname;
+          // this SVG expects a localStorage with the same name as its file
+            const localStorageName =  thisSVGfilename.substring(thisSVGfilename.lastIndexOf('/') + 1, thisSVGfilename.lastIndexOf('.'));
+            let instrumentValue = localStorage.getItem(localStorageName);
 
+
+
+          if (instrumentValue !== null) {
+            // Make sure percentage is between 0 and 100
+            instrumentValue = Math.max(0, Math.min(100, instrumentValue));
+
+          } else {
+          // no localStorage, so make up a number, so it swings back and forth
+          // Initialize static variables if they don't exist
+          if (typeof window.testValue === 'undefined') {
+            window.testValue = 0;
+            window.testDirection = 1; // 1 for increasing, -1 for decreasing
+          }
+
+          // Update the test value
+          window.testValue += window.testDirection * 2; // increment by 2 each time
+
+          // Reverse direction at boundaries
+          if (window.testValue >= 100) {
+            window.testValue = 100;
+            window.testDirection = -1;
+          } else if (window.testValue <= 0) {
+            window.testValue = 0;
+            window.testDirection = 1;
+          }
+
+          instrumentValue = window.testValue;
+          console.log('no local storage '+localStorageName+', using test value:', instrumentValue);
+
+           }
+
+          updateSVG(instrumentValue)
+
+
+
+          }, 50);  //end of setInterval code.  50 is 50 milliseconds or 20 times per second.
+
+        //]]> // this is to make javascript work in the SVG, leave it alone
+    </script>
   <!-- SVG visual elements -->
 </svg>
 ```
@@ -249,7 +247,7 @@ Please merge the animation code into my updated design.
 
 2. **What should animate?**
 
-   - Rotation (needles, gauges)
+   - Rotation (needles, instruments)
    - Translation (sliders, indicators)
    - Color (fill changes based on value)
    - Scale (growing/shrinking elements)
@@ -280,7 +278,7 @@ Please merge the animation code into my updated design.
 
 ## Common Animation Patterns
 
-### Rotation (Gauges, Needles)
+### Rotation (instruments, Needles)
 
 ```javascript
 // Map value to angle range
@@ -319,19 +317,21 @@ const angle = -90 + normalized * 180; // -90° to +90°
 
 ## Workflow
 
-### Replacing a Stock Gauge (MOST COMMON for this project)
+### Replacing a Stock instruments (MOST COMMON for this project)
 
 **Preferred workflow: Fetch from GitHub (cleaner, always up-to-date)**
 
 1. **Student provides GitHub URL and uploads files:**
+
    - Gives you the project URL: https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
    - Uploads SKILL.md
    - Uploads their new design SVG
-   - Tells you which gauge they're replacing (speed, battery, etc.)
-   - **NO need to upload the stock gauge** - you'll fetch it from GitHub
+   - Tells you which instruments they're replacing (speed, battery, etc.)
+   - **NO need to upload the stock instruments** - you'll fetch it from GitHub
 
-2. **Fetch and analyze the stock gauge from GitHub:**
-   - Use WebFetch to access: `https://raw.githubusercontent.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/main/instruments/[gauge-name].svg`
+2. **Fetch and analyze the stock instruments from GitHub:**
+
+   - Use WebFetch to access: `https://raw.githubusercontent.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/main/instruments/[instruments-name].svg`
    - Read the STUDENT EDIT ZONE to understand the animation behavior
    - Note the data range (0-100, -100 to +100, etc.)
    - Identify the element being animated and the transformation type (rotation, translation, etc.)
@@ -340,13 +340,15 @@ const angle = -90 + normalized * 180; // -90° to +90°
    - **This is your reference for what behavior to replicate**
 
 3. **Analyze the new design:**
+
    - Find the element(s) to animate (student should have named them)
    - Determine rotation/transformation origins (center points, pivot points)
    - Check if the visual layout requires formula adjustments
 
 4. **Apply the behavior:**
+
    - **CRITICAL: Include the STUDENT EDIT ZONE boundary markers exactly** - they must be present
-   - Recreate the animation logic from stock gauge STUDENT EDIT ZONE
+   - Recreate the animation logic from stock instruments STUDENT EDIT ZONE
    - Adapt element IDs to match new design
    - Adjust rotation origins or positions if needed based on new design geometry
    - Keep the same localStorage key (filename-based detection will handle this)
@@ -358,8 +360,9 @@ const angle = -90 + normalized * 180; // -90° to +90°
 6. Student tests by opening in browser
 
 **Alternative workflow if student is iterating on their own custom code:**
-- If student uploads their own working SVG (not a stock gauge), use that as the reference
-- This is for when they've already customized beyond the stock gauges
+
+- If student uploads their own working SVG (not a stock instruments), use that as the reference
+- This is for when they've already customized beyond the stock instruments
 - Extract their existing logic and apply it to their new design
 
 ### First Time Animation (Less Common)
@@ -484,7 +487,7 @@ Every SVG has **automatic test mode** built-in. No external test page needed!
 ```javascript
 // ========================================
 // STUDENT EDIT ZONE
-// This section controls how the gauge displays
+// This section controls how the instruments displays
 // ========================================
 ```
 
@@ -497,6 +500,7 @@ And the closing marker:
 ```
 
 **Why these markers are critical:**
+
 - Students are visual designers with limited coding experience
 - These boundary markers are **visual landmarks** that show where it's safe to edit
 - Without them, students don't know which code to modify vs. which infrastructure code to leave alone
@@ -504,6 +508,7 @@ And the closing marker:
 - The phrase "STUDENT EDIT ZONE" is instantly recognizable
 
 **Rules for boundary markers:**
+
 1. **NEVER remove or modify these comment markers** when editing existing code
 2. **ALWAYS include them** when generating new code
 3. **Keep the exact formatting** - 40 equals signs, all caps, exact wording
@@ -537,8 +542,8 @@ Include clear, student-friendly comments that explain the animation intent:
 
 ```javascript
 /**
- * Updates the battery gauge display
- * - The gauge needle (line) rotates to show battery level
+ * Updates the battery instruments display
+ * - The instruments needle (line) rotates to show battery level
  * - 0% = -180 degrees (pointing left, empty)
  * - 50% = -90 degrees (pointing up, half)
  * - 100% = 0 degrees (pointing right, full)
@@ -549,7 +554,7 @@ Include clear, student-friendly comments that explain the animation intent:
 const angle = -180 + instrumentValue * 1.8;
 ```
 
-These comments help students understand what's happening AND help Claude understand intent for future iterations.
+These comments help students understand what's happening AND help the AI understand intent for future iterations.
 
 ## Student-Friendly Practices
 
@@ -572,7 +577,7 @@ These comments help students understand what's happening AND help Claude underst
     </style>
   </defs>
 
-  <!-- Gauge background arc -->
+  <!-- instruments background arc -->
   <path id="background" d="M503.8,256c0-136.9-110.9-247.8-247.8-247.8S8.2,119.1,8.2,256"/>
 
   <!-- Needle line (student designed this in Figma) -->
@@ -589,11 +594,11 @@ These comments help students understand what's happening AND help Claude underst
     function updateSVG(instrumentValue){
     // ========================================
     // STUDENT EDIT ZONE
-    // This section controls how the gauge displays
+    // This section controls how the instruments displays
     // ========================================
 
     /**
-     * Updates the speed gauge display
+     * Updates the speed instruments display
      * - The needle rotates to show speed level
      * - 0% = -180 degrees (pointing left)
      * - 50% = -90 degrees (pointing up)
