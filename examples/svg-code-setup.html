@@ -202,7 +202,7 @@
   <body>
     <div class="container">
       <h1>SVG JavaScript Setup</h1>
-      <h2>The tool adds the basic code to your SVG</h2>
+      <h2>The tool adds the basic Submarine Instrument code to your SVG, so you can collaborate with the AI</h2>
 
       <div class="drop-zones">
         <div class="drop-zone" id="newSvgZone">
@@ -350,6 +350,7 @@
           document.getElementById("newSvgInfo").textContent = `✓ Loaded: ${file.name}`;
           document.getElementById("newSvgInfo").style.display = "block";
           document.getElementById("newSvgZone").classList.add("loaded");
+          document.getElementById("newSvgZone").style.display = "none";
 
           // Automatically add JavaScript template
           addJavaScriptToSvg();
@@ -380,7 +381,10 @@
 
           if (existingScripts.length > 0) {
             // Alert user but continue
-            showStatus(`⚠️ Warning: This SVG already contains ${existingScripts.length} script tag(s). The template code will be added anyway.`, "info");
+            showStatus(
+              `Warning: This SVG already contains ${existingScripts.length} script tag(s). The template code will replace the existing code in the download.`,
+              "info"
+            );
           }
 
           // Create new script element with the template code
@@ -404,7 +408,7 @@
 
           // Show success message
           if (existingScripts.length === 0) {
-            showStatus(`✓ Success! JavaScript template added to ${newSvgFileName}. Click "Download SVG with Code" above to save it.`, "success");
+            showStatus(`Success! JavaScript template added to ${newSvgFileName}. Click "Download SVG with Code" above to save it.`, "success");
           }
         } catch (error) {
           showStatus(`Error: ${error.message}`, "error");
@@ -447,6 +451,7 @@
         document.getElementById("previewArea").innerHTML = "";
         document.getElementById("newSvgInput").value = "";
         document.getElementById("statusMessage").style.display = "none";
+        document.getElementById("newSvgZone").style.display = "block";
       }
 
       function showStatus(message, type) {

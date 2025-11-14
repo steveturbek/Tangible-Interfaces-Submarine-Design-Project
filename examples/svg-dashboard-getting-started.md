@@ -38,31 +38,65 @@ Use the <a href="https://steveturbek.github.io/Tangible-Interfaces-Submarine-Des
 
 _ChatGPT is used in this demo as it is free, but others may work._
 
-Open a new chat with the AI and drag these files onto the window:
+Cut and paste use this template, but update the file names!
+
+```
+I'm a design student, redesigning the elevator.svg instrument for the class project: https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
+
+
+I am next going to paste 3 files:
+- svg-dashboard-helper-SKILL.md is a AI Skill instructions to guide you.
+- elevator.svg is the instrument file we want to replace, use it to understand the data range and javascript code as an example.
+- elevator-new.svg is my new design, it has template Javascript code. I want you to just work in the STUDENT EDIT ZONE only.  Do not change any other code!
+
+I want you to make an new SVG I can download from  elevator-new.svg but add a different behavior:
+
+
+I want to rotate in place the "elevator-shape" element of the svg.
+instrumentValue is the input variable, and it goes from -100 to 100
+
+When instrumentValue is 0, "elevator-shape" should be at the initial orientation
+When instrumentValue is -100, "elevator-shape" should rotate -30 degrees from the initial orientation
+When instrumentValue is 100, "elevator-shape" should rotate +30 degrees from the initial orientation
+
+As output, I want you to create a svg file so I can download it and put it in the game as a 'drop in' replacement for elevator.svg
+I am a designer, and don't understand programming, so you will need to be my guide and do it for me.
+
+Don't make the file until I have pasted all three files! Does this make sense?  Ask any questions you need to.
+```
+
+**In 3 steps, copy the text of these files and paste in the chat text box**
 
 1. The [AI 'skill' file](https://raw.githubusercontent.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/refs/heads/main/examples/svg-dashboard-helper-SKILL.md) or in `examples/svg-dashboard-helper-SKILL.md` (teaches the AI the rules)
-1. The instrument SVG file you are replacing (e.g. speed.svg)
-1. Your new SVG file (with the code added in step 2), name it speed-new.svg
+1. The instrument SVG file you are replacing (e.g. elevator.svg)
+1. Your new SVG file (with the code added in step 2), name it elevator-new.svg
 
-Then use this template:
+**Tips**
 
-```
-I'm redesigning the speed.svg instrument for the class project: https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/tree/main
-Please use these uploaded AI Skill instructions to guide you.
+- Be patient
+- Be extremely specific - name the specific layer in your design, say exactly what you want to happen
+- You can sometimes upload the file rather than pasting the text, but it seems to require you to upgrade.
 
-Please look at the speed.svg instrument to understand the data range and localStorage key.
+1. **Start simple:** Animate just one element first
+2. **Test constantly:** Open the SVG in a browser after every change
+3. **Iterate:** Describe what's wrong and the AI will fix it
+4. **Experiment:** Once one instrument works, try different animation types
 
-I want to update speed-new.svg but add a different behavior in the STUDENT EDIT ZONE only.  Do not change any other code.
+If something isn't working:
 
-I want to fill a bar from left to right. The bar element is called "speed_bar" and
-should fill based on the same 0-100 values that the original instrument uses.
+1. Check the browser console for error messages
+2. Upload your SVG to the AI and describe the problem
+3. Ask the AI to explain what a specific part of the code does
 
+**Example Chats**
 
-```
+- [Claude](https://claude.ai/share/38cac827-76fd-4966-8419-9c8a412d1330)
+- [ChatGPT](https://chatgpt.com/share/6917a6ed-70d4-8010-8d2b-01a3d27447ac)
+- (also tested on Gemini )
 
 ## Step 4: Download and Test
 
-1. Load file in chrome browser, it should auto animate the Instrument.
+1. Load file in Chrome browser, it should auto animate the Instrument.
 
    1. The SVG has **built-in test mode** - it will oscillate between 0-100 automatically so you can see how it looks.
    1. **Check the browser console** (Right-click → Inspect → Console) to see debugging info.
@@ -162,24 +196,3 @@ The SVG detects its own filename and uses it as the localStorage key.
 **A:**
 
 - Check that the filename is an exact replacement of the old one
-
-## Next Steps
-
-1. **Start simple:** Animate just one element first
-2. **Test constantly:** Open the SVG in a browser after every change
-3. **Iterate:** Describe what's wrong and the AI will fix it
-4. **Experiment:** Once one instrument works, try different animation types
-
-## Tools Reference
-
-- **svg-dashboard-helper-SKILL.md** - The instruction file for the AI
-- **svg-code-merger.html** - Tool to merge new designs with working code
-- **Your browser console** - Shows debugging info and errors
-
-## Getting Help
-
-If something isn't working:
-
-1. Check the browser console for error messages
-2. Upload your SVG to the AI and describe the problem
-3. Ask the AI to explain what a specific part of the code does
