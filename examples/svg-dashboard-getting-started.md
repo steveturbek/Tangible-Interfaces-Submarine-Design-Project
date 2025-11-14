@@ -32,7 +32,7 @@ These layer names become IDs in your SVG code. When you tell the AI "rotate the 
 
 ## Step 2: Add AI Starter code to your SVG file
 
-Use the < a href="https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/examples/examples/svg-code-setup.html"> SVG Code Setup Tool</a> to add the basic JavaScript template to your SVG. Download the file for the next step
+Use the <a href="https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/examples/examples/svg-code-setup.html"> SVG Code Setup Tool</a> to add the basic JavaScript template to your SVG. Download the file for the next step
 
 ## Step 3: Talk to the AI
 
