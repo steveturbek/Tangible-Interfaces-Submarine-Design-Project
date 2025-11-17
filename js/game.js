@@ -40,7 +40,7 @@ const gameState_original = {
 
   // Navigation & Environment
   navigation: {
-    targetPosition: { x: 0, y: 10, z: -1200 }, // target location (30 units above seabed)
+    targetPosition: { x: 0, y: 10, z: -1200 }, // target location
     distanceToTarget: 0, // 0-100% (scaled)
     headingToTarget: 0, // 0-359 degrees
     // proximityWarning: 0, // 0-100% (distance to nearest obstacle)
@@ -483,8 +483,6 @@ function updateSubmarineState(deltaTime) {
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// REPLACE the applyBoundaryConstraints function with this corrected version:
-
 // Helper function to reset velocities when hitting boundaries
 function resetVelocities() {
   window.gameState.velocity.x = 0;
@@ -548,7 +546,7 @@ function applyBoundaryConstraints() {
     appendInstrumentConsoleMessage("Hit seabed - stopping submarine");
 
     // Drop the target if it was grabbed!
-    if (window.gameState.navigation.targetGrabbed) {
+    if (window.gameState.navigation.targetGrabbed && window.gameDifficulty !== "easy") {
       window.gameState.navigation.targetGrabbed = false;
       window.gameState.navigation.targetFallVelocity = -20; // Start falling
       appendInstrumentConsoleMessage("💎 You dropped the target! It's falling!");

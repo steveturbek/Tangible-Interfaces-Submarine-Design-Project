@@ -80,8 +80,8 @@ function handleKeyPress(event) {
       break;
 
     // Emergency controls
-    case "b":
-      emergencyBlowTanks();
+    case "g":
+      grabTarget();
       break;
 
     // Emergency brake
@@ -346,8 +346,8 @@ function grabTarget() {
   // Calculate distance to target
   const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-  // Check if within 20 units
-  if (distance > 20) {
+  // Check if within
+  if (distance > 40) {
     console.log(`Target too far away: ${distance.toFixed(2)} units`);
     return;
   }
