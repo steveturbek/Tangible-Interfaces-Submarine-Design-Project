@@ -4,10 +4,7 @@
     <!-- sky gradient -->
     <linearGradient id="skyGrad" x1="0" x2="0" y1="0" y2="1">
       <stop offset="0%" stop-color="#0f0326"/>
-      <stop offset="35%" stop-color="#2b0a4f"/>
-      <stop offset="60%" stop-color="#7b1fa8"/>
-      <stop offset="85%" stop-color="#ff3d81"/>
-      <stop offset="100%" stop-color="#ff9f4d"/>
+      <stop offset="100%" stop-color="#0f0326"/>
     </linearGradient>
 
     <!-- sun radial -->
