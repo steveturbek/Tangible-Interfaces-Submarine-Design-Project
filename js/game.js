@@ -243,47 +243,41 @@ function updateSubmarineState(deltaTime) {
   window.gameState.time.elapsed += deltaTime;
   window.gameState.time.logTimeCounter += deltaTime;
 
-  // Update oxygen based on elapsed time (skip for easy mode)
-  const difficulty = window.gameDifficulty || "hard";
-  if (difficulty !== "easy") {
-    window.gameState.status.oxygenLevel = Math.max(
-      0,
-      Math.ceil(((window.gameState.constants.maxOxygenTime - window.gameState.time.elapsed) / window.gameState.constants.maxOxygenTime) * 100)
-    );
-  } else {
-    // Easy mode: oxygen stays at 100%
-    window.gameState.status.oxygenLevel = 100;
-  }
+  // Update oxygen based on elapsed time
+  window.gameState.status.oxygenLevel = Math.max(
+    0,
+    Math.ceil(((window.gameState.constants.maxOxygenTime - window.gameState.time.elapsed) / window.gameState.constants.maxOxygenTime) * 100)
+  );
 
   // Calculate engine RPM based on thruster values
   // Average the absolute values of both thrusters to get overall engine load
   const avgThrottle = (Math.abs(window.gameState.controls.ThrottleLeft) + Math.abs(window.gameState.controls.ThrottleRight)) / 2;
   window.gameState.status.engineRPM = avgThrottle;
 
-  // Update battery based on engine usage and aft thruster (skip for easy mode)
-  if (difficulty !== "easy") {
-    const mainPowerDrain = (avgThrottle * deltaTime) / window.gameState.constants.maxBatteryTime;
-    // Aft thrusters also use some power, but less than main thrusters
-    const aftPowerDrain = (Math.abs(window.gameState.controls.VerticalThruster) * 0.3 * deltaTime) / window.gameState.constants.maxBatteryTime;
-    const totalPowerDrain = mainPowerDrain + aftPowerDrain;
+  // Update battery based on engine usage and aft thruster
+  const mainPowerDrain = (avgThrottle * deltaTime) / window.gameState.constants.maxBatteryTime;
+  // Aft thrusters also use some power, but less than main thrusters
+  const aftPowerDrain = (Math.abs(window.gameState.controls.VerticalThruster) * 0.3 * deltaTime) / window.gameState.constants.maxBatteryTime;
+  const totalPowerDrain = mainPowerDrain + aftPowerDrain;
 
-    window.gameState.status.batteryLevel = Math.max(0, window.gameState.status.batteryLevel - totalPowerDrain);
+  window.gameState.status.batteryLevel = Math.max(0, window.gameState.status.batteryLevel - totalPowerDrain);
 
-    // Battery warnings when crossing below 10% thresholds (90, 80, 70, etc.)
-    const currentThreshold = Math.floor(window.gameState.status.batteryLevel / 10) * 10;
-    const previousThreshold = Math.floor(window.gameState.status.lastBatteryWarning / 10) * 10;
-    // Only warn when crossing into a new lower threshold
-    if (currentThreshold < previousThreshold && window.gameState.status.batteryLevel > 0) {
-      window.gameState.status.lastBatteryWarning = currentThreshold;
-      if (currentThreshold === 0) {
-        appendInstrumentConsoleMessage("BATTERY DEPLETED! Thrusters offline!");
-      } else {
-        appendInstrumentConsoleMessage(`Battery at ${previousThreshold}%`);
+  // Battery warnings when crossing below 10% thresholds (90, 80, 70, etc.)
+  const currentThreshold = Math.floor(window.gameState.status.batteryLevel / 10) * 10;
+  const previousThreshold = Math.floor(window.gameState.status.lastBatteryWarning / 10) * 10;
+  // Only warn when crossing into a new lower threshold
+  if (currentThreshold < previousThreshold && window.gameState.status.batteryLevel > 0) {
+    window.gameState.status.lastBatteryWarning = currentThreshold;
+    if (currentThreshold === 0) {
+      appendInstrumentConsoleMessage("BATTERY DEPLETED! Thrusters offline!");
+
+      if (window.gameDifficulty === "easy") {
+        appendInstrumentConsoleMessage("You are on Easy Mode, restoring power!");
+        window.gameState.status.batteryLevel = 100;
       }
+    } else {
+      appendInstrumentConsoleMessage(`Battery at ${previousThreshold}%`);
     }
-  } else {
-    // Easy mode: battery stays at 100%
-    window.gameState.status.batteryLevel = 100;
   }
 
   // Calculate forward thrust vector based on submarine orientation
@@ -472,7 +466,7 @@ function updateSubmarineState(deltaTime) {
   applyBoundaryConstraints();
 
   // Check for coral collisions (skip for easy and medium modes)
-  if (difficulty === "hard" && typeof checkCoralCollisions === "function") {
+  if (window.gameDifficulty === "hard" && typeof checkCoralCollisions === "function") {
     checkCoralCollisions();
   }
 
@@ -627,11 +621,17 @@ function updateUI() {
 
   // oxygen level
   if (window.gameState.status.oxygenLevel <= 0) {
-    console.log("GAME OVER: Oxygen depleted, level =", window.gameState.status.oxygenLevel);
-    appendInstrumentConsoleMessage("CRITICAL: Oxygen depleted!");
-    showGameOverScreen();
-    stopGame();
-    return;
+    if (window.gameDifficulty === "easy") {
+      console.log("Oxygen depleted, But you are on Easy Mode, so restoring Oxygen");
+      appendInstrumentConsoleMessage("Restoring Oxygen on Easy Mode");
+      window.gameState.status.oxygenLevel = 100;
+    } else {
+      console.log("GAME OVER: Oxygen depleted, level =", window.gameState.status.oxygenLevel);
+      appendInstrumentConsoleMessage("CRITICAL: Oxygen depleted!");
+      showGameOverScreen();
+      stopGame();
+      return;
+    }
   }
 
   // Format position values with 2 decimal places
