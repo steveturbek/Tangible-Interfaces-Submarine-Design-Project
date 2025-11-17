@@ -101,6 +101,20 @@ If something isn't working:
    1. The SVG has **built-in test mode** - it will oscillate between 0-100 automatically so you can see how it looks.
    1. **Check the browser console** (Right-click → Inspect → Console) to see debugging info.
 
+### Background on how this works
+
+The SVGs we make here have javascript code in it. It looks for a variable stored in the Chrome browser's [localStorage](https://en.wikipedia.org/wiki/Web_storage#localStorage).
+The SVG code looks for a variable with the same filename, so `compass.svg` uses `copmpass`, `compass_new.svg` uses `compass_new`
+
+If the SVG does not find the variable, it goes into test mode. In Chrome, open up the Javascript console (Menu bar > View > Developer > Javascript Console). it should say something like `no local storage "compass", using test value: 316`
+
+You can acccess this and set the value directly in the Chrome DevTools console
+
+- To set a localStorage value: `localStorage.setItem('keyName', 'value');`
+- To delete a localStorage value: `localStorage.removeItem('keyName');`
+
+### Test in Game
+
 1. Drop in `instruments` folder and load game
    1. Make sure it has the same name as the old file
 
