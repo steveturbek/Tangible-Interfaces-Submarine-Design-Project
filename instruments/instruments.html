@@ -27,21 +27,21 @@
     </div>
 
     <div class="instruments-grid">
-      <object id="oxygenGauge" type="image/svg+xml" data="instruments/oxygen.svg"></object>
-      <object id="batteryGauge" type="image/svg+xml" data="instruments/battery.svg"></object>
-      <object id="compassGauge" type="image/svg+xml" data="instruments/compass.svg" style="grid-column: span 2; /* Takes up 2 columns */"></object>
+      <object id="oxygenGauge" type="image/svg+xml" data="oxygen.svg"></object>
+      <object id="batteryGauge" type="image/svg+xml" data="battery.svg"></object>
+      <object id="compassGauge" type="image/svg+xml" data="compass.svg" style="grid-column: span 2; /* Takes up 2 columns */"></object>
 
-      <object id="depthGauge" type="image/svg+xml" data="instruments/depth.svg"></object>
-      <object id="speedGauge" type="image/svg+xml" data="instruments/speed.svg"></object>
-      <object id="pitchGauge" type="image/svg+xml" data="instruments/pitch.svg"></object>
+      <object id="depthGauge" type="image/svg+xml" data="depth.svg"></object>
+      <object id="speedGauge" type="image/svg+xml" data="speed.svg"></object>
+      <object id="pitchGauge" type="image/svg+xml" data="pitch.svg"></object>
 
-      <object id="leftThrustGauge" type="image/svg+xml" data="instruments/thrust-left.svg"></object>
-      <object id="rightThrustGauge" type="image/svg+xml" data="instruments/thrust-right.svg"></object>
-      <object id="targetGauge" type="image/svg+xml" data="instruments/target.svg"></object>
+      <object id="leftThrustGauge" type="image/svg+xml" data="thrust-left.svg"></object>
+      <object id="rightThrustGauge" type="image/svg+xml" data="thrust-right.svg"></object>
+      <object id="targetGauge" type="image/svg+xml" data="target.svg"></object>
 
-      <object id="rudderGauge" type="image/svg+xml" data="instruments/rudder.svg"></object>
-      <object id="elevatorGauge" type="image/svg+xml" data="instruments/elevator.svg"></object>
-      <object id="verticalThrusterGauge" type="image/svg+xml" data="instruments/thrust-vertical.svg"></object>
+      <object id="rudderGauge" type="image/svg+xml" data="rudder.svg"></object>
+      <object id="elevatorGauge" type="image/svg+xml" data="elevator.svg"></object>
+      <object id="verticalThrusterGauge" type="image/svg+xml" data="thrust-vertical.svg"></object>
     </div>
     <div id="sub-data-text" style="grid-column: span 3"></div>
 
@@ -56,7 +56,7 @@
       loading="lazy"
     ></iframe>
 
-    <script src="js/instruments-window.js"></script>
+    <script src="../js/instruments-window.js"></script>
   </body>
 
   <style>
@@ -96,7 +96,7 @@
       position: relative;
       height: 91vh;
       width: 100%;
-      background-image: url("instruments/instruments-background.svg");
+      background-image: url("instruments-background.svg");
       background-size: cover;
       background-position: center;
     }
@@ -118,7 +118,7 @@
       left: 150px;
       transform: translateY(-50%);
       width: 200px;
-      height: 200px;
+      height: 300px;
     }
 
     /* Right of speed */
