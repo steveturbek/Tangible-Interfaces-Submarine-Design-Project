@@ -244,16 +244,15 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
       1. If instruments SVG is not updating after a save, do 'hard reload' ( Cmd + Shift + R on a Mac)
 
 1. Instruments page
-   1. In the `instruments/` folder, the file `instruments.css` controls the layout of the instruments
-   1. Update `instruments-background.svg` image
-   1. Load in Chrome browser to view.
+   1. Open `instruments.html` in Chrome browser.
    1. Set the window size you want, use full screen icon in top right.
    1. **Command-Shift-E ** command turns on layout editor.
       - Drag to position and resize instruments.
       - Instruments can overlap each other (if they have transparent backgrounds)
       - Click Download Layout
       - Move the `instruments.css` to the `instruments/` folder (replacing previous file)
-      - Reload
+      - Update `instruments-background.svg` image to change background
+      - Reload to view changes
 
 ## Project Structure
 
