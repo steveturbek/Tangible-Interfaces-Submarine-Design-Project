@@ -8,12 +8,12 @@
     </linearGradient>
 
     <!-- sun radial -->
-    <radialGradient id="sunGrad" cx="50%" cy="60%" r="40%">
-      <stop offset="0%" stop-color="#fff2d6" stop-opacity="1"/>
-      <stop offset="30%" stop-color="#ffd07a" stop-opacity="1"/>
-      <stop offset="60%" stop-color="#ff6f7a" stop-opacity="0.85"/>
-      <stop offset="100%" stop-color="#ff3d81" stop-opacity="0"/>
-    </radialGradient>
+      <!-- <radialGradient id="sunGrad" cx="50%" cy="60%" r="40%">
+        <stop offset="0%" stop-color="#fff2d6" stop-opacity="1"/>
+        <stop offset="30%" stop-color="#ffd07a" stop-opacity="1"/>
+        <stop offset="60%" stop-color="#ff6f7a" stop-opacity="0.85"/>
+        <stop offset="100%" stop-color="#ff3d81" stop-opacity="0"/>
+      </radialGradient> -->
 
     <!-- neon line glow -->
     <linearGradient id="gridColor" x1="0" x2="1">
@@ -49,34 +49,34 @@
  <!-- perspective grid - converging lines to vanishing point (800,360) -->
   <g stroke-linecap="round" stroke-width="1.6" filter="url(#glow)">
     <!-- long perspective spokes -->
-    <g stroke="url(#gridColor)" opacity="0.95">
-      <line x1="0" y1="900" x2="800" y2="360"/>
-      <line x1="80" y1="900" x2="800" y2="360"/>
-      <line x1="160" y1="900" x2="800" y2="360"/>
-      <line x1="240" y1="900" x2="800" y2="360"/>
-      <line x1="320" y1="900" x2="800" y2="360"/>
-      <line x1="400" y1="900" x2="800" y2="360"/>
-      <line x1="480" y1="900" x2="800" y2="360"/>
-      <line x1="560" y1="900" x2="800" y2="360"/>
-      <line x1="640" y1="900" x2="800" y2="360"/>
-      <line x1="720" y1="900" x2="800" y2="360"/>
-      <line x1="880" y1="900" x2="800" y2="360"/>
-      <line x1="960" y1="900" x2="800" y2="360"/>
-      <line x1="1040" y1="900" x2="800" y2="360"/>
-      <line x1="1120" y1="900" x2="800" y2="360"/>
-      <line x1="1200" y1="900" x2="800" y2="360"/>
-      <line x1="1280" y1="900" x2="800" y2="360"/>
-      <line x1="1360" y1="900" x2="800" y2="360"/>
-      <line x1="1440" y1="900" x2="800" y2="360"/>
-      <line x1="1600" y1="900" x2="800" y2="360"/>
+    <g stroke="url(#gridColor)" opacity="0.75">
+      <line x1="0" y1="900" x2="800" y2="440"/>
+      <line x1="80" y1="900" x2="800" y2="440"/>
+      <line x1="160" y1="900" x2="800" y2="440"/>
+      <line x1="240" y1="900" x2="800" y2="440"/>
+      <line x1="320" y1="900" x2="800" y2="440"/>
+      <line x1="400" y1="900" x2="800" y2="440"/>
+      <line x1="480" y1="900" x2="800" y2="440"/>
+      <line x1="560" y1="900" x2="800" y2="440"/>
+      <line x1="640" y1="900" x2="800" y2="440"/>
+      <line x1="720" y1="900" x2="800" y2="440"/>
+      <line x1="880" y1="900" x2="800" y2="440"/>
+      <line x1="960" y1="900" x2="800" y2="440"/>
+      <line x1="1040" y1="900" x2="800" y2="440"/>
+      <line x1="1120" y1="900" x2="800" y2="440"/>
+      <line x1="1200" y1="900" x2="800" y2="440"/>
+      <line x1="1280" y1="900" x2="800" y2="440"/>
+      <line x1="1360" y1="900" x2="800" y2="440"/>
+      <line x1="1440" y1="900" x2="800" y2="440"/>
+      <line x1="1600" y1="900" x2="800" y2="440"/>
     </g>
   </g>
   
   <!-- sun (semi-hidden behind horizon) -->
-  <g transform="translate(800,360)">
+  <!-- <g transform="translate(800,360)">
     <circle cx="0" cy="40" r="160" fill="url(#sunGrad)" opacity="0.95"/>
     <circle cx="0" cy="40" r="64" fill="#ffeb9a" opacity="0.7" />
-  </g>
+  </g> -->
 
   <!-- faint distant horizontal glow near horizon -->
   <ellipse cx="800" cy="400" rx="900" ry="120" fill="rgba(255,120,110,0.06)" />

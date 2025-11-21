@@ -166,18 +166,11 @@ The student will have the ability to design the submarine. Here are the technica
 
 The submarine simulation is an idealized vehicle to keep the project fun!
 
-### 💡 Tips for New Pilots
-
-1. **Start slow**: Begin with small adjustments to get a feel for the submarine's response.
-2. **Watch your depth**
-3. **Turn gradually**
-4. **Monitor your systems**:
-
 ### Game Mechanics
 
 - Oxygen management (countdown timer)
 - Electric power management (reduced by engine usage)
-- Navigation challenges (tight passageways, 3D maze)
+- Navigation challenges (Kelp Reduce Visibility)
 
 ### Cockpit Instruments
 
@@ -239,16 +232,9 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 
 1. Research instrument displays
 1. Pick a display screen, can be a laptop monitor, an iPad, or one of the interesting monitor shapes like [round](https://www.amazon.com/s?k=HDMI+Round+Touch+Display&i=electronics&crid=2KOIQO2N9TW8C&sprefix=hdmi+round+touch+display%2Caps%2C101) or [skinny](https://www.amazon.com/s?k=11.26+inch+1920x440+HDMI+LCD&i=electronics&crid=1UKVEQ5GCQXD7&sprefix=11.26+inch+1920x440+hdmi+lcd%2Caps%2C125&ref=nb_sb_noss_1)
-1. Instruments page
-
-   1. In the downloaded game folder, the file instruments.html controls the layout of the instruments
-   1. Edit instrument.html to layout and style the instruments window
-   1. Use TextEdit to edit instruments.html, but make this one settings change: TextEdit > Settings > Open and Save. **Uncheck** "Display HTML files as HTML code instead of formatted text"
-   1. Edit the CSS style code to change an instruments location on the screen
-   1. Instruments can overlap each other (if they have transparent backgrounds)
-   1. AI's are really good at explaining and fixing errors in the code, if you give them context of the github project URL
-
-1. Instruments (Speed, Oxygen)
+1. Design your layout
+   - Adobe Illustrator is a little bit easier to use for this purpose
+1. Design Instruments (Speed, Oxygen, ...)
 
    1. Each instrument is a file in the `instruments/` folder.
    1. They are SVG files, which is a image file type which can have some extra tricks we use.
@@ -257,14 +243,27 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
    1. Move updated file to instruments folder and reload instrument.html page in Chrome browser
       1. If instruments SVG is not updating after a save, do 'hard reload' ( Cmd + Shift + R on a Mac)
 
+1. Instruments page
+   1. In the downloaded game folder, the file instruments.html controls the layout of the instruments
+   1. Update `instruments-background.svg` image
+   1. Load in Chrome browser to view.
+   1. Set the window size you want, use full screen icon in top right.
+   1. **Command-Shift-E ** command turns on layout editor.
+      - Drag to position and resize instruments.
+      - Instruments can overlap each other (if they have transparent backgrounds)
+      - Click Download Layout
+      - Move the instruments.css to the `instruments/` folder (replacing previous)
+      - Reload
+
 ## Project Structure
 
 The files:
 
 ```
 ***Design Me, Program Me!***
-├── instruments.html # the layout of the instruments window
 ├── instruments/
+│   ├── instruments.html # the layout of the instruments window
+│   ├── instruments.css # the layout of the instruments window
 │   ├── oxygen.svg     # Oxygen instruments
 │   ├── battery.svg    # Battery instruments
 │   └── etc...

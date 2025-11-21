@@ -1,0 +1,55 @@
+/* ====================================
+   Submarine Instruments Layout
+   Each instrument uses translate() relative to center and scale() for sizing.
+   ==================================== */
+
+#oxygen {
+  transform: translate(-592px, -313px) scale(0.4080208786645106);
+}
+
+#battery {
+  transform: translate(-369px, -166px) scale(0.49102284816738073);
+}
+
+#compass {
+  transform: translate(219px, -182px) scale(1);
+}
+
+#depth {
+  transform: translate(-228px, 25px) scale(1);
+}
+
+#speed {
+  transform: translate(204px, 144px) scale(0.874206);
+}
+
+#pitch {
+  transform: translate(-63px, -98px) scale(0.5);
+}
+
+#leftThrust {
+  transform: translate(-569px, 61px) scale(0.4536553502539992);
+}
+
+#rightThrust {
+  transform: translate(-342px, -327px) scale(0.4781082270953606);
+}
+
+#target {
+  transform: translate(255px, -342px) scale(0.562243);
+}
+
+#rudder {
+  transform: translate(-409px, 175px) scale(0.518373);
+}
+
+#elevator {
+  transform: translate(-78px, -348px) scale(0.3787760022560067);
+}
+
+#verticalThruster {
+  transform: translate(-571px, -22px) scale(0.570281);
+}
+#extra {
+  transform: translate(300px, 200px) scale(0.25);
+}
