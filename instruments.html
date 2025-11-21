@@ -426,6 +426,25 @@
           }
         });
       })();
+
+      // Fullscreen functionality
+      // Wait for DOM to be ready before adding event listener
+      document.addEventListener("DOMContentLoaded", function () {
+        const fullscreenIcon = document.getElementById("fullscreen-icon");
+        if (fullscreenIcon) {
+          fullscreenIcon.addEventListener("click", function () {
+            if (!document.fullscreenElement) {
+              // Enter fullscreen
+              document.documentElement.requestFullscreen().catch((err) => {
+                console.error("Error attempting to enable fullscreen:", err);
+              });
+            } else {
+              // Exit fullscreen
+              document.exitFullscreen();
+            }
+          });
+        }
+      });
     </script>
   </body>
 
