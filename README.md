@@ -244,7 +244,7 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
       1. If instruments SVG is not updating after a save, do 'hard reload' ( Cmd + Shift + R on a Mac)
 
 1. Instruments page
-   1. In the downloaded game folder, the file instruments.html controls the layout of the instruments
+   1. In the `instruments/` folder, the file `instruments.css` controls the layout of the instruments
    1. Update `instruments-background.svg` image
    1. Load in Chrome browser to view.
    1. Set the window size you want, use full screen icon in top right.
@@ -252,7 +252,7 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
       - Drag to position and resize instruments.
       - Instruments can overlap each other (if they have transparent backgrounds)
       - Click Download Layout
-      - Move the instruments.css to the `instruments/` folder (replacing previous)
+      - Move the `instruments.css` to the `instruments/` folder (replacing previous file)
       - Reload
 
 ## Project Structure
@@ -262,7 +262,6 @@ The files:
 ```
 ***Design Me, Program Me!***
 ├── instruments/
-│   ├── instruments.html # the layout of the instruments window
 │   ├── instruments.css # the layout of the instruments window
 │   ├── oxygen.svg     # Oxygen instruments
 │   ├── battery.svg    # Battery instruments
@@ -270,6 +269,7 @@ The files:
 
 ***These should not need to be edited***
 ├── index.html          # Game page
+├── instruments.html # the instruments window
 ├── js/                 # JavaScript files
 │   ├── game.js                 # Core game mechanics
 │   ├── controls.js             # Input handling

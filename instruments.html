@@ -17,7 +17,7 @@
     ╚════════════════════════════════════════════════════════════════════════════╝
     -->
     <!-- Load saved layout CSS (may not exist yet - that's OK) -->
-    <link rel="stylesheet" href="instruments.css" />
+    <link rel="stylesheet" href="instruments/instruments.css" />
   </head>
   <body>
     <!-- Layout Editor Control Panel (hidden by default) -->
@@ -36,22 +36,22 @@
     </div>
 
     <div class="instruments-grid">
-      <object id="extra" type="image/svg+xml" data="extra.svg"></object>
-      <object id="oxygen" type="image/svg+xml" data="oxygen.svg"></object>
-      <object id="battery" type="image/svg+xml" data="battery.svg"></object>
-      <object id="compass" type="image/svg+xml" data="compass.svg"></object>
+      <object id="extra" type="image/svg+xml" data="instruments/extra.svg"></object>
+      <object id="oxygen" type="image/svg+xml" data="instruments/oxygen.svg"></object>
+      <object id="battery" type="image/svg+xml" data="instruments/battery.svg"></object>
+      <object id="compass" type="image/svg+xml" data="instruments/compass.svg"></object>
 
-      <object id="depth" type="image/svg+xml" data="depth.svg"></object>
-      <object id="speed" type="image/svg+xml" data="speed.svg"></object>
-      <object id="pitch" type="image/svg+xml" data="pitch.svg"></object>
+      <object id="depth" type="image/svg+xml" data="instruments/depth.svg"></object>
+      <object id="speed" type="image/svg+xml" data="instruments/speed.svg"></object>
+      <object id="pitch" type="image/svg+xml" data="instruments/pitch.svg"></object>
 
-      <object id="leftThrust" type="image/svg+xml" data="thrust-left.svg"></object>
-      <object id="rightThrust" type="image/svg+xml" data="thrust-right.svg"></object>
-      <object id="target" type="image/svg+xml" data="target.svg"></object>
+      <object id="leftThrust" type="image/svg+xml" data="instruments/thrust-left.svg"></object>
+      <object id="rightThrust" type="image/svg+xml" data="instruments/thrust-right.svg"></object>
+      <object id="target" type="image/svg+xml" data="instruments/target.svg"></object>
 
-      <object id="rudder" type="image/svg+xml" data="rudder.svg"></object>
-      <object id="elevator" type="image/svg+xml" data="elevator.svg"></object>
-      <object id="verticalThruster" type="image/svg+xml" data="thrust-vertical.svg"></object>
+      <object id="rudder" type="image/svg+xml" data="instruments/rudder.svg"></object>
+      <object id="elevator" type="image/svg+xml" data="instruments/elevator.svg"></object>
+      <object id="verticalThruster" type="image/svg+xml" data="instruments/thrust-vertical.svg"></object>
 
       <button id="restart-btn" onclick="restartGame()">Restart Mission</button>
       <svg id="fullscreen-icon" height="30px" width="30px" version="1.1" viewBox="10 10 18 18">
@@ -70,7 +70,7 @@
       <div id="sub-data-text" style="display: none"></div>
     </div>
 
-    <script src="../js/instruments-window.js"></script>
+    <script src="js/instruments-window.js"></script>
 
     <!-- Layout Editor Script -->
     <script>
@@ -430,10 +430,6 @@
   </body>
 
   <style>
-    /* ========================================
-       STUDENT EDIT ZONE - Customize this!
-       ======================================== */
-
     body {
       margin: 0;
       padding: 0px;
@@ -446,7 +442,7 @@
       position: relative;
       height: 100vh;
       width: 100%;
-      background-image: url("instruments-background.svg");
+      background-image: url("instruments/instruments-background.svg");
       background-size: 100% 100%;
       background-position: top left;
       padding: 0;
