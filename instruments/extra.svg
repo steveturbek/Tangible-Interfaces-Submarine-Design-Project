@@ -65,6 +65,10 @@
       instrumentValue = Math.max(0, Math.min(100, instrumentValue));
 
     } else {
+
+/*
+turn off test value as extra is not used at present
+
     // no localStorage, so make up a number, so it swings back and forth
     // Initialize static variables if they don't exist
     if (typeof window.testValue === 'undefined') {
@@ -86,6 +90,7 @@
 
     instrumentValue = window.testValue;
     console.log('no local storage \"'+localStorageName+'\", using test value:', instrumentValue);
+*/
 
      } 
     
