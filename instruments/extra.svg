@@ -14,40 +14,18 @@
     // This sections controls how the gauge displays
     // ========================================
 
-    /**
-     * Updates the gauge display
-     * - The gauge needle (line) rotates to show level
-     * - 0% = -180 degrees (pointing left)
-     * - 50% = -90 degrees (pointing up)
-     * - 100% = 0 degrees (pointing right)
-     */
-
-      // Calculate rotation angle
-      // Formula: -180 degrees + (percentage * 1.8)
-      const angle = -180 + instrumentValue * 1.8;
-
-
-      // Get the needle line element
-      const line = document.getElementById('line');
-      if (!line) { 
-        console.log('Cant find element to animate');
-        return;
-      }
-
-      // Get the pivot point (start of the line)
-      const x1 = parseFloat(line.getAttribute('x1'));
-      const y1 = parseFloat(line.getAttribute('y1'));
-
-      // Rotate the needle around its pivot point
-      line.setAttribute('transform', `rotate(${angle}, ${x1}, ${y1})`);
-
-
+    
 
     // ========================================
     // END STUDENT EDIT ZONE
     // ========================================
 
     }
+
+
+/*
+turn off test value as extra is not used at present
+
 
 
     setInterval(() => { // do this repeatedly
@@ -66,8 +44,6 @@
 
     } else {
 
-/*
-turn off test value as extra is not used at present
 
     // no localStorage, so make up a number, so it swings back and forth
     // Initialize static variables if they don't exist
@@ -90,7 +66,7 @@ turn off test value as extra is not used at present
 
     instrumentValue = window.testValue;
     console.log('no local storage \"'+localStorageName+'\", using test value:', instrumentValue);
-*/
+
 
      } 
     
@@ -99,6 +75,8 @@ turn off test value as extra is not used at present
 
 
     }, 50);  //end of setInterval code.  50 is 50 milliseconds or 20 times per second.
+
+*/
 
   //]]> // this is to make javascript work in the SVG, leave it alone
   </script>
