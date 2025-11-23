@@ -3,53 +3,55 @@
    Each instrument uses translate() relative to center and scale() for sizing.
    ==================================== */
 
+#extra {
+  transform: translate(-4px, -355px) scale(0.649818);
+}
+
 #oxygen {
-  transform: translate(-592px, -313px) scale(0.4080208786645106);
+  transform: translate(-674px, -354px) scale(0.649927);
 }
 
 #battery {
-  transform: translate(-369px, -166px) scale(0.49102284816738073);
+  transform: translate(-677px, -6px) scale(0.654452);
 }
 
 #compass {
-  transform: translate(219px, -182px) scale(1);
+  transform: translate(-341px, -356px) scale(0.653889);
 }
 
 #depth {
-  transform: translate(-228px, 25px) scale(1);
+  transform: translate(-12px, -7px) scale(0.326738);
 }
 
 #speed {
-  transform: translate(204px, 144px) scale(0.874206);
+  transform: translate(62px, -204px) scale(0.385861);
 }
 
 #pitch {
-  transform: translate(-63px, -98px) scale(0.5);
+  transform: translate(322px, -354px) scale(0.654757);
 }
 
 #leftThrust {
-  transform: translate(-569px, 61px) scale(0.4536553502539992);
+  transform: translate(-35px, -354px) scale(0.328205);
 }
 
 #rightThrust {
-  transform: translate(-342px, -327px) scale(0.4781082270953606);
+  transform: translate(186px, -353px) scale(0.327043);
 }
 
 #target {
-  transform: translate(255px, -342px) scale(0.562243);
+  transform: translate(-342px, -352px) scale(0.645987);
 }
 
 #rudder {
-  transform: translate(-409px, 175px) scale(0.518373);
+  transform: translate(-337px, -6px) scale(0.649284);
 }
 
 #elevator {
-  transform: translate(-78px, -348px) scale(0.3787760022560067);
+  transform: translate(322px, -8px) scale(0.649728);
 }
 
 #verticalThruster {
-  transform: translate(-571px, -22px) scale(0.570281);
+  transform: translate(151px, -9px) scale(0.326587);
 }
-#extra {
-  transform: translate(300px, 200px) scale(0.25);
-}
+

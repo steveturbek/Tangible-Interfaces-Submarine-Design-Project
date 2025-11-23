@@ -212,7 +212,7 @@
           // Update scale display
           const state = elementStates[selectedElement.id];
           if (state) {
-            scaleValue.textContent = state.scale.toFixed(1) + "x";
+            scaleValue.textContent = state.scale.toFixed(2) + "x";
           }
         }
 
@@ -256,7 +256,7 @@
           selectedName.textContent = el.id;
 
           const state = elementStates[el.id];
-          scaleValue.textContent = state.scale.toFixed(1) + "x";
+          scaleValue.textContent = state.scale.toFixed(2) + "x";
 
           // Calculate initial distance from element top-left to mouse
           const rect = el.getBoundingClientRect();
@@ -290,7 +290,7 @@
           selectedElement.style.transform = `translate(${state.translateX}px, ${state.translateY}px) scale(${newScale})`;
 
           // Update scale display
-          scaleValue.textContent = newScale.toFixed(1) + "x";
+          scaleValue.textContent = newScale.toFixed(2) + "x";
 
           // Update overlay position
           const overlay = document.querySelector(`.drag-overlay[data-target-id="${selectedElement.id}"]`);

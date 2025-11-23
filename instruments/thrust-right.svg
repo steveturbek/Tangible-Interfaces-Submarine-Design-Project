@@ -1,114 +1,148 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256">
+<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" id="thrust-left" version="1.1" viewBox="0 0 202 402">
+  <!-- Generator: Adobe Illustrator 30.0.0, SVG Export Plug-In . SVG Version: 2.1.1 Build 123)  -->
   <defs>
     <style>
-      .thrust-track {
-        fill: none;
-        stroke-width: 10px;
-        stroke: #666;
-        stroke-linecap: round;
+      .st0 {
+        fill: lime;
       }
-      .thrust-indicator {
-        fill: none;
-        stroke-width: 1px;
-        stroke: #fff;
+
+      .st1 {
+        fill: red;
       }
     </style>
   </defs>
+  <g id="up">
+    <polygon id="_x31_" class="st0" points="100 168.2 105.6 182 114.8 193.8 100 191.8 85.2 193.8 94.4 182 100 168.2"/>
+    <polygon id="_x31_1" class="st0" points="100 156.7 105.6 170.5 114.8 182.3 100 180.3 85.2 182.3 94.4 170.5 100 156.7"/>
+    <polygon id="_x31_2" class="st0" points="100 145.2 105.6 159 114.8 170.8 100 168.8 85.2 170.8 94.4 159 100 145.2"/>
+    <polygon id="_x31_3" class="st0" points="100 133.7 105.6 147.5 114.8 159.2 100 157.2 85.2 159.2 94.4 147.5 100 133.7"/>
+    <polygon id="_x31_4" class="st0" points="100 122.1 105.6 135.9 114.8 147.7 100 145.7 85.2 147.7 94.4 135.9 100 122.1"/>
+    <polygon id="_x31_5" class="st0" points="100 110.6 105.6 124.4 114.8 136.2 100 134.2 85.2 136.2 94.4 124.4 100 110.6"/>
+    <polygon id="_x31_6" class="st0" points="100 99.1 105.6 112.9 114.8 124.7 100 122.7 85.2 124.7 94.4 112.9 100 99.1"/>
+    <polygon id="_x31_7" class="st0" points="100 87.6 105.6 101.4 114.8 113.1 100 111.1 85.2 113.1 94.4 101.4 100 87.6"/>
+    <polygon id="_x31_8" class="st0" points="100 76 105.6 89.8 114.8 101.6 100 99.6 85.2 101.6 94.4 89.8 100 76"/>
+    <polygon id="_x31_9" class="st0" points="100 64.5 105.6 78.3 114.8 90.1 100 88.1 85.2 90.1 94.4 78.3 100 64.5"/>
+  </g>
+  <g id="down">
+    <polygon id="_x31_10" class="st1" points="100 228.3 94.4 214.5 85.2 202.7 100 204.7 114.8 202.7 105.6 214.5 100 228.3"/>
+    <polygon id="_x31_11" class="st1" points="100 239.8 94.4 226 85.2 214.2 100 216.2 114.8 214.2 105.6 226 100 239.8"/>
+    <polygon id="_x31_12" class="st1" points="100 251.3 94.4 237.5 85.2 225.7 100 227.7 114.8 225.7 105.6 237.5 100 251.3"/>
+    <polygon id="_x31_13" class="st1" points="100 262.8 94.4 249 85.2 237.3 100 239.3 114.8 237.3 105.6 249 100 262.8"/>
+    <polygon id="_x31_14" class="st1" points="100 274.4 94.4 260.6 85.2 248.8 100 250.8 114.8 248.8 105.6 260.6 100 274.4"/>
+    <polygon id="_x31_15" class="st1" points="100 285.9 94.4 272.1 85.2 260.3 100 262.3 114.8 260.3 105.6 272.1 100 285.9"/>
+    <polygon id="_x31_16" class="st1" points="100 297.4 94.4 283.6 85.2 271.8 100 273.9 114.8 271.8 105.6 283.6 100 297.4"/>
+    <polygon id="_x31_17" class="st1" points="100 308.9 94.4 295.2 85.2 283.4 100 285.4 114.8 283.4 105.6 295.2 100 308.9"/>
+    <polygon id="_x31_18" class="st1" points="100 320.5 94.4 306.7 85.2 294.9 100 296.9 114.8 294.9 105.6 306.7 100 320.5"/>
+    <polygon id="_x31_19" class="st1" points="100 332 94.4 318.2 85.2 306.4 100 308.4 114.8 306.4 105.6 318.2 100 332"/>
+  </g>
+<script type="text/javascript" id="TangibleSVG">
+            
+      // // this is to make javascript work in the SVG, leave it alone
 
-  <line id="track" class="thrust-track" x1="50" y1="128" x2="462" y2="128"/>
-  <line id="indicator" class="thrust-indicator" x1="256" y1="100" x2="256" y2="156"/>
+          function updateSVG(instrumentValue){
+          // ========================================
+          // STUDENT EDIT ZONE
+          // This section controls how the instrument displays
+          // ========================================
 
-  <text x="10" y="40" style="font-family: Arial; font-size: 40px; font-weight: bold; fill: white;">Right Thrust</text>
-  <text x="20" y="180" style="font-family: Arial; font-size: 20px; fill: white;">-100%</text>
-  <text x="230" y="180" style="font-family: Arial; font-size: 20px; fill: white;">0%</text>
-  <text x="410" y="180" style="font-family: Arial; font-size: 20px; fill: white;">+100%</text>
+          /**
+           * Vertical Thrust Indicator
+           * - instrumentValue ranges from -100 to +100
+           * - Positive values (1 to 100): show "up" arrows from center outward
+           * - Negative values (-1 to -100): show "down" arrows from center outward
+           * - Zero: all arrows hidden
+           * 
+           * Up group IDs: _x31_, _x31_1, _x31_2, ... _x31_9 (10 shapes)
+           * Down group IDs: _x31_10, _x31_11, _x31_12, ... _x31_19 (10 shapes)
+           */
 
-  <script type="text/javascript">
-//<![CDATA[ // this is to make javascript work in the SVG, leave it alone
+          // Define the element IDs for each group
+          const upIDs = ['_x31_', '_x31_1', '_x31_2', '_x31_3', '_x31_4', 
+                         '_x31_5', '_x31_6', '_x31_7', '_x31_8', '_x31_9'];
+          const downIDs = ['_x31_10', '_x31_11', '_x31_12', '_x31_13', '_x31_14',
+                           '_x31_15', '_x31_16', '_x31_17', '_x31_18', '_x31_19'];
 
-    function updateSVG(instrumentValue){
-    // ========================================
-    // STUDENT EDIT ZONE
-    // This sections controls how the gauge displays
-    // ========================================
+          // Calculate how many shapes to show
+          // Truncate toward zero: 35 -&gt; 3 shapes, -35 -&gt; 3 shapes
+          const absValue = Math.abs(instrumentValue);
+          const shapesToShow = Math.floor(absValue / 10);
 
-    /**
-     * Updates the right thrust gauge display
-     * - The vertical indicator line moves horizontally to show thrust level
-     * - -100 = x position at left (50) - Reverse thrust
-     * - 0 = x position at center (256) - No thrust
-     * - +100 = x position at right (462) - Forward thrust
-     */
+          // Show/hide UP shapes
+          for (let i = 0; i &lt; upIDs.length; i++) {
+            const el = document.getElementById(upIDs[i]);
+            if (el) {
+              // Show if: value is positive AND this shape's index is within range
+              if (instrumentValue &gt; 0 &amp;&amp; i &lt; shapesToShow) {
+                el.style.display = 'block';
+              } else {
+                el.style.display = 'none';
+              }
+            }
+          }
 
-      // Calculate x position
-      // Formula: 256 + (value / 100) * 206 to map -100 to +100 to 50-462
-      const xPosition = 256 + (instrumentValue / 100) * 206;
+          // Show/hide DOWN shapes
+          for (let i = 0; i &lt; downIDs.length; i++) {
+            const el = document.getElementById(downIDs[i]);
+            if (el) {
+              // Show if: value is negative AND this shape's index is within range
+              if (instrumentValue &lt; 0 &amp;&amp; i &lt; shapesToShow) {
+                el.style.display = 'block';
+              } else {
+                el.style.display = 'none';
+              }
+            }
+          }
 
-      // Get the indicator line element
-      const indicator = document.getElementById('indicator');
-      if (!indicator) {
-        console.log('Cant find element to animate');
-        return;
-      }
+          // ========================================
+          // END STUDENT EDIT ZONE
+          // ========================================
 
-      // Update both x1 and x2 to move the vertical line horizontally
-      indicator.setAttribute('x1', xPosition);
-      indicator.setAttribute('x2', xPosition);
-
-
-    // ========================================
-    // END STUDENT EDIT ZONE
-    // ========================================
-
-    }
-
-
-    setInterval(() => { // do this repeatedly
-
-    // Check localStorage for updates
-      const thisSVGfilename = window.location.pathname;
-    // this SVG expects a localStorage with the same name as its file
-      const localStorageName =  thisSVGfilename.substring(thisSVGfilename.lastIndexOf('/') + 1, thisSVGfilename.lastIndexOf('.'));
-      let instrumentValue = localStorage.getItem(localStorageName);
-
-
-
-    if (instrumentValue !== null) {
-      // Make sure value is between -100 and +100
-      instrumentValue = Math.max(-100, Math.min(100, instrumentValue));
-
-    } else {
-    // no localStorage, so make up a number, so it swings back and forth
-    // Initialize static variables if they don't exist
-    if (typeof window.testValue === 'undefined') {
-      window.testValue = -100;
-      window.testDirection = 1; // 1 for increasing, -1 for decreasing
-    }
-
-    // Update the test value
-    window.testValue += window.testDirection * 2; // increment by 2 each time
-
-    // Reverse direction at boundaries
-    if (window.testValue >= 100) {
-      window.testValue = 100;
-      window.testDirection = -1;
-    } else if (window.testValue <= -100) {
-      window.testValue = -100;
-      window.testDirection = 1;
-    }
-
-    instrumentValue = window.testValue;
-    console.log('no local storage \"'+localStorageName+'\", using test value:', instrumentValue);
-
-     }
-
-    updateSVG(instrumentValue)
+          }
 
 
+          setInterval(() =&gt; { // do this repeatedly
 
-    }, 50);  //end of setInterval code.  50 is 50 milliseconds or 20 times per second.
+          // Check localStorage for updates
+            const thisSVGfilename = window.location.pathname;
+          // this SVG expects a localStorage with the same name as its file
+            const localStorageName =  thisSVGfilename.substring(thisSVGfilename.lastIndexOf('/') + 1, thisSVGfilename.lastIndexOf('.'));
+            let instrumentValue = localStorage.getItem(localStorageName);
 
-  //]]> // this is to make javascript work in the SVG, leave it alone
-  </script>
-</svg>
+
+
+          if (instrumentValue !== null) {
+            // Make sure value is between -100 and +100
+           instrumentValue = Math.max(-100, Math.min(100, instrumentValue));
+          } else {
+          // no localStorage, so make up a number, so it swings back and forth
+          // Initialize static variables if they don't exist
+          if (typeof window.testValue === 'undefined') {
+            window.testValue = -100;
+            window.testDirection = 1; // 1 for increasing, -1 for decreasing
+          }
+
+          // Update the test value
+          window.testValue += window.testDirection * 2; // increment by 2 each time
+
+          // Reverse direction at boundaries
+          if (window.testValue &gt;= 100) {
+            window.testValue = 100;
+            window.testDirection = -1;
+          } else if (window.testValue &lt;= -100) {
+            window.testValue = -100;
+            window.testDirection = 1;
+          }
+
+          instrumentValue = window.testValue;
+          console.log('no local storage '+localStorageName+', using test value:', instrumentValue);
+
+           }
+
+          updateSVG(instrumentValue)
+
+
+
+          }, 50);  //end of setInterval code.  50 is 50 milliseconds or 20 times per second.
+
+        // // this is to make javascript work in the SVG, leave it alone
+    </script></svg>

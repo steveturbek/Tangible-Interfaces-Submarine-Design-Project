@@ -5,7 +5,7 @@
     <style>
 
  @font-face {
-      font-family: "Doto";
+      font-family: "14-Segment-LED";
       src: url("14-Segment-LED-Regular.ttf ") format("truetype");
     }
 
@@ -15,8 +15,8 @@
       }
 
       .st0, .st1 {
-        fill: #ff08ff;
-        font-family: 'Doto';
+        fill: #0000ff;
+        font-family: '14-Segment-LED';
         letter-spacing: 0em;
       }
 
