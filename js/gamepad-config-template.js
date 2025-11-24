@@ -4,7 +4,7 @@
  * Use this template to design your own submarine control scheme!
  *
  * INSTRUCTIONS:
- * 1. Open examples/gamepad-demo.html to see which buttons/axes do what
+ * 1. Open helpers/gamepad-demo.html to see which buttons/axes do what
  * 2. Modify the values below to map gamepad inputs to submarine controls
  * 3. Test your control scheme in the game
  * 4. Iterate until it feels intuitive!

@@ -338,7 +338,7 @@ The repository files:
 │   ├── instruments.js          # Cockpit instrument displays
 │   └── microbit-serial.js      # Receive and interpret messages from microbit board
 ├── artwork/            # Other visual assets
-└── examples/           # Example code
+└── helpers/           # Example code
 ```
 
 <!-- ### Submarine Control via Keyboard

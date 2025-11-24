@@ -239,7 +239,7 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
    1. Each instrument is a file in the `instruments/` folder.
    1. They are SVG files, which is a image file type which can have some extra tricks we use.
    1. You can simply replace an SVG instrument to update the window
-   1. Instructions: [Instruments SVG AI Page](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/examples/svg-dashboard-getting-started.html)
+   1. Instructions: [Instruments SVG AI Page](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/helpers/svg-dashboard-getting-started.html)
    1. Move updated file to instruments folder and reload instrument.html page in Chrome browser
       1. If instruments SVG is not updating after a save, do 'hard reload' ( Cmd + Shift + R on a Mac)
 
@@ -277,7 +277,7 @@ The files:
 │   ├── instruments.js          # Cockpit instrument displays
 │   └── microbit-serial.js      # Receive and interpret messages from microbit board
 ├── artwork/            # Other visual assets
-└── examples/           # Example code
+└── helpers/           # Example code
 ```
 
 <!-- ### Submarine Control via Keyboard

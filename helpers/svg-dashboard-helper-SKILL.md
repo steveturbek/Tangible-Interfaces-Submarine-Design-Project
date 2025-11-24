@@ -48,7 +48,7 @@ Help beginner UX design students animate SVG dashboard elements using JavaScript
 
 - **Option 1: Use the SVG Code Merger tool** (easiest)
 
-  - Open [examples/svg-code-merger.html](examples/svg-code-merger.html) in your browser
+  - Open [helpers/svg-code-merger.html](helpers/svg-code-merger.html) in your browser
   - Drag your NEW SVG (without code) from Figma into slot 1
   - Drag your OLD SVG (with working code) into slot 2
   - Click "Merge Code Into New SVG"
@@ -678,4 +678,4 @@ Student opens `speed.svg` directly in Chrome/Firefox/Safari and watches it auto-
 - Filename → localStorage key is the namespace strategy (auto-detected)
 - **Test mode is built into every SVG** - just open it in a browser to see it animate
 - STUDENT EDIT ZONE makes it clear what students can safely modify
-- SVG Code Merger tool ([examples/svg-code-merger.html](examples/svg-code-merger.html)) helps merge designs and code
+- SVG Code Merger tool ([helpers/svg-code-merger.html](helpers/svg-code-merger.html)) helps merge designs and code

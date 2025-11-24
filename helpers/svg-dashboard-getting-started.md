@@ -32,7 +32,7 @@ These layer names become IDs in your SVG code. When you tell the AI "rotate the 
 
 ## Step 2: Add AI Starter code to your SVG file
 
-Use the <a href="https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/examples/svg-code-setup.html"> SVG Code Setup Tool</a> to add the basic JavaScript template to your SVG. Download the file for the next step
+Use the <a href="https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/helpers/svg-code-setup.html"> SVG Code Setup Tool</a> to add the basic JavaScript template to your SVG. Download the file for the next step
 
 ## Step 3: Talk to the AI
 
@@ -67,7 +67,7 @@ Don't make the file until I have pasted all three files! Does this make sense?  
 
 **In 3 steps, copy the text of these files and paste in the chat text box**
 
-1. The [AI 'skill' file](https://raw.githubusercontent.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/refs/heads/main/examples/svg-dashboard-helper-SKILL.md) or in `examples/svg-dashboard-helper-SKILL.md` (teaches the AI the rules)
+1. The [AI 'skill' file](https://raw.githubusercontent.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/refs/heads/main/helpers/svg-dashboard-helper-SKILL.md) or in `helpers/svg-dashboard-helper-SKILL.md` (teaches the AI the rules)
 1. The instrument SVG file you are replacing (e.g. elevator.svg)
 1. Your new SVG file (with the code added in step 2), name it elevator-new.svg
 
@@ -135,7 +135,7 @@ the AI will fix just that part while keeping everything else working.
 
 ### If you made a new version of the SVG and lost the code
 
-If you edited the look and feel of the design after you got it working, and lost the code. The [Code merger tool](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/examples/svg-code-merger.html) Copies the code from an old SVG to the new one. This wil only work if the main parts of the file, like the layer names are the same.
+If you edited the look and feel of the design after you got it working, and lost the code. The [Code merger tool](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/helpers/svg-code-merger.html) Copies the code from an old SVG to the new one. This wil only work if the main parts of the file, like the layer names are the same.
 
 ## Understanding the Code (Optional)
 
