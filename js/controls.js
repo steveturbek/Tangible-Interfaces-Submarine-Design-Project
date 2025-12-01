@@ -79,7 +79,7 @@ function handleKeyPress(event) {
       adjustVerticalThruster(-controlConfig.thrusterIncrement);
       break;
 
-    // Emergency controls
+    // grab target
     case "g":
       grabTarget();
       break;
