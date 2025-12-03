@@ -30,8 +30,8 @@
     </style>
   </defs>
   <rect class="st2" width="512" height="256"/>
-  <text class="st1" transform="translate(10 156.2)"><tspan id="speedNum" x="0" y="0">125%</tspan></text>
-  <text class="st0" transform="translate(10 251.7)"><tspan x="0" y="0">_SPEED_</tspan></text>
+  <text class="st1"   x="2%" y="150" width="100%" text-anchor="right" ><tspan id="speedNum">125%</tspan></text>
+  <text class="st0" x="2%" y="250" width="100%"><tspan>_SPEED_</tspan></text>
 
   <script type="text/javascript">
 //<![CDATA[
@@ -44,8 +44,8 @@
         return;
       }
 
-      // Update the text content with percentage
-      speedNum.textContent = instrumentValue + '%';
+      // Update the text content with percentage (padded to 3 digits)
+      speedNum.textContent = String(instrumentValue).padStart(3, '_') + '%';
     }
 
     setInterval(() => {
@@ -70,8 +70,8 @@
         window.testValue += window.testDirection * 2; // increment by 2 each time
 
         // Reverse direction at boundaries
-        if (window.testValue >= 100) {
-          window.testValue = 100;
+        if (window.testValue >= 99) {
+          window.testValue = 99;
           window.testDirection = -1;
         } else if (window.testValue <= 0) {
           window.testValue = 0;
@@ -79,7 +79,7 @@
         }
 
         instrumentValue = window.testValue;
-        console.log('no local storage "'+localStorageName+'", using test value:', instrumentValue);
+        //console.log('no local storage "'+localStorageName+'", using test value:', instrumentValue);
       }
 
       updateSVG(instrumentValue);
