@@ -410,6 +410,10 @@ function emergencyAllStop() {
   window.gameState.velocity.x = 0;
   window.gameState.velocity.y = 0;
   window.gameState.velocity.z = 0;
+
+  // Reset rotation to level (zero pitch and roll, keep yaw)
+  window.gameState.rotation.x = 0; // Level pitch
+  window.gameState.rotation.z = 0; // Level roll
 }
 
 // Initialize keyboard controls when the window loads
