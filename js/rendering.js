@@ -1469,44 +1469,22 @@ function initRenderer() {
 
 // Function to reinitialize scene with correct difficulty
 function reinitSceneForDifficulty() {
-  // Clear existing scene objects that are difficulty-dependent
-  // Keep renderer and camera, but rebuild scene elements
-
-  // Remove all children from scene
-  while (scene.children.length > 0) {
-    scene.remove(scene.children[0]);
-  }
-
-  // Reset fog
-  scene.fog = null;
-  underwaterFog = null;
-
-  // Rebuild scene with current difficulty
   const difficulty = window.gameDifficulty || "hard";
 
-  // Re-add fog if not easy mode
-  if (difficulty !== "easy") {
-    underwaterFog = new THREE.Fog(FOG_COLOR, FOG_NEAR, FOG_FAR);
-    scene.fog = underwaterFog;
+  // Remove fog if in easy mode
+  if (difficulty === "easy") {
+    scene.fog = null;
+    underwaterFog = null;
+
+    // Traverse all coral structures and set opacity to 25%
+    for (let obstacle of coralObstacles) {
+      const coralStructure = obstacle.mesh;
+      coralStructure.traverse((child) => {
+        if (child.isMesh && child.material) {
+          child.material.transparent = true;
+          child.material.opacity = 0.25;
+        }
+      });
+    }
   }
-
-  // Rebuild lighting
-  setupLighting();
-
-  // Rebuild seabed
-  createSeabed();
-
-  // Rebuild target
-  createTarget();
-
-  // Rebuild start marker
-  createStartMarker();
-
-  // Rebuild coral only if not easy mode
-  if (difficulty !== "easy") {
-    createCoralReef();
-  }
-
-  // Rebuild water surface boundary
-  createWaterSurfaceBoundary();
 }

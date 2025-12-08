@@ -2,8 +2,8 @@
 
 // Control configurations
 const controlConfig = {
-  thrusterIncrement: 1, // per keypress
-  flapIncrement: 1, // per keypress
+  thrusterIncrement: 5, // per keypress
+  flapIncrement: 3, // per keypress
 };
 
 // Gamepad controller instance
