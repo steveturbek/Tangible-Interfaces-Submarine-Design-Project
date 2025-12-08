@@ -117,6 +117,11 @@ function startGame() {
     // console.log("Starting game with difficulty:", window.gameDifficulty);
     // console.log("Initial throttle values - Left:", window.gameState.controls.ThrottleLeft, "Right:", window.gameState.controls.ThrottleRight);
 
+    // move jewel closer if in easy mode
+    if (difficulty === "easy") {
+      gameState.navigation.targetPosition = { x: 0, y: 5, z: -100 };
+    }
+
     // Reinitialize scene with the selected difficulty
     if (typeof reinitSceneForDifficulty === "function") {
       reinitSceneForDifficulty();

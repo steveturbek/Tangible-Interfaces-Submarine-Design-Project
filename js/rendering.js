@@ -1507,13 +1507,6 @@ function reinitSceneForDifficulty() {
     createCoralReef();
   }
 
-  // move jewel closer if in easy mode
-  if (difficulty === "easy") {
-    gameState.navigation.targetPosition = { x: 0, y: 5, z: -10 };
-  }
-
   // Rebuild water surface boundary
   createWaterSurfaceBoundary();
 }
-
-// Renderer initialization is now handled in index.html
