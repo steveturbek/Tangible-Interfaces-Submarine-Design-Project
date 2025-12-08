@@ -40,7 +40,7 @@ const gameState_original = {
 
   // Navigation & Environment
   navigation: {
-    targetPosition: { x: 0, y: 10, z: -1200 }, // target location
+    targetPosition: { x: 0, y: 10, z: -1200 }, //from start position, x is left right, y down is positive target location -z is straight ahead
     distanceToTarget: 0, // 0-100% (scaled)
     headingToTarget: 0, // 0-359 degrees
     // proximityWarning: 0, // 0-100% (distance to nearest obstacle)
@@ -117,10 +117,9 @@ function startGame() {
     // console.log("Starting game with difficulty:", window.gameDifficulty);
     // console.log("Initial throttle values - Left:", window.gameState.controls.ThrottleLeft, "Right:", window.gameState.controls.ThrottleRight);
 
-    console.log(window.gameDifficulty);
     // move jewel closer if in easy mode
     if (window.gameDifficulty === "easy") {
-      gameState.navigation.targetPosition = { x: 0, y: 5, z: -100 };
+      gameState.navigation.targetPosition = { x: 0, y: 5, z: -551 }; // go max elevator down, straight forward, and you should get to it
     }
 
     // Reinitialize scene with the selected difficulty
