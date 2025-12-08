@@ -458,7 +458,7 @@ function updateSubmarineState(deltaTime) {
   window.gameState.rotation.y += window.gameState.angularVelocity.y * deltaTime;
   window.gameState.rotation.z += window.gameState.angularVelocity.z * deltaTime;
 
-  // Hard clamp roll to prevent excessive banking - keeps submarine feeling upright
+  // clamp roll to prevent excessive banking - keeps submarine feeling upright
   const maxRoll = 5; // Allow only ±5° of roll (barely noticeable)
   window.gameState.rotation.z = Math.max(-maxRoll, Math.min(maxRoll, window.gameState.rotation.z));
 
@@ -546,7 +546,7 @@ function applyBoundaryConstraints() {
     appendInstrumentConsoleMessage("Hit seabed - stopping submarine");
 
     // Drop the target if it was grabbed!
-    if (window.gameState.navigation.targetGrabbed && window.gameDifficulty !== "easy") {
+    if (window.gameState.navigation.targetGrabbed && window.gameDifficulty === "hard") {
       window.gameState.navigation.targetGrabbed = false;
       window.gameState.navigation.targetFallVelocity = -20; // Start falling
       appendInstrumentConsoleMessage("💎 You dropped the target! It's falling!");
