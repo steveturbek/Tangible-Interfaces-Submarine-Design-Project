@@ -279,10 +279,6 @@ function createSeabedEdge(radius) {
   return edge;
 }
 
-// Enhanced Coral Reef Creation with Tempest-inspired geometry and collision detection
-// Add this to your rendering.js file, replacing the existing createCoralReef function
-
-// Global array to store collision data for obstacles
 // Global array to store collision data for obstacles
 let coralObstacles = [];
 

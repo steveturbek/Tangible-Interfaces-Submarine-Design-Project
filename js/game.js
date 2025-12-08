@@ -568,7 +568,7 @@ function applyBoundaryConstraints() {
     appendInstrumentConsoleMessage("Hit Cave ceiling  - stopping submarine");
 
     // Drop the target if it was grabbed!
-    if (window.gameState.navigation.targetGrabbed) {
+    if (window.gameState.navigation.targetGrabbed && window.gameDifficulty === "hard") {
       window.gameState.navigation.targetGrabbed = false;
       window.gameState.navigation.targetFallVelocity = -20; // Start falling
       appendInstrumentConsoleMessage("💎 You dropped the target! It's falling!");
