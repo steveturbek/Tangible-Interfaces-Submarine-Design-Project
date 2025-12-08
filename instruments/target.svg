@@ -41,7 +41,6 @@
       }
 
 indicator.setAttribute('r', radius);
-console.log(instrumentValue, radius)
 
 
     // ========================================
