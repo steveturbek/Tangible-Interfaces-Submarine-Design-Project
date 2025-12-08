@@ -82,9 +82,6 @@ function initScene() {
   // Create target sphere
   createTarget();
 
-  // Create start position marker
-  createStartMarker();
-
   // Add water effects - caustics, particles, etc.
   // createWaterEffects();  //there was some flashing
 
@@ -769,16 +766,6 @@ function createTarget() {
   const beam = new THREE.Mesh(beamGeometry, beamMaterial);
   beam.position.y = 100; // Position above target
   targetSphere.add(beam);
-}
-
-function createStartMarker() {
-  // Start marker disabled - the escape hole in the ceiling marks the start/exit
-  // Keeping function for compatibility but not rendering anything
-
-  // Create invisible placeholder
-  startSphere = new THREE.Object3D();
-  startSphere.position.set(gameState_original.position.x, gameState_original.position.y, gameState_original.position.z);
-  scene.add(startSphere);
 }
 
 // Create a textured cave ceiling at the water surface with a hole
