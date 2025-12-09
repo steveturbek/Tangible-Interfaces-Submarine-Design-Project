@@ -39,7 +39,7 @@
 // first binary number is emergencyAllStop() // stop all engines
 // second binary number is  GrabTarget() 
 *
- * Example web page to test serial output https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/helpers/microbit-web-serial-demo.html
+ * Example web page to test serial output https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/helpers/microbit-web-serial-demo.html
 
 * ABOUT THIS DEMO HARDWARE
 * this demo code is written for an old skool Kraft Thunderstick, an inexpensive joystick for IBM-compatible PCs released in the late 1980s

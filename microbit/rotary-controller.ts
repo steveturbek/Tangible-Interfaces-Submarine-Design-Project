@@ -42,7 +42,7 @@
 // first binary number is emergencyAllStop() // stop all engines
 // second binary number is  GrabTarget() 
 *
- * Example web page to test serial output https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/helpers/microbit-web-serial-demo.html
+ * Example web page to test serial output https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/helpers/microbit-web-serial-demo.html
 
 * ABOUT THIS HARDWARE
 * this demo code is written for this KY-040 rotary encoder https://www.amazon.com/dp/B07DM2YMT4
