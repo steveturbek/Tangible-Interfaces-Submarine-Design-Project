@@ -1,7 +1,5 @@
 # Tangible Interfaces Submarine Design Project
 
-![Illustration of a Submarine Cockpit](artwork/submarine-illus.jpg "Illustration of a Submarine Cockpit"){:style="max-width: 100%;"}
-
 <div class="toc-wrapper" markdown="1">
 
 ## Contents
@@ -11,6 +9,8 @@
 - TOC
 {:toc}
 </div>
+
+![Illustration of a Submarine Cockpit](artwork/submarine-illus.jpg "Illustration of a Submarine Cockpit"){:style="max-width: 100%;"}
 
 ## Introduction
 
@@ -165,7 +165,7 @@ Your submersible will navigate through an underwater maze of coral reefs. The pi
 
 [Submarine Simulator](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/game.html)
 
-Note the game is intended to be played with custom hardware controls, but can be steered with USB gamepad for development or keyboard (See below for tips).
+Note the game is intended to be played with custom hardware controls, but can be steered with USB gamepad for development or keyboard.
 
 ### Submarine Controls
 
@@ -192,7 +192,11 @@ Students will design and implement SVG-based instruments displaying:
 - Battery level 0-100%
 - Speed
 - Pitch (up / down)
-- Yaw (left/right)
+- Rudder
+- Elevator
+- Vertical Thruster
+- Left Thruster
+- Right Thruster
 - Sonar distance to target
 - Depth
 - Compass direction 0-359°
