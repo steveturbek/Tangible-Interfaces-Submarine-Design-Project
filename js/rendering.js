@@ -185,9 +185,6 @@ function createSeabed() {
   const segments = 40; // Moderate value for smoother circle
   const seabedGeometry = new THREE.CircleBufferGeometry(radius, segments);
 
-  // Load sand texture
-  const textureLoader = new THREE.TextureLoader();
-
   // Create material with tropical white sand appearance
   const seabedMaterial = new THREE.MeshStandardMaterial({
     color: 0xf2e8c9, // Light beige/white sand color
@@ -196,26 +193,25 @@ function createSeabed() {
     flatShading: false,
   });
 
-  // Try to load texture, but have fallback
-  // NOTE: When running from file:// protocol (without web server), texture loading
-  // will fail due to CORS restrictions. The game will use the fallback color instead.
-  // This is expected behavior and does not affect gameplay.
+  // Use base64 encoded image (works with file:// protocol)
+  const dataURL = `data:${sandImage.mime};base64,${sandImage.data}`;
+  const textureLoader = new THREE.TextureLoader();
   textureLoader.load(
-    "artwork/sand_texture.jpg",
+    dataURL,
     function (texture) {
       // Success callback
       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
       texture.repeat.set(50, 50);
       seabedMaterial.map = texture;
       seabedMaterial.needsUpdate = true;
+      //console.log("Sand texture loaded");
     },
     undefined,
     function (err) {
       // Error callback - already using fallback color
-      console.log("Using fallback sand color (texture failed to load - this is expected when running from file://)");
+      // console.log("Sand texture failed to load, using fallback color");
     }
   );
-
   // Create seabed mesh and position it
   seabed = new THREE.Mesh(seabedGeometry, seabedMaterial);
   seabed.rotation.x = -Math.PI / 2; // Rotate to horizontal
