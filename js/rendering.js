@@ -65,16 +65,8 @@ function initScene() {
   // Enable physically correct lighting
   renderer.physicallyCorrectLights = true;
 
-  // Add post-processing for water caustics
-  setupPostProcessing();
-
   // Add lighting for bright Caribbean day
   setupLighting();
-
-  // plain flat area to make it look better outside world area
-
-  //maybe this is limited to world size?
-  // createSimpleExtendedSeabed();
 
   // Create seabed with coral formations
   createSeabed();
@@ -95,15 +87,6 @@ function initScene() {
 
   // Initial camera position
   updateCameraPosition();
-}
-
-// Setup post-processing effects
-function setupPostProcessing() {
-  // This is a simplified placeholder - implement if Three.js version supports it
-  if (THREE.EffectComposer) {
-    // Setup would go here if using post-processing libraries
-    console.log("Post-processing available");
-  }
 }
 
 // Set up scene lighting for a bright Caribbean day
@@ -558,47 +541,6 @@ function handleCoralCollision(obstacle) {
     window.gameState.position.y = obstacle.position.y + (dy / distance) * pushDistance;
     window.gameState.position.z = obstacle.position.z + (dz / distance) * pushDistance;
   }
-}
-
-// Add this function to create a simple extended seabed
-function createSimpleExtendedSeabed() {
-  // Get the current world size
-  const currentWorldSize = window.gameState.constants.worldBoundary * 2;
-
-  // Define how much larger the extension should be (e.g., 3x the current world size)
-  const extensionSize = currentWorldSize * 3;
-
-  // Create a simple flat plane geometry for the extension
-  const extendedSeabedGeometry = new THREE.PlaneBufferGeometry(
-    window.gameState.constants.worldBoundary * 1, // Width
-    window.gameState.constants.worldBoundary * 1, // Height
-    1, // Width segments (minimal)
-    1 // Height segments (minimal)
-  );
-
-  // Create a simple material with a solid color
-  // Using a slightly darker color than the main seabed for subtle differentiation
-  const extendedSeabedMaterial = new THREE.MeshBasicMaterial({
-    color: 0xffffff, // Slightly darker than main seabed
-    side: THREE.FrontSide,
-  });
-
-  // Create the mesh
-  const extendedSeabed = new THREE.Mesh(extendedSeabedGeometry, extendedSeabedMaterial);
-
-  // Position it at the same depth as the main seabed, but ensure it's slightly lower
-  // to prevent z-fighting with the main seabed
-  extendedSeabed.position.y = window.gameState.constants.seabedDepth - 0.1;
-
-  // Rotate to horizontal
-  extendedSeabed.rotation.x = -Math.PI / 2;
-
-  // Add to scene before the main seabed so the main seabed renders on top
-  scene.add(extendedSeabed);
-
-  console.log("Simple extended seabed created");
-
-  return extendedSeabed;
 }
 
 // Create target destination marker - glowing faceted diamond

@@ -47,7 +47,7 @@ To make this project possible for a design student, a technical framework has be
 - https://www.seamagine.com/small-submarines-models.html
 - https://www.thejetshark.com/
 - https://robbreport.com/motors/marine/gallery/personal-submersibles-exploration-1234848269/
-- [User instructions to flush a toilet underwater](https://firehead.net/2009/08/submarine-toilet-flushing-instructions/). Funny only [if it is not you](https://en.wikipedia.org/wiki/German_submarine_U-1206#Fate)!
+- [User instructions to flush a toilet underwater](https://firehead.net/2009/08/submarine-toilet-flushing-instructions/). Funny only [if it happens to someone else](https://en.wikipedia.org/wiki/German_submarine_U-1206#Fate)!
 
 ### Videos of Submarines, with a focus on their controls
 
