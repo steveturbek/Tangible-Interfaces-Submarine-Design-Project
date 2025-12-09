@@ -4,7 +4,7 @@
 
 ## Introduction
 
-This Submarine Design Project is part of [Steve Turbek's "Tangible Interfaces" Industrial Design class](https://turbek.com/articles/tangible-interfaces-class.html) at Pratt Institute. In this project, you'll work in teams to create an immersive submarine piloting experience that combines industrial design, user interface design, and physical computing with a custom [Submarine Simulator](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project).
+This Submarine Design Project is part of [Steve Turbek's "Tangible Interfaces" Industrial Design class](https://turbek.com/articles/tangible-interfaces-class.html) at Pratt Institute. In this project, you'll work in teams to create an immersive submarine piloting experience that combines industrial design, user interface design, and physical computing with a custom [Submarine Simulator](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/game.html).
 
 ## The Design Challenge
 
@@ -33,7 +33,7 @@ To make this project possible for a design student, a technical framework has be
 
 ### Game Setup
 
-- The [Submarine Simulator](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project) is a web based game that connects to a Microbit (or other device) via USB cable.
+- The [Submarine Simulator](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/game.html) is a web based game that connects to a Microbit (or other device) via USB cable.
 - The game has two windows/monitors: the submarine's front window and an instrument panel. In the final presentation, the instruments are in a laptop window, with a projector for the outside view.
 - A Microbit can be programmed to interpret sensor inputs from a custom designed control to steer the submarine.
 
@@ -151,7 +151,7 @@ These criteria balance the practical requirements (can users actually pilot the 
 
 Your submersible will navigate through an underwater maze of coral reefs. The pilot must reach an underwater base before running out of oxygen or electricity. The gameplay emphasizes careful resource management and precise navigation through challenging 3D environments.
 
-[Submarine Simulator](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project)
+[Submarine Simulator](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/game.html)
 
 Note the game is intended to be played with custom hardware controls, but can be steered with USB gamepad for development or keyboard (See below for tips).
 
@@ -208,7 +208,7 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 
 1. [Download this repo zip](https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/archive/refs/heads/main.zip)
 1. Unzip, perhaps move folder to your Documents folder
-1. In Google Chrome app, Open the index.html file
+1. In Google Chrome app, Open the game.html file
 1. Play!
 
 ### Building the Physical Controls
@@ -239,7 +239,7 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
    1. Each instrument is a file in the `instruments/` folder.
    1. They are SVG files, which is a image file type which can have some extra tricks we use.
    1. You can simply replace an SVG instrument to update the window
-   1. Instructions: [Instruments SVG AI Page](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/helpers/svg-dashboard-getting-started.html)
+   1. Instructions: [Instruments SVG AI Page](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/helpers/svg-dashboard-getting-started.html)
    1. Move updated file to instruments folder and reload instrument.html page in Chrome browser
       1. If instruments SVG is not updating after a save, do 'hard reload' ( Cmd + Shift + R on a Mac)
 
@@ -267,7 +267,7 @@ The files:
 │   └── etc...
 
 ***These should not need to be edited***
-├── index.html          # Game page
+├── game.html          # Game page
 ├── instruments.html # the instruments window
 ├── js/                 # JavaScript files
 │   ├── game.js                 # Core game mechanics
@@ -279,24 +279,3 @@ The files:
 ├── artwork/            # Other visual assets
 └── helpers/           # Example code
 ```
-
-<!-- ### Submarine Control via Keyboard
-
-Note the game is intended to be played with custom hardware controls, but can be clumsily steered with keyboard for development.
-
-```
-| Key   | Function                   | Effect                                   |
-| ----- | -----------------------    | ---------------------------------------- |
-| `↑`   | Elevator Up                | Pitches the submarine downward (descend) |
-| `↓`   | Elevator Down              | Pitches the submarine upward (ascend)    |
-| `←`   | Rudder Left                | Turns the submarine to the left          |
-| `→`   | Rudder Right               | Turns the submarine to the right         |
-| `a`   | Left Thruster Increase     | Increases power to the left thruster     |
-| `z`   | Left Thruster Decrease     | Decreases power to the left thruster     |
-| `s`   | Right Thruster Increase    | Increases power to the right thruster    |
-| `x`   | Right Thruster Decrease    | Decreases power to the right thruster    |
-| `ESC` | Emergency Brake            | Slows it down                            |
-| `P`   | Vertical Thruster Increase | Increases power to the Vertical thruster |
-| `L`   | Vertical Thruster Decrease | Decreases power to the Vertical thruster |
-| `B`   | Emergency Surface          | Activates emergency surfacing procedure  |
-``` -->
