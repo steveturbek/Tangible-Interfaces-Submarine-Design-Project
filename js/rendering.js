@@ -82,9 +82,6 @@ function initScene() {
   // Create target sphere
   createTarget();
 
-  // Add water effects - caustics, particles, etc.
-  // createWaterEffects();  //there was some flashing
-
   // Add coral reef elements (skip for easy mode)
   if (difficulty !== "easy") {
     createCoralReef();
@@ -905,77 +902,6 @@ function createCaveCeilingFormation(caveColors) {
   }
 
   return formationGroup;
-}
-
-// Create underwater effects (caustics, particles, water surface) with improved water texture
-
-function createWaterEffects() {
-  // Create water surface with improved texture and ripple effect
-  const waterGeometry = new THREE.PlaneBufferGeometry(window.gameState.constants.worldBoundaryVisible, window.gameState.constants.worldBoundaryVisible, 32, 32);
-
-  // Create better material for water with updated properties for lighter appearance from below
-  // Make it much more visible with brighter color and higher opacity
-  const waterMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0x00d4ff, // Bright cyan/turquoise - very visible
-    transparent: true,
-    opacity: 0.85, // Much more opaque to be clearly visible
-    roughness: 0.1,
-    metalness: 0.0,
-    clearcoat: 0.8,
-    clearcoatRoughness: 0.1,
-    side: THREE.DoubleSide,
-    envMapIntensity: 2.0,
-    transmission: 0.3, // Reduced transmission for more solid appearance
-    reflectivity: 0.5, // Increased reflectivity
-    emissive: 0x0088aa, // Add slight glow to make it stand out
-    emissiveIntensity: 0.3,
-  });
-
-  // Load water texture and normal map
-  const textureLoader = new THREE.TextureLoader();
-
-  // Try to load water texture
-  textureLoader.load(
-    "artwork/water_texture.jpg",
-    function (texture) {
-      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.set(10, 10);
-      waterMaterial.map = texture;
-      waterMaterial.needsUpdate = true;
-    },
-    undefined,
-    function (err) {
-      console.log("Using fallback water color (texture failed to load)");
-    }
-  );
-
-  // Try to load normal map for water ripples
-  textureLoader.load(
-    "artwork/water_normal.jpg",
-    function (normalMap) {
-      normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
-      normalMap.repeat.set(15, 15);
-      waterMaterial.normalMap = normalMap;
-      waterMaterial.normalScale.set(0.2, 0.2);
-      waterMaterial.needsUpdate = true;
-    },
-    undefined,
-    function (err) {
-      console.log("Water normal map failed to load");
-    }
-  );
-
-  // Create water mesh
-  water = new THREE.Mesh(waterGeometry, waterMaterial);
-  water.rotation.x = Math.PI / 2;
-  water.position.y = window.gameState.constants.waterSurface;
-  scene.add(water);
-
-  // Add underwater particles for better depth perception
-  addUnderwaterParticles();
-
-  // NEW: Add caustics effect to the seabed
-  //addCausticsEffect();
 }
 
 // NEW: Function to add water caustics effect to the scene
