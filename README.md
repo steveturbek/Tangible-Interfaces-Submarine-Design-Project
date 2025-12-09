@@ -14,7 +14,15 @@
 
 ## Introduction
 
-This Submarine Design Project is part of [Steve Turbek's "Tangible Interfaces" Industrial Design class](https://turbek.com/articles/tangible-interfaces-class.html) at Pratt Institute. In this project, you'll work in teams to create an immersive submarine piloting experience that combines industrial design, user interface design, and physical computing with a custom [Submarine Simulator](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/game.html).
+This Submarine Design Project is part of [Steve Turbek's "Tangible Interfaces" Industrial Design class](https://turbek.com/articles/tangible-interfaces-class.html) at Pratt Institute. In this project, you'll work in teams to create an immersive submarine piloting experience that combines industrial design, user interface design, and physical computing.
+
+## Game Setup
+
+- The [Submarine Simulator](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/game.html) is a web based game that simulates piloting a personal submarine. The player aims to collect a jewel and return to the surface before they run out of oxygen and battery.
+- The game has two windows: the submarine's front window and an instrument dashboard. In the final presentation, the instruments are on a laptop monitor, with a projector for the outside view.
+- The students design and code the working instruments dashboard, needed for safely steering the sub.
+- Students will design and prototype hardware controls to direct the submarine. A Microbit board can be programmed to interpret sensor inputs and send to the game via USB cable.
+- The vehicle interior and exterior design are integrated into a unified concept with steering and instruments.
 
 ## The Design Challenge
 
@@ -28,7 +36,7 @@ To make this project possible for a design student, a technical framework has be
 
 **We want the control experience to be THE major selling point of this sub - what innovative and cool experience can you design?**
 
-### Your mission:
+## Your mission:
 
 1. Research and identify a **target market**
 1. Create the **brand** for your sub
@@ -41,22 +49,16 @@ To make this project possible for a design student, a technical framework has be
 1. **Test** with real people
 1. Write up and present design, process, and findings
 
-### Game Setup
-
-- The [Submarine Simulator](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/game.html) is a web based game that connects to a Microbit (or other device) via USB cable.
-- The game has two windows/monitors: the submarine's front window and an instrument panel. In the final presentation, the instruments are in a laptop window, with a projector for the outside view.
-- A Microbit can be programmed to interpret sensor inputs from a custom designed control to steer the submarine.
-
 ## Research and Reference
 
 ### Submarines for Inspiration
 
-- https://www.uboatworx.com/custom2
-- https://tritonsubs.com/subs/
-- https://en.wikipedia.org/wiki/DeepFlight_Super_Falcon
-- https://www.seamagine.com/small-submarines-models.html
-- https://www.thejetshark.com/
-- https://robbreport.com/motors/marine/gallery/personal-submersibles-exploration-1234848269/
+- [Triton Subs](https://tritonsubs.com/subs/)
+- [U-boat worx](https://www.uboatworx.com/custom2)
+<!-- - https://en.wikipedia.org/wiki/DeepFlight_Super_Falcon -->
+- [Seamagine subs](https://www.seamagine.com/small-submarines-models.html)
+- [Jet Shark](https://www.thejetshark.com/)
+- [Robb Report on personal submersibles](https://robbreport.com/motors/marine/gallery/personal-submersibles-exploration-1234848269/)
 - [User instructions to flush a toilet underwater](https://firehead.net/2009/08/submarine-toilet-flushing-instructions/). Funny only [if it happens to someone else](https://en.wikipedia.org/wiki/German_submarine_U-1206#Fate)!
 
 ### Videos of Submarines, with a focus on their controls
@@ -242,27 +244,30 @@ Using the Micro:bit v2 as a bridge to the computer, students will implement at a
 
 1. Research instrument displays
 1. Pick a display screen, can be a laptop monitor, an iPad, or one of the interesting monitor shapes like [round](https://www.amazon.com/s?k=HDMI+Round+Touch+Display&i=electronics&crid=2KOIQO2N9TW8C&sprefix=hdmi+round+touch+display%2Caps%2C101) or [skinny](https://www.amazon.com/s?k=11.26+inch+1920x440+HDMI+LCD&i=electronics&crid=1UKVEQ5GCQXD7&sprefix=11.26+inch+1920x440+hdmi+lcd%2Caps%2C125&ref=nb_sb_noss_1)
-1. Design your layout
-   - Adobe Illustrator is a little bit easier to use for this purpose
-1. Design Instruments (Speed, Oxygen, ...)
+1. Design your layout (Adobe Illustrator is a little bit easier to use for this purpose)
 
-   1. Each instrument is a file in the `instruments/` folder.
-   1. They are SVG files, which is a image file type which can have some extra tricks we use.
-   1. You can simply replace an SVG instrument to update the window
-   1. Instructions: [Instruments SVG AI Page](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/helpers/svg-dashboard-getting-started.html)
-   1. Move updated file to instruments folder and reload instrument.html page in Chrome browser
-      1. If instruments SVG is not updating after a save, do 'hard reload' ( Cmd + Shift + R on a Mac)
+Design Instruments (Speed, Oxygen, ...)
 
-1. Instruments page
-   1. Open `instruments.html` in Chrome browser.
-   1. Set the window size you want, use full screen icon in top right.
-   1. **Command-Shift-E ** command turns on layout editor.
-      - Drag to position and resize instruments.
-      - Instruments can overlap each other (if they have transparent backgrounds)
-      - Click Download Layout
-      - Move the `instruments.css` to the `instruments/` folder (replacing previous file)
-      - Update `instruments-background.svg` image to change background
-      - Reload to view changes
+1. Each instrument is a file in the `instruments/` folder.
+1. They are SVG files, which is a image file type which can have some extra tricks we use.
+1. You can simply replace an SVG instrument to update the window
+1. Instructions: [Instruments SVG AI Page](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/helpers/svg-dashboard-getting-started.html)
+1. Move updated file to instruments folder and reload instrument.html page in Chrome browser
+1. If instruments SVG is not updating after a save, do 'hard reload' ( Cmd + Shift + R on a Mac)
+
+Instruments page
+
+1. Open `instruments.html` in Chrome browser.
+1. Set the window size you want, use full screen icon in top right.
+
+**Command-Shift-E ** command turns on layout editor.
+
+- Drag to position and resize instruments.
+- Instruments can overlap each other (if they have transparent backgrounds)
+- Click Download Layout
+- Move the `instruments.css` to the `instruments/` folder (replacing previous file)
+- Update `instruments-background.svg` image to change background
+- Reload to view changes
 
 ## Project Structure
 
