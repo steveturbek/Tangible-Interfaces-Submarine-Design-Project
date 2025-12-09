@@ -2,6 +2,16 @@
 
 ![Illustration of a Submarine Cockpit](artwork/submarine-illus.jpg "Illustration of a Submarine Cockpit")
 
+<div class="toc-wrapper" markdown="1">
+
+## Contents
+
+{: .no_toc}
+
+- TOC
+{:toc}
+</div>
+
 ## Introduction
 
 This Submarine Design Project is part of [Steve Turbek's "Tangible Interfaces" Industrial Design class](https://turbek.com/articles/tangible-interfaces-class.html) at Pratt Institute. In this project, you'll work in teams to create an immersive submarine piloting experience that combines industrial design, user interface design, and physical computing with a custom [Submarine Simulator](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/game.html).
