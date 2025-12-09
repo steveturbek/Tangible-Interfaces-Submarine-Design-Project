@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ page.title }}</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+
+    <meta property="og:title" content="Steve Turbek: {{ page.title }}" />
+    <meta property="og:image" content="images/OG_image.png" />
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.ico" sizes="48x48">
+
+
+    <style>
+      html {
+        width: 100%;
+        padding: 0;
+      }
+      body {
+        width: 100%;
+        /* margin: 0%; */
+        text-align: center;
+        font: 400 100.01% "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;
+        text-rendering: optimizeLegibility;
+        text-wrap: pretty;
+        background-color: #ddd;
+      }
+
+      #main {
+        margin: auto;
+        margin-top: 1em;
+        max-width: 1100px;
+      }
+
+      #mini-header,
+      footer {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 2em;
+      }
+
+      #content-container {
+        position: relative;
+      }
+
+      #content {
+        text-align: left;
+        margin-bottom: 2em;
+        max-width: 800px;
+      }
+
+      /* TOC Styling - positioned outside to the right */
+      .toc-wrapper {
+        position: absolute;
+        top: -200px;
+        left: calc(800px + 2em); /* Position to the right of max-width content */
+        width: 250px;
+        padding: 1em;
+        font-size: 70%;
+        font-weight: 400;
+      }
+
+      /* Make TOC sticky as you scroll */
+      @supports (position: sticky) {
+        .toc-wrapper {
+          position: sticky;
+          top: 0px;
+          float: right;
+          margin-left: 2em;
+          margin-right: calc(-250px - 2em); /* Pull it out to the right */
+          
+        }
+      }
+
+      .toc-wrapper h2 {
+        margin-top: 0;
+        font-size: 120%;
+        font-weight: 500;
+        margin-bottom: 0.5em;
+      }
+
+      .toc-wrapper ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+      }
+
+      .toc-wrapper ul ul {
+        padding-left: 1em;
+        margin-top: 0.25em;
+      }
+
+      /* Hide depth 3+ */
+      .toc-wrapper ul ul ul {
+        display: none; 
+      }
+
+      /* hide title in TOC */
+      .toc-wrapper > ul > li > a {
+        display: none; 
+      }
+      /* hide TOC in TOC */
+      .toc-wrapper > ul > li > ul > li:first-of-type {
+        display: none; 
+      }
+
+      .toc-wrapper li {
+        margin: 0.5em 0;
+        line-height: 1.4;
+      }
+
+      .toc-wrapper a {
+        color: #333;
+      }
+
+      .toc-wrapper a:hover {
+        color: #2e4d9c;
+      }
+
+      a:link,
+      a:visited {
+        text-decoration: none;
+        color: #2e4d9c;
+        /* background: transparent;  */
+      }
+
+      a:hover {
+        background: transparent;
+        text-decoration: underline;
+      }
+
+      a:active {
+        font-weight: bold;
+        color: #99ff00;
+        background: transparent;
+      }
+
+h1,h2,h3,h4 {
+  font-weight: 300;
+margin-top: 2em;
+}
+
+figure{
+  margin-block: 0;
+}
+
+      p, li {
+        font-size: 120%;
+      }
+
+/* hack to show SVG instructions in github readme preview, but hide in github pages, processed with Jekyll */
+      .hideFromJekyll-showInGithubPreview{
+        display: none;
+      }
+
+      @media screen and (max-width: 1100px) {
+        .toc-wrapper {
+          display: none; /* Hide TOC on smaller screens */
+        }
+
+        code{
+           white-space: pre-wrap;       /* Preserves formatting while allowing wrapping */
+          word-wrap: break-word;       /* Breaks long words if needed */
+          overflow-wrap: break-word;   /* Modern alternative to word-wrap */
+        }
+
+      }
+
+      @media screen and (max-width: 510px) {
+        #main {
+          padding: 0;
+          margin: 0;
+          max-width: 95%;
+        }
+
+        a {
+          word-break: break-all;
+        }
+
+
+
+      }
+
+      .interstitial_svg{
+        margin-top: 50px;
+        display: block;
+          margin: 0 auto;
+      }
+      /* .interstitial_svg > img{
+          display: block;
+          margin: 0 auto;
+      } */
+    </style>
+  </head>
+  <body>
+    <div id="main">
+      <div id="mini-header">
+<a href="https://turbek.com">
+  <svg viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg" style="height: 20px; vertical-align:-10%; padding-right: 10px; display:inline;">
+<style>
+path { fill: #000000; }
+</style>
+<path d="M346.773 15.1763C406.122 31.0497 447.529 70.0432 468.577 130.086C472.373 140.784 483.069 167.616 483.069 192.974L483.069 989.005L413.354 989.005C408.758 779.561 408.538 569.743 408.538 360.251C407.378 332.194 393.355 292.962 381.968 271.567C370.237 249.137 344.703 222.911 324.344 211.179C294.325 194.27 278.797 192.89 139.74 192.89L10.0001 192.89L10.0001 101.445L10.0001 10L169.415 10.3451C291.909 10.3451 333.316 11.7255 346.773 15.1763Z"/>
+<path d="M266.024 231.728C302.648 238.979 324.416 253.827 343.764 284.559C357.93 307.004 375.041 341.301 375.279 387.064C376.274 578.572 373.634 785.285 374.781 989.675L304.114 989.94C304.114 989.94 303.648 894.02 302.957 760.387C302.266 544.918 300.575 515.222 295.393 497.266C281.918 449.269 259.114 424.407 219.035 413.357C215.234 412.321 168.59 410.94 115.381 410.25C62.1724 409.904 10.0001 410.25 10.0001 410.25L10.0001 226.893L126.783 226.893C209.015 227.239 250.476 228.275 266.024 231.728Z"/>
+<path d="M653.227 15.1763C593.878 31.0497 552.471 70.0432 531.423 130.086C527.628 140.784 516.931 167.616 516.931 192.974L516.931 989.005L586.646 989.005C591.242 779.561 591.463 569.743 591.463 360.251C592.622 332.194 606.645 292.962 618.032 271.567C629.764 249.137 655.298 222.911 675.656 211.179C705.675 194.27 721.203 192.89 860.26 192.89L990 192.89L990 101.445L990 10L830.585 10.3451C708.091 10.3451 666.684 11.7255 653.227 15.1763Z"/>
+<path d="M733.976 231.728C697.352 238.979 675.584 253.827 656.236 284.559C642.07 307.004 624.959 341.301 624.721 387.064C623.726 578.572 626.366 785.285 625.218 989.675C648.769 989.42 672.326 990.22 695.886 989.94L697.043 760.387C697.043 760.387 699.425 515.222 704.607 497.266C718.082 449.269 740.886 424.407 780.965 413.357C784.766 412.321 831.41 410.94 884.619 410.25C937.828 409.904 990 409 990 409C990 348.298 990 287.596 990 226.893L873.217 226.893C790.985 227.239 749.524 228.275 733.976 231.728Z"/>
+</svg></a>
+<h1 style="display: inline; font-size: 150%; font-weight: 200;"><a href="https://turbek.com">Steve&nbsp;Turbek</a></h1></a
+        >
+  <!-- <a href="/{{ site.github.repository_name }}/">{{ site.github.repository_name | replace: "-", " " }}</a>
+  <span style="font-size:80%; font-weight: 400;">by</span>  -->
+      </div>
+      <div id="content-container">
+        <div id="content">{{ content }}</div>
+      </div>
+      <footer>
+        <p>© steve turbek</p>
+      </footer>
+    </div>
+  </body>
+</html>
