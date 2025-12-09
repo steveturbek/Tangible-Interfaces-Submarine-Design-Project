@@ -1237,19 +1237,22 @@ function updateCameraPosition() {
   // Position camera at submarine position
   camera.position.copy(window.gameState.position);
 
-  // Create quaternion from Euler angles
-  const quaternion = new THREE.Quaternion();
-  quaternion.setFromEuler(
-    new THREE.Euler(
-      THREE.MathUtils.degToRad(window.gameState.rotation.x),
-      THREE.MathUtils.degToRad(window.gameState.rotation.y),
-      THREE.MathUtils.degToRad(window.gameState.rotation.z),
-      "XYZ"
-    )
-  );
-
-  // Set camera quaternion
-  camera.quaternion.copy(quaternion);
+  // Use quaternion orientation directly (prevents gimbal lock)
+  if (window.gameState.orientation) {
+    camera.quaternion.copy(window.gameState.orientation);
+  } else {
+    // Fallback to Euler angles if quaternion not initialized
+    const quaternion = new THREE.Quaternion();
+    quaternion.setFromEuler(
+      new THREE.Euler(
+        THREE.MathUtils.degToRad(window.gameState.rotation.x),
+        THREE.MathUtils.degToRad(window.gameState.rotation.y),
+        THREE.MathUtils.degToRad(window.gameState.rotation.z),
+        "XYZ"
+      )
+    );
+    camera.quaternion.copy(quaternion);
+  }
 
   // Update fog based on depth
   updateFogWithDepth();

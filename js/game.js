@@ -3,6 +3,7 @@ const gameState_original = {
   // Position & Orientation (using Three.js coordinate system)
   position: { x: 0, y: 10, z: 0 }, // x: right/left, y: up/down, z: forward/backward
   rotation: { x: 0, y: 0, z: 0 }, // x: pitch, y: yaw, z: roll - start facing forward (down -Z axis)
+  orientation: null, // THREE.Quaternion for proper body-space rotations (initialized after THREE.js loads)
   velocity: { x: 0, y: 0, z: 0 }, // velocity vector in Three.js coordinates
   angularVelocity: { x: 0, y: 0, z: 0 }, // rotation speed in Three.js coordinates
 
@@ -117,6 +118,11 @@ function startGame() {
     // console.log("Starting game with difficulty:", window.gameDifficulty);
     // console.log("Initial throttle values - Left:", window.gameState.controls.ThrottleLeft, "Right:", window.gameState.controls.ThrottleRight);
 
+    // Initialize quaternion orientation (now that THREE.js is loaded)
+    if (!window.gameState.orientation) {
+      window.gameState.orientation = new THREE.Quaternion(); // Identity quaternion (no rotation)
+    }
+
     // move jewel closer if in easy mode
     if (window.gameDifficulty === "easy") {
       gameState.navigation.targetPosition = { x: 0, y: 5, z: -551 }; // go max elevator down, straight forward, and you should get to it
@@ -217,6 +223,7 @@ function restartGame() {
 window.startGame = startGame;
 window.stopGame = stopGame;
 window.restartGame = restartGame;
+window.resetVelocities = resetVelocities;
 // console.log("game.js: game control functions exposed globally");
 
 // Start the game after everything else is loaded
@@ -286,10 +293,6 @@ function updateSubmarineState(deltaTime) {
   }
 
   // Calculate forward thrust vector based on submarine orientation
-  // Get orientation angles in radians (for Three.js coordinates)
-  const pitch = THREE.MathUtils.degToRad(window.gameState.rotation.x);
-  const yaw = THREE.MathUtils.degToRad(window.gameState.rotation.y);
-  const roll = 0; //THREE.MathUtils.degToRad(window.gameState.rotation.z);
 
   // Calculate thrust based on thruster values
   if (window.gameState.status.batteryLevel > 0) {
@@ -307,14 +310,19 @@ function updateSubmarineState(deltaTime) {
     // Side thrust: X direction
     // Vertical thrust: Y direction
 
-    // Create quaternion for proper 3D rotation
-    const quaternion = new THREE.Quaternion();
-    quaternion.setFromEuler(new THREE.Euler(pitch, yaw, roll, "XYZ"));
-
     // Create thrust vector (pointing forward in local space)
     const thrustVector = new THREE.Vector3(0, 0, -1);
     thrustVector.multiplyScalar(netThrust * thrustFactor * deltaTime);
-    thrustVector.applyQuaternion(quaternion);
+
+    // Apply quaternion rotation if available, otherwise use Euler angles
+    if (window.gameState.orientation) {
+      thrustVector.applyQuaternion(window.gameState.orientation);
+    } else {
+      // Fallback to Euler angles if quaternion not initialized yet
+      const quaternion = new THREE.Quaternion();
+      quaternion.setFromEuler(new THREE.Euler(pitch, yaw, roll, "XYZ"));
+      thrustVector.applyQuaternion(quaternion);
+    }
 
     // Apply to velocity
     window.gameState.velocity.x += thrustVector.x;
@@ -449,23 +457,78 @@ function updateSubmarineState(deltaTime) {
   window.gameState.angularVelocity.y *= 1 - drag * 4 * deltaTime;
   window.gameState.angularVelocity.z *= 1 - drag * 2 * deltaTime;
 
-  // Limit maximum pitch angle
-  const maxPitch = window.gameState.controls.maxPitchElevatorAngle;
-  window.gameState.rotation.x = Math.max(-maxPitch, Math.min(maxPitch, window.gameState.rotation.x));
-
   // Update position based on velocity
   window.gameState.position.x += window.gameState.velocity.x * deltaTime;
   window.gameState.position.y += window.gameState.velocity.y * deltaTime;
   window.gameState.position.z += window.gameState.velocity.z * deltaTime;
 
-  // Update rotation based on angular velocity
-  window.gameState.rotation.x += window.gameState.angularVelocity.x * deltaTime;
-  window.gameState.rotation.y += window.gameState.angularVelocity.y * deltaTime;
-  window.gameState.rotation.z += window.gameState.angularVelocity.z * deltaTime;
+  // Update rotation based on angular velocity using quaternions (body-space rotations)
+  // This prevents gimbal lock and keeps horizon level during pitch+yaw
 
-  // clamp roll to prevent excessive banking - keeps submarine feeling upright
-  const maxRoll = 5; // Allow only ±5° of roll (barely noticeable)
-  window.gameState.rotation.z = Math.max(-maxRoll, Math.min(maxRoll, window.gameState.rotation.z));
+  // Get current local axes by transforming world axes by current orientation
+  const localX = new THREE.Vector3(1, 0, 0).applyQuaternion(window.gameState.orientation);
+  const localY = new THREE.Vector3(0, 1, 0).applyQuaternion(window.gameState.orientation);
+  const localZ = new THREE.Vector3(0, 0, 1).applyQuaternion(window.gameState.orientation);
+
+  // Create rotation deltas around the submarine's LOCAL axes (body space)
+  const pitchDelta = new THREE.Quaternion().setFromAxisAngle(
+    localX, // Submarine's local X axis (pitch)
+    THREE.MathUtils.degToRad(window.gameState.angularVelocity.x * deltaTime)
+  );
+  const yawDelta = new THREE.Quaternion().setFromAxisAngle(
+    localY, // Submarine's local Y axis (yaw)
+    THREE.MathUtils.degToRad(window.gameState.angularVelocity.y * deltaTime)
+  );
+  const rollDelta = new THREE.Quaternion().setFromAxisAngle(
+    localZ, // Submarine's local Z axis (roll)
+    THREE.MathUtils.degToRad(window.gameState.angularVelocity.z * deltaTime)
+  );
+
+  // Apply rotations: multiply in reverse order (roll * pitch * yaw * current)
+  const combinedRotation = new THREE.Quaternion();
+  combinedRotation.multiply(rollDelta).multiply(pitchDelta).multiply(yawDelta);
+  window.gameState.orientation.premultiply(combinedRotation);
+  window.gameState.orientation.normalize(); // Prevent drift from numerical errors
+
+  // Check pitch and roll limits using vector projection (NO Euler angles!)
+  const maxPitch = window.gameState.controls.maxPitchElevatorAngle;
+  const maxPitchRad = THREE.MathUtils.degToRad(maxPitch);
+  const maxRoll = 5; // Allow only ±5° of roll
+  const maxRollRad = THREE.MathUtils.degToRad(maxRoll);
+
+  // Extract pitch by looking at where the forward vector points vertically
+  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(window.gameState.orientation);
+  const currentPitchRad = Math.asin(Math.max(-1, Math.min(1, forward.y))); // Clamp to [-1, 1] for safety
+
+  // Extract roll by looking at how much the up vector is tilted sideways
+  const up = new THREE.Vector3(0, 1, 0).applyQuaternion(window.gameState.orientation);
+  const right = new THREE.Vector3(1, 0, 0).applyQuaternion(window.gameState.orientation);
+  const currentRollRad = Math.atan2(right.y, up.y);
+
+  // Check pitch limits - stop angular velocity if exceeded
+  // Don't rebuild quaternion - let stabilization code bring it back
+  if (currentPitchRad > maxPitchRad) {
+    window.gameState.angularVelocity.x = Math.min(0, window.gameState.angularVelocity.x); // Only allow pitching down
+  } else if (currentPitchRad < -maxPitchRad) {
+    window.gameState.angularVelocity.x = Math.max(0, window.gameState.angularVelocity.x); // Only allow pitching up
+  }
+
+  // Check roll limits - stop angular velocity if exceeded
+  if (currentRollRad > maxRollRad) {
+    window.gameState.angularVelocity.z = Math.min(0, window.gameState.angularVelocity.z); // Only allow rolling left
+  } else if (currentRollRad < -maxRollRad) {
+    window.gameState.angularVelocity.z = Math.max(0, window.gameState.angularVelocity.z); // Only allow rolling right
+  }
+
+  // Update gameState.rotation for display only (NOT used in calculations)
+  const finalForward = new THREE.Vector3(0, 0, -1).applyQuaternion(window.gameState.orientation);
+  const finalUp = new THREE.Vector3(0, 1, 0).applyQuaternion(window.gameState.orientation);
+  const finalRight = new THREE.Vector3(1, 0, 0).applyQuaternion(window.gameState.orientation);
+
+  window.gameState.rotation.x = THREE.MathUtils.radToDeg(Math.asin(Math.max(-1, Math.min(1, finalForward.y))));
+  const finalForwardFlat = new THREE.Vector3(finalForward.x, 0, finalForward.z).normalize();
+  window.gameState.rotation.y = THREE.MathUtils.radToDeg(Math.atan2(finalForwardFlat.x, -finalForwardFlat.z));
+  window.gameState.rotation.z = THREE.MathUtils.radToDeg(Math.atan2(finalRight.y, finalUp.y));
 
   // Apply boundary constraints
   applyBoundaryConstraints();
@@ -490,12 +553,48 @@ function updateSubmarineState(deltaTime) {
 
 // Helper function to reset velocities when hitting boundaries
 function resetVelocities() {
+  // Stop all movement
   window.gameState.velocity.x = 0;
   window.gameState.velocity.y = 0;
   window.gameState.velocity.z = 0;
   window.gameState.angularVelocity.x = 0;
   window.gameState.angularVelocity.y = 0;
   window.gameState.angularVelocity.z = 0;
+
+  // Reset controls
+  window.gameState.controls.ThrottleLeft = 0;
+  window.gameState.controls.ThrottleRight = 0;
+  window.gameState.controls.PitchElevatorAngle = 0;
+  window.gameState.controls.YawRudderAngle = 0;
+
+  // Level the submarine (zero pitch and roll, keep yaw)
+  if (window.gameState.orientation && typeof THREE !== "undefined") {
+    // Get current forward direction
+    const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(window.gameState.orientation);
+
+    // Flatten to horizontal plane (removes pitch)
+    const targetForward = new THREE.Vector3(forward.x, 0, forward.z).normalize();
+
+    // Build a level orientation matrix looking in that direction
+    const matrix = new THREE.Matrix4();
+    matrix.lookAt(
+      new THREE.Vector3(0, 0, 0), // from origin
+      targetForward, // look at the flattened forward direction
+      new THREE.Vector3(0, 1, 0) // up is world up (no roll)
+    );
+
+    // Extract quaternion from the matrix (this keeps yaw but levels pitch/roll)
+    window.gameState.orientation.setFromRotationMatrix(matrix);
+
+    // Update Euler angles for display
+    window.gameState.rotation.x = 0; // Level pitch
+    window.gameState.rotation.y = THREE.MathUtils.radToDeg(Math.atan2(targetForward.x, -targetForward.z));
+    window.gameState.rotation.z = 0; // Level roll
+  } else {
+    // Fallback if quaternion not available
+    window.gameState.rotation.x = 0;
+    window.gameState.rotation.z = 0;
+  }
 }
 
 function applyBoundaryConstraints() {
@@ -516,20 +615,6 @@ function applyBoundaryConstraints() {
 
   // Track if we're hitting a boundary
   let isHittingBoundary = false;
-
-  // Reset velocity helper function
-  const resetVelocities = () => {
-    window.gameState.velocity.x = 0;
-    window.gameState.velocity.y = 0;
-    window.gameState.velocity.z = 0;
-    window.gameState.angularVelocity.x = 0;
-    window.gameState.angularVelocity.y = 0;
-    window.gameState.angularVelocity.z = 0;
-    window.gameState.controls.ThrottleLeft = 0;
-    window.gameState.controls.ThrottleRight = 0;
-    window.gameState.controls.PitchElevatorAngle = 0;
-    window.gameState.controls.YawRudderAngle = 0;
-  };
 
   // Make a copy of the position to track changes
   const newPosition = { x, y, z };

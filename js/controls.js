@@ -395,25 +395,14 @@ function emergencyAllStop() {
   if (Date.now() - window.gameState.controls.AllStopLastUsedTime < 3000) return; // debounce physical buttons
 
   console.log("EMERGENCY ALL STOP");
-  window.gameState.controls.ThrottleLeft = 0;
-  window.gameState.controls.ThrottleRight = 0;
+
+  // Use the shared resetVelocities function to stop and level the submarine
+  if (typeof resetVelocities === "function") {
+    resetVelocities();
+  }
+
+  // Also reset vertical thruster (specific to emergency stop)
   window.gameState.controls.VerticalThruster = 0;
-  window.gameState.controls.PitchElevatorAngle = 0;
-  window.gameState.controls.YawRudderAngle = 0;
-
-  // Immediately stop all rotation
-  window.gameState.angularVelocity.x = 0; // Stop pitch rotation
-  window.gameState.angularVelocity.y = 0; // Stop yaw rotation
-  window.gameState.angularVelocity.z = 0; // Stop roll rotation
-
-  // Immediately stop all velocity
-  window.gameState.velocity.x = 0;
-  window.gameState.velocity.y = 0;
-  window.gameState.velocity.z = 0;
-
-  // Reset rotation to level (zero pitch and roll, keep yaw)
-  window.gameState.rotation.x = 0; // Level pitch
-  window.gameState.rotation.z = 0; // Level roll
 }
 
 // Initialize keyboard controls when the window loads
