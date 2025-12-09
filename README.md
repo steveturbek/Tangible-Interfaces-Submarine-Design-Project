@@ -1,6 +1,6 @@
 # Tangible Interfaces Submarine Design Project
 
-![Illustration of a Submarine Cockpit](artwork/submarine-illus.png "Illustration of a Submarine Cockpit")
+![Illustration of a Submarine Cockpit](artwork/submarine-illus.jpg "Illustration of a Submarine Cockpit")
 
 ## Introduction
 
