@@ -24,6 +24,26 @@ This Submarine Design Project is part of [Steve Turbek's "Tangible Interfaces" I
 - Students will design and prototype hardware controls to direct the submarine. A Microbit board can be programmed to interpret sensor inputs and send to the game via USB cable.
 - The vehicle interior and exterior design are integrated into a unified concept with steering and instruments.
 
+Your submersible will navigate through an underwater maze of coral reefs. The pilot must reach an underwater base before running out of oxygen or electricity. The gameplay emphasizes careful resource management and precise navigation through challenging 3D environments.
+
+[Submarine Simulator](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/game.html)
+
+Note the game is intended to be played with custom hardware controls, but can be steered with USB gamepad or keyboard for development.
+
+**Video of game play**
+
+<video autoplay muted loop playsinline  width="100%" alt="video of game play">
+   <source src="artwork/game-video-clip.mp4" type="video/mp4" />
+</video>
+
+[Longer video of front view of simulator](artwork/game-video.mp4)
+
+**Video of dashboard instruments**
+
+<video autoplay muted loop playsinline  width="100%" alt="video of dashboard instrument SVGs in action">
+   <source src="artwork/dashboard.mp4" type="video/mp4" />
+</video>
+
 ## The Design Challenge
 
 You are a design team tasked by "AquaNova Submarine" with creating the next generation of personal submersibles for beginner pilots.
@@ -159,14 +179,6 @@ These criteria balance the practical requirements (can users actually pilot the 
 
 ## Game Overview
 
-### The Gameplay Experience
-
-Your submersible will navigate through an underwater maze of coral reefs. The pilot must reach an underwater base before running out of oxygen or electricity. The gameplay emphasizes careful resource management and precise navigation through challenging 3D environments.
-
-[Submarine Simulator](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/game.html)
-
-Note the game is intended to be played with custom hardware controls, but can be steered with USB gamepad for development or keyboard.
-
 ### Submarine Controls
 
 The student will have the ability to design the submarine. Here are the technical design constraints. A clever team can write code to change these, but they are responsible for these customizations.
@@ -259,7 +271,13 @@ Design Instruments (Speed, Oxygen, ...)
 1. Move updated file to instruments folder and reload instrument.html page in Chrome browser
 1. If instruments SVG is not updating after a save, do 'hard reload' ( Cmd + Shift + R on a Mac)
 
-Instruments page
+**Example Instrument**
+
+<object data="instruments/battery.svg" type="image/svg+xml" width="300" class="interstitial_svg">
+  <img src="instruments/battery.svg" alt="Battery Gauge SVG" />
+</object>
+
+**Instruments page**
 
 1. Open `instruments.html` in Chrome browser.
 1. Set the window size you want, use full screen icon in top right.
@@ -272,6 +290,12 @@ Instruments page
 - Move the `instruments.css` to the `instruments/` folder (replacing previous file)
 - Update `instruments-background.svg` image to change background
 - Reload to view changes
+
+The drag and drop layout editor, which downloads a new instruments.css file the student uses to save the layout.
+
+<video autoplay muted loop playsinline  width="100%" alt="video of dashboard instrument SVGs in action">
+   <source src="artwork/dashboard_layout_editor.mp4" type="video/mp4" />
+</video>
 
 ## Project Structure
 
