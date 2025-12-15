@@ -9,12 +9,15 @@
 {: .no_toc}
 
 - TOC
-{:toc}
+  {:toc}
+
 </div>
 
 ## Introduction
 
 This Submarine Design Project is part of [Steve Turbek's "Tangible Interfaces" Industrial Design class](https://turbek.com/Tangible-Interfaces/) at Pratt Institute. In this project, you'll work in teams to create an immersive submarine piloting experience that combines industrial design, user interface design, and physical computing.
+
+<a href="https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/" target="new">Open Source on GitHub.com</a>
 
 ## Game Setup
 
