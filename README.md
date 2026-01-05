@@ -5,11 +5,10 @@
 <div class="toc-wrapper" markdown="1">
 
 ## Contents
-
 {: .no_toc}
 
-- TOC
-  {:toc}
+* TOC
+{:toc}
 
 </div>
 
