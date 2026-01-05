@@ -5,11 +5,11 @@
 <div class="toc-wrapper" markdown="1">
 
 ## Contents
+
 {: .no_toc}
 
-* TOC
+- TOC
 {:toc}
-
 </div>
 
 ## Introduction
@@ -17,6 +17,18 @@
 This Submarine Design Project is part of [Steve Turbek's "Tangible Interfaces" Industrial Design class](https://turbek.com/Tangible-Interfaces/) at Pratt Institute. In this project, you'll work in teams to create an immersive submarine piloting experience that combines industrial design, user interface design, and physical computing.
 
 <a href="https://github.com/steveturbek/Tangible-Interfaces-Submarine-Design-Project/" target="new">Open Source on GitHub.com</a>
+
+<p style="text-align:center">  
+  <img src="artwork/steve-test-drive-wonderfour.jpg" width="200" alt="Team Wonder Four Sub cockpit">
+  <img src="artwork/2025_fall_sub_marine.jpg" width="200" alt="Team Sub Marine sub cockpit">
+</p>
+<p style="text-align:center">  
+  <img src="artwork/2025_fall_7431.jpeg" width="200" alt="Team Wonder Four Sub cockpit">
+  <img src="artwork/2025_fall_7478.jpeg" width="200" alt="Team Sub Marine sub cockpit">
+  <img src="artwork/2025_fall_7479.jpeg" width="200" alt="Team B.A.S.S. sub cockpit">
+</p>
+
+_(Photos of student work, used with permission)_
 
 ## Game Setup
 
