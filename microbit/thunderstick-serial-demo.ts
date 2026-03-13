@@ -39,7 +39,7 @@
 // first binary number is emergencyAllStop() // stop all engines
 // second binary number is  GrabTarget() 
 *
- * Example web page to test serial output https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/helpers/microbit-web-serial-demo.html
+ * Example web page to test serial output https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/helpers/microbit-web-serial-demo.html
 
 * ABOUT THIS DEMO HARDWARE
 * this demo code is written for an old skool Kraft Thunderstick, an inexpensive joystick for IBM-compatible PCs released in the late 1980s
@@ -173,7 +173,7 @@ basic.forever(function () {
     pins.analogReadPin(PortEnginePowerPin),
     PortEnginePowerAnalogMin,
     PortEnginePowerAnalogMid,
-    PortEnginePowerAnalogMax
+    PortEnginePowerAnalogMax,
   );
   // serial.writeLine("PortAnalog:" + pins.analogReadPin(PortEnginePowerPin) + "     PortEnginePower:" + PortEnginePowerOutput);
 
@@ -181,7 +181,7 @@ basic.forever(function () {
     pins.analogReadPin(StarboardEnginePowerPin),
     StarboardEnginePowerAnalogMin,
     StarboardEnginePowerAnalogMid,
-    StarboardEnginePowerAnalogMax
+    StarboardEnginePowerAnalogMax,
   );
   // serial.writeLine("StarboardAnalog:" + pins.analogReadPin(StarboardEnginePowerPin) + "   StarboardEnginePower:" + StarboardEnginePowerOutput);
 
@@ -189,7 +189,7 @@ basic.forever(function () {
     pins.analogReadPin(VerticalEnginePowerPin),
     VerticalEnginePowerAnalogMin,
     VerticalEnginePowerAnalogMid,
-    VerticalEnginePowerAnalogMax
+    VerticalEnginePowerAnalogMax,
   );
 
   if (pins.analogReadPin(VerticalEnginePowerPin) <= 100) VerticalEnginePowerOutput = "f00"; // this potentiometer has a switch, which reads analog 0 if off
@@ -209,7 +209,7 @@ basic.forever(function () {
       "|" +
       pins.digitalReadPin(AllStopPin) +
       "|" +
-      pins.digitalReadPin(GrabTargetPin)
+      pins.digitalReadPin(GrabTargetPin),
   );
 });
 
@@ -249,17 +249,20 @@ function RemapAnalogReadingWithCenterToSerialString(value: number, minVal: numbe
     outputVal = Math.map(value, minVal, midVal, 99, 0);
 
     //Reverse
-    if (backwardsPotentiometer) analogDirection = "f"; //backwards potentiometer
+    if (backwardsPotentiometer)
+      analogDirection = "f"; //backwards potentiometer
     else analogDirection = "r";
   } else {
     // Map upper half: midVal to maxVal becomes 0 to 99
     outputVal = Math.map(value, midVal, maxVal, 0, 99);
     //Forward
-    if (backwardsPotentiometer) analogDirection = "r"; //backwards potentiometer
+    if (backwardsPotentiometer)
+      analogDirection = "r"; //backwards potentiometer
     else analogDirection = "f";
   }
 
   outputVal = Math.round(outputVal);
-  if (outputVal < 10) return analogDirection + "0" + outputVal; // prepend a zero if 1 digit
+  if (outputVal < 10)
+    return analogDirection + "0" + outputVal; // prepend a zero if 1 digit
   else return analogDirection + outputVal;
 }

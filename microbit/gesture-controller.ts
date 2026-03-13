@@ -41,7 +41,7 @@
 // first binary number is emergencyAllStop() // stop all engines
 // second binary number is  GrabTarget() 
 *
- * Example web page to test serial output https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/helpers/microbit-web-serial-demo.html
+ * Example web page to test serial output https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/helpers/microbit-web-serial-demo.html
 
 * Devices is expected to be held flat, buttons upward
 * button b adds + 10 enginePower 
@@ -124,7 +124,7 @@ function SendControlMessageToGame() {
       "|" +
       AllStop +
       "|" +
-      GrabTarget
+      GrabTarget,
   );
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -140,6 +140,7 @@ function RemapSteeringValueForSerialOut(InputValue: number) {
 
   InputValue = Math.abs(InputValue);
 
-  if (InputValue < 10) return analogDirection + "0" + InputValue; // prepend a zero if 1 digit
+  if (InputValue < 10)
+    return analogDirection + "0" + InputValue; // prepend a zero if 1 digit
   else return analogDirection + InputValue;
 }

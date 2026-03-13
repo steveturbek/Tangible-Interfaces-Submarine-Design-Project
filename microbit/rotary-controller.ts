@@ -42,7 +42,7 @@
 // first binary number is emergencyAllStop() // stop all engines
 // second binary number is  GrabTarget() 
 *
- * Example web page to test serial output https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/helpers/microbit-web-serial-demo.html
+ * Example web page to test serial output https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/helpers/microbit-web-serial-demo.html
 
 * ABOUT THIS HARDWARE
 * this demo code is written for this KY-040 rotary encoder https://www.amazon.com/dp/B07DM2YMT4
@@ -179,7 +179,7 @@ basic.forever(function () {
         "|" +
         (pins.digitalReadPin(AllStopPin) ? 0 : 1) + // this sends 1 when clicked, as the pin is naturally High
         "|" +
-        (pins.digitalReadPin(GrabTargetPin) ? 0 : 1) // this sends 1 when clicked, as the pin is naturally High
+        (pins.digitalReadPin(GrabTargetPin) ? 0 : 1), // this sends 1 when clicked, as the pin is naturally High
     );
   }
 });
@@ -197,6 +197,7 @@ function RemapSteeringValueForSerialOut(InputValue: number) {
 
   InputValue = Math.abs(InputValue);
 
-  if (InputValue < 10) return analogDirection + "0" + InputValue; // prepend a zero if 1 digit
+  if (InputValue < 10)
+    return analogDirection + "0" + InputValue; // prepend a zero if 1 digit
   else return analogDirection + InputValue;
 }
