@@ -38,8 +38,6 @@ _(Photos of student work, used with permission)_
 - Students will design and prototype hardware controls to direct the submarine. A Microbit board can be programmed to interpret sensor inputs and send to the game via USB cable.
 - The vehicle interior and exterior design are integrated into a unified concept with steering and instruments.
 
-Your submersible will navigate through an underwater maze of coral reefs. The pilot must reach an underwater base before running out of oxygen or electricity. The gameplay emphasizes careful resource management and precise navigation through challenging 3D environments.
-
 [Submarine Simulator](https://turbek.com/Tangible-Interfaces-Submarine-Design-Project/game.html)
 
 Note the game is intended to be played with custom hardware controls, but can be steered with USB gamepad or keyboard for development.
