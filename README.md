@@ -32,13 +32,13 @@ _(Photos of student work, used with permission)_
 
 ## Game Setup
 
-- The [Submarine Simulator](/Tangible-Interfaces-Submarine-Design-Project/game.html) is a web based game that simulates piloting a personal submarine. The player aims to collect a jewel and return to the surface before they run out of oxygen and battery.
+- The [Submarine Simulator](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/game.html) is a web based game that simulates piloting a personal submarine. The player aims to collect a jewel and return to the surface before they run out of oxygen and battery.
 - The game has two windows: the submarine's front window and an instrument dashboard. In the final presentation, the instruments are on a laptop monitor, with a projector for the outside view.
 - The students design and code the working instruments dashboard, needed for safely steering the sub.
 - Students will design and prototype hardware controls to direct the submarine. A Microbit board can be programmed to interpret sensor inputs and send to the game via USB cable.
 - The vehicle interior and exterior design are integrated into a unified concept with steering and instruments.
 
-[Submarine Simulator](/Tangible-Interfaces-Submarine-Design-Project/game.html)
+[Submarine Simulator](https://steveturbek.github.io/Tangible-Interfaces-Submarine-Design-Project/game.html)
 
 Note the game is intended to be played with custom hardware controls, but can be steered with USB gamepad or keyboard for development.
 
